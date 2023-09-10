@@ -1,0 +1,59 @@
+@import "normalize.css";
+
+:root {
+  // The :root selector matches the document's root element.
+
+  --bg-primary: #252423;
+  --bg-secondary: #11100f;
+  --bg-tertiary: #252423;
+  --bg-primary-accent: #201f1e;
+  --bg-hover: #323130;
+  --bg-hover-secondary: #292827;
+  --bg-hover-tertiary: #323130;
+  --bg-active: #3b3a39;
+  --bg-active-secondary: #3b3a39;
+  --bg-active-tertiary: #3b3a39;
+  --bg-separator: #484644;
+  --bg-border: #605e5c;
+  --bg-scrollbar: #484644;
+  --bg-brand: #296fe6;
+  --bg-brand-hover: #2461c8;
+  --bg-brand-secondary: #071327;
+  --bg-brand-hover-secondary: #1890f1;
+  --bg-brand-disable: #1b1a19;
+  --font-color-primary: #fff;
+  --font-color-secondary: #a19f9d;
+  --font-color-tertiary: #a19f9d;
+  --font-color-warning: #f1707b;
+  --font-color-brand: #78bafd;
+  --font-color-disable: #a19f9d;
+  --bg-ms-planner: #a4e18c;
+  --bg-ms-one-note: #c0aae4;
+  --bg-ms-excel: #60bd82;
+  --bg-ms-word: #82abf1;
+  --bg-ms-power-point: #e1966d;
+  --bg-ms-teams: #a6a7dc;
+  --bg-ms-loop: #a375ff;
+  --bg-warning: #433519;
+  --bg-error: #4f2a0f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%; // https://www.aleksandrhovhannisyan.com/blog/62-5-percent-font-size-trick/
+}
+
+body {
+  font-family: "Segoe", "Segoe UI", "Arial", "sans-serif";
+  font-size: 1.6rem;
+  line-height: 1.5;
+  text-rendering: optimizeSpeed;
+  color: var(--font-color-primary);
+  background-color: var(--bg-secondary);
+
+}
