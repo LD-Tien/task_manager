@@ -1,0 +1,27 @@
+.wrapper {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: var(--bg-primary);
+  font-size: 1.6rem;
+
+  .title {
+    flex: 1;
+    margin: 0px 16px;
+  }
+
+  .icon {
+    width: 24px;
+    text-align: center;
+  }
+}
+
+.wrapper:hover {
+  background-color: var(--bg-hover);
+}
+
+.active {
+  border-left: 2px solid var(--font-color-brand);
+  background-color: var(--bg-active);
+}
