@@ -1,0 +1,24 @@
+.wrapper {
+  display: inline;
+
+  :hover {
+    background-color: var(--bg-hover);
+    border: none;
+  }
+}
+
+.wrapper > * {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-size: 1.6rem;
+  padding: 8px 8px;
+  color: var(--font-color-brand);
+  background-color: transparent;
+  border-radius: 3px;
+
+  span,
+  svg {
+    margin: 0px 2px;
+  }
+}
