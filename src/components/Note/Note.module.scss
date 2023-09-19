@@ -1,0 +1,25 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+  padding: 16px;
+  border: 3px solid transparent;
+
+  .input {
+    flex: 1;
+    background-color: transparent;
+    color: var(--font-color-primary);
+    outline: none;
+    border: none;
+    resize: none;
+  }
+
+  .time-update {
+    font-size: 1.2rem;
+    color: var(--font-color-secondary);
+  }
+}
+
+.wrapper:hover {
+  border: 3px solid var(--bg-hover);
+}
