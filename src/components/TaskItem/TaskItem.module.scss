@@ -1,0 +1,60 @@
+.wrapper {
+  display: flex;
+  background-color: var(--bg-primary);
+  margin: 8px 24px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  min-height: 52px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.wrapper:hover {
+  background-color: var(--bg-hover);
+}
+
+.task-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 14px;
+}
+
+.task-title {
+  font-size: 1.4rem;
+}
+
+.task-status {
+  font-size: 1.2rem;
+  color: var(--font-color-secondary);
+}
+
+.wrapper input {
+  background-color: transparent;
+  color: var(--font-color-primary);
+  border: none;
+  outline: none;
+}
+
+.checked { 
+  .task-title,
+  .task-title-input {
+    color: var(--font-color-secondary);
+    text-decoration: line-through;
+  }
+
+  .task-title-input:focus {
+    color: var(--font-color-primary);
+    text-decoration: none;
+  }
+}
+
+.active {
+  background-color: var(--bg-active);
+
+  .task-title,
+  .task-status {
+    color: var(--font-color-primary);
+  }
+}
