@@ -1,8 +1,8 @@
-.container {
+.content {
     display: flex;
 }
 
-.main {
+.main-content {
     flex: 1;
-    min-width: none;
+    height: calc(100vh - 48px);
 }
