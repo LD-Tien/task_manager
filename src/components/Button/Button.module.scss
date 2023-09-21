@@ -1,24 +1,73 @@
 .wrapper {
   display: inline;
+  border: none;
+  font-size: 1.6rem;
 
   :hover {
     background-color: var(--bg-hover);
+  }
+
+  > * {
+    cursor: pointer;
     border: none;
+    outline: none;
+    border-radius: 3px;
+    color: var(--font-color-brand);
+    background-color: transparent;
+    text-decoration: none;
+
+    span,
+    svg {
+      margin: 0px 2px;
+    }
+
+    svg {
+      font-size: 1.6rem;
+    }
+
+    .cancel {
+      display: none;
+    }
   }
 }
 
-.wrapper > * {
-  cursor: pointer;
-  border: none;
-  outline: none;
-  font-size: 1.6rem;
+.small > * {
   padding: 8px 8px;
-  color: var(--font-color-brand);
-  background-color: transparent;
-  border-radius: 3px;
+}
 
-  span,
-  svg {
-    margin: 0px 2px;
+.item {
+  display: flex;
+  min-height: 52px;
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+
+  > * {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    color: var(--font-color-secondary);
+
+    .text {
+      flex: 1;
+      text-align: left;
+      padding: 0 8px;
+    }
+  }
+}
+
+.active {
+  > * {
+    color: var(--font-color-brand);
+  }
+}
+
+.active,
+.file {
+  :hover {
+    .cancel {
+      display: block;
+    }
   }
 }
