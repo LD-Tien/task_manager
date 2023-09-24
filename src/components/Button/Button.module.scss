@@ -31,10 +31,6 @@
   }
 }
 
-.small > * {
-  padding: 8px 8px;
-}
-
 .item {
   display: flex;
   min-height: 52px;
@@ -54,6 +50,10 @@
       text-align: left;
       padding: 0 8px;
     }
+
+    .sub-text {
+      color: var(--font-color-secondary);
+    }
   }
 }
 
@@ -68,6 +68,23 @@
   :hover {
     .cancel {
       display: block;
+    }
+  }
+}
+
+.small {
+  min-height: 40px;
+}
+
+.small > * {
+  padding: 8px 12px;
+}
+
+
+.danger {
+  > * {
+    span {
+      color: var(--font-color-warning);
     }
   }
 }

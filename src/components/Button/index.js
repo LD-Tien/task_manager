@@ -10,6 +10,8 @@ function Button({
   href,
   isActive,
   isFile,
+  subText,
+  danger,
   children,
   onClick,
   onClickCancel,
@@ -22,11 +24,12 @@ function Button({
     <div
       className={`${styles["wrapper"]} ${item ? styles["item"] : ""} ${
         small ? styles["small"] : ""
-      } ${isActive ? styles["active"] : ""} ${isFile ? styles["file"] : ""}`}
+      } ${isActive ? styles["active"] : ""} ${isFile ? styles["file"] : ""} ${danger ? styles["danger"] : ""}`}
     >
-      <Comp href={!!href && href} target={!!href && "_blank"}>
+      <Comp href={!!href ? href : null} target={!!href ? "_blank" : null}>
         {leftIcon && <span className={styles["leftIcon"]}>{leftIcon}</span>}
         {children && <span className={styles["text"]}>{children}</span>}
+        {subText && <span className={styles["sub-text"]}>{subText}</span>}
         {rightIcon && <span className={styles["rightIcon"]}>{rightIcon}</span>}
         {(isActive || isFile) && (
           <span className={styles["cancel"]} onClick={onClickCancel}>
