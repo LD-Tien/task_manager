@@ -1,0 +1,28 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+    min-height: fit-content;
+    
+    > :first-child {
+        overflow: hidden;
+        border-top-right-radius: 8px;
+        border-top-left-radius: 8px;
+    }
+
+    > :last-child {
+        overflow: hidden;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    * {
+        margin: 0;
+        border-radius: 0px;
+    }
+
+
+    > :not(:first-child) {
+        border-top: 0.1rem solid var(--bg-active);
+    }
+}
