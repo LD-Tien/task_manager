@@ -1,0 +1,17 @@
+.group {
+  width: 100%;
+  padding: 6px 0;
+  border-bottom: 0.1rem solid var(--bg-active);
+
+  > * > * {
+    color: var(--font-color-primary);
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: var(--font-color-primary);
+    font-weight: 500;
+    margin: 8px;
+    text-align: center;
+  }
+}

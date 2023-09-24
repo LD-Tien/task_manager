@@ -1,0 +1,15 @@
+.wrapper {
+    background-color: var(--bg-primary);
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px !important;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px 5px rgba($color: #000, $alpha: 0.05); 
+
+    > :last-child {
+        border-bottom: none;
+    }
+}
