@@ -8,105 +8,14 @@ import GroupItem from "./GroupItem";
 import { faPaperclip, faRotate } from "@fortawesome/free-solid-svg-icons";
 import {
   faBell,
-  faCalendar,
   faCalendarDays,
-  faClock,
   faFile,
   faSun,
 } from "@fortawesome/free-regular-svg-icons";
 import Note from "../../../Note";
 import { default as MenuPopper } from "../../../Popper/Menu";
+import { REMIND_MENU_POPPER, DUE_MENU_POPPER, REPEAT_MENU_POPPER } from "../../../../store/constraints";
 
-const remind = [
-  { headerTitle: "Reminder" },
-  {
-    options: [
-      {
-        icon: <FontAwesomeIcon icon={faClock} />,
-        title: "Later today",
-        subTitle: "",
-        color: "",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faClock} />,
-        title: "Tomorrow",
-        subTitle: "Sun, 9 AM",
-        color: "",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faClock} />,
-        title: "Later today",
-        subTitle: "Sun, 9 AM",
-        color: "",
-      },
-    ],
-  },
-  {
-    customOptions: {
-      icon: <FontAwesomeIcon icon={faClock} />,
-      title: "Pick a date & time",
-    },
-  },
-];
-
-const due = [
-  {headerTitle : "Due"},
-  {options: [
-    {
-      icon: <FontAwesomeIcon icon={faCalendar}/>,
-      title: "Today",
-      subTitle: "Sun",
-      color: "",
-    },
-    {
-      icon: <FontAwesomeIcon icon={faCalendar}/>,
-      title: "Tomorrow",
-      subTitle: "Mon",
-      color: "",
-    },
-    {
-      icon: <FontAwesomeIcon icon={faCalendar}/>,
-      title: "Next week",
-      subTitle: "Mon",
-      color: "",
-    }
-  ]},
-  {customOptions: {
-    icon: <FontAwesomeIcon icon={faCalendar}/>,
-    title: "Pick a date",
-    color: ""
-  }}
-]
-
-const repeat = [
-  {headerTitle : "Repeat"},
-  {options: [
-    {
-      icon: <FontAwesomeIcon icon={faCalendar}/>,
-      title: "Daily",
-    },
-    {
-      icon: <FontAwesomeIcon icon={faCalendar}/>,
-      title: "Weekdays",
-    },
-    {
-      icon: <FontAwesomeIcon icon={faCalendar}/>,
-      title: "Weekly",
-    },
-    {
-      icon: <FontAwesomeIcon icon={faCalendar}/>,
-      title: "Monthly",
-    },
-    {
-      icon: <FontAwesomeIcon icon={faCalendar}/>,
-      title: "Yearly",
-    }
-  ]},
-  {customOptions: {
-    icon: <FontAwesomeIcon icon={faCalendar}/>,
-    title: "Custom",
-  }}
-]
 
 function Details({ task }) {
   return (
@@ -126,21 +35,21 @@ function Details({ task }) {
         </Button>
       </GroupItem>
       <GroupItem>
-        <MenuPopper trigger="click" items={remind}>
+        <MenuPopper trigger="click" items={REMIND_MENU_POPPER}>
           <div>
             <Button leftIcon={<FontAwesomeIcon icon={faBell} />} item>
               Remind me
             </Button>
           </div>
         </MenuPopper>
-        <MenuPopper trigger="click" items={due}>
+        <MenuPopper trigger="click" items={DUE_MENU_POPPER}>
           <div>
             <Button leftIcon={<FontAwesomeIcon icon={faCalendarDays} />} item>
               19/09/2023
             </Button>
           </div>
         </MenuPopper>
-        <MenuPopper trigger="click" items={repeat}>
+        <MenuPopper trigger="click" items={REPEAT_MENU_POPPER}>
           <div>
             <Button leftIcon={<FontAwesomeIcon icon={faRotate} />} item>
               Repeat

@@ -6,16 +6,7 @@ import styles from "./App.module.scss";
 import Details from "./components/Layouts/components/Details";
 import { useState } from "react";
 import Menu from "./components/Popper/Menu";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendar,
-  faCheckCircle,
-  faCopy,
-  faStar,
-  faSun,
-  faTrashCan,
-} from "@fortawesome/free-regular-svg-icons";
-import { faListCheck } from "@fortawesome/free-solid-svg-icons";
+import { CONTEXT_MENU_TASK } from "./store/constraints";
 
 function App() {
   const tasks = [
@@ -191,61 +182,7 @@ function App() {
     },
   ];
 
-  const contextMenuTask = [
-    {
-      options: [
-        {
-          icon: <FontAwesomeIcon icon={faSun} />,
-          title: "Add to My Day",
-        },
-        {
-          icon: <FontAwesomeIcon icon={faStar} />,
-          title: "Mark as important",
-        },
-        {
-          icon: <FontAwesomeIcon icon={faCheckCircle} />,
-          title: "Mark as completed",
-        },
-      ],
-    },
-    {
-      options: [
-        {
-          icon: <FontAwesomeIcon icon={faCalendar} />,
-          title: "Due today",
-        },
-        {
-          icon: <FontAwesomeIcon icon={faCalendar} />,
-          title: "Due tomorrow",
-        },
-      ],
-    },
-    {
-      options: [
-        {
-          icon: <FontAwesomeIcon icon={faListCheck} />,
-          title: "Create new list from this task",
-        },
-        {
-          icon: <FontAwesomeIcon icon={faListCheck} />,
-          title: "Move task to...",
-        },
-        {
-          icon: <FontAwesomeIcon icon={faCopy} />,
-          title: "Copy task to...",
-        },
-      ],
-    },
-    {
-      options: [
-        {
-          icon: <FontAwesomeIcon icon={faTrashCan} />,
-          title: "Delete task",
-          danger: true,
-        },
-      ],
-    },
-  ];
+  
 
   const [taskIDActive, setTaskIDActive] = useState(1);
   let taskActive;
@@ -268,7 +205,7 @@ function App() {
                   taskActive = value;
                 }
                 return (
-                  <Menu key={index} followMouse={"initial"} trigger={"contextmenu"} placement="right-start" items={contextMenuTask}>
+                  <Menu key={index} followMouse={"initial"} trigger={"contextmenu"} placement="right-start" items={CONTEXT_MENU_TASK}>
                     <div>
                       <TaskItem
                         key={index}
