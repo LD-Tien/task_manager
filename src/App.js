@@ -268,7 +268,7 @@ function App() {
                   taskActive = value;
                 }
                 return (
-                  <Menu key={index} trigger={"contextmenu"} placement="right" items={contextMenuTask}>
+                  <Menu key={index} followMouse={"initial"} trigger={"contextmenu"} placement="right-start" items={contextMenuTask}>
                     <div>
                       <TaskItem
                         key={index}

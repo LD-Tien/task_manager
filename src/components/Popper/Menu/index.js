@@ -1,16 +1,18 @@
 import Tippy from "@tippyjs/react/headless";
+import {followCursor} from 'tippy.js/headless';
 import styles from "./Menu.module.scss";
 import Popper from "..";
 import Button from "../../Button";
 
-function Menu({ trigger, placement="bottom", items = [], children }) {
+function Menu({ trigger, followMouse, placement="bottom", items = [], children }) {
   return (
     <div>
       <Tippy
         trigger={trigger}
         interactive
+        followCursor={!!followMouse ? followMouse : false}
+        plugins={[followCursor]}
         placement={placement}
-        delay={[0, 500]}
         render={(attrs) => (
           <div className={styles["menu-list"]} tabIndex="-1" {...attrs}>
             <Popper>
