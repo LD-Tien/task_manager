@@ -3,17 +3,19 @@
   display: flex;
   align-items: center;
   padding: 12px 24px;
-  background-color: var(--bg-primary);
+  background-color: transparent;
   font-size: 1.6rem;
+  border-left: 2px solid transparent;
 
   .title {
     flex: 1;
     margin: 0px 16px;
   }
 
-  .icon {
+  .icon,
+  svg {
     width: 24px;
-    text-align: center;
+    text-align: left;
   }
 }
 
