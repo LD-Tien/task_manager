@@ -1,0 +1,46 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    height: 52px;
+    margin: 16px 24px 8px;
+    color: var(--font-color-brand);
+    font-size: 1.6rem;
+    background-color: var(--bg-primary);
+    border-radius: 8px;
+    padding: 0 16px;
+
+    > * {
+        margin: 0 2px;
+    }
+
+    svg {
+        width: 16px;
+    }
+    
+    
+    input {
+        background-color: transparent;
+        flex: 1;
+        height: 100%;
+        border: none;
+        padding: 0 8px;
+        font-size: 1.5rem;
+        color: var(--font-color-primary);
+        outline: none;
+    }
+    
+    input:focus::placeholder {
+        color: var(--font-color-primary);
+    }
+    
+    input::placeholder {
+        color: var(--font-color-brand);
+        font-size: 1.5rem;
+    }
+
+    .plan-options {
+        display: flex;
+    }
+
+}
+
