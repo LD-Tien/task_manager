@@ -6,10 +6,19 @@
   background-color: transparent;
   font-size: 1.6rem;
   border-left: 2px solid transparent;
+  user-select: none;
 
-  .title {
+  .title,.input-list-name {
     flex: 1;
     margin: 0px 16px;
+  }
+
+  .input-list-name {
+    border: none;
+    outline: none;
+    background-color: var(--bg-primary);
+    color: inherit;
+    font-size: inherit;
   }
 
   .icon,

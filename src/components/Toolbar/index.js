@@ -2,7 +2,6 @@ import {
   faArrowDownAZ,
   faEllipsis,
   faFilter,
-  faHouse,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./Toolbar.module.scss";
@@ -43,12 +42,12 @@ const sort = [
   },
 ];
 
-function Toolbar() {
+function Toolbar({title, icon}) {
   return (
     <div className={styles["wrapper"]}>
       <div className={styles["title"]}>
-        <FontAwesomeIcon icon={faHouse} />
-        <p>Tasks</p>
+        {icon}
+        <p>{title}</p>
         <Button leftIcon={<FontAwesomeIcon icon={faEllipsis} />} small></Button>
       </div>
       <MenuPopper trigger="click" items={sort}>

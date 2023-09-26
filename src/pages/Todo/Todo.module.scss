@@ -16,11 +16,17 @@
   
       .header {
         position: sticky;
-        width: 100%;
         top: 0px;
         background-color: var(--bg-secondary);
         display: flex;
         flex-direction: column;
+        padding: 0 24px 8px;
+
+        .add-task {
+          > * {
+            border-radius: 8px;
+          }
+        }
       }
     }
   }

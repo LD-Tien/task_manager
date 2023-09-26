@@ -3,12 +3,13 @@ import {
   faCalendar,
   faCheckCircle,
   faClock,
+  faClone,
   faCopy,
   faStar,
   faSun,
   faTrashCan,
 } from "@fortawesome/free-regular-svg-icons";
-import { faListCheck } from "@fortawesome/free-solid-svg-icons";
+import { faICursor, faListCheck } from "@fortawesome/free-solid-svg-icons";
 
 export const REMIND_MENU_POPPER = [
   { headerTitle: "Reminder" },
@@ -162,5 +163,43 @@ export const CONTEXT_MENU_TASK = [
         danger: true,
       },
     ],
+  },
+];
+
+export const CONTEXT_MENU_USER_LIST = [
+  {
+    options: [
+      { icon: <FontAwesomeIcon icon={faICursor} />, title: "Rename list" },
+      { icon: <FontAwesomeIcon icon={faClone} />, title: "Duplicate list" },
+    ],
+  },
+
+  {
+    options: [
+      {
+        icon: <FontAwesomeIcon icon={faTrashCan} />,
+        title: "Delete list",
+        danger: true,
+      },
+    ],
+  },
+];
+
+export const SIDEBAR_DEFAULT_ITEM = [
+  { _id: "MyDay", icon: <FontAwesomeIcon icon={faSun} />, title: "My Day" },
+  {
+    _id: "Important",
+    icon: <FontAwesomeIcon icon={faStar} />,
+    title: "Important",
+  },
+  {
+    _id: "Planned",
+    icon: <FontAwesomeIcon icon={faCalendar} />,
+    title: "Planned",
+  },
+  {
+    _id: "Tasks",
+    icon: <FontAwesomeIcon icon={faListCheck} />,
+    title: "Tasks",
   },
 ];

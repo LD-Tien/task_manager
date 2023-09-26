@@ -5,4 +5,31 @@
     height: calc(100vh - 48px);
     background-color: var(--bg-primary-accent);
     padding: 16px 0px;
+    overflow-y: auto;
+    
+    > * {
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+    }
+}
+
+.default-list {
+    border-bottom: 0.1rem solid var(--bg-active);
+}
+
+.user-list {
+    > :last-child {
+        margin: 0;
+        padding: 0 24px;
+        border-radius: 0;
+        background-color: transparent;
+
+        > :first-child {
+            margin: 0 12px 0 4px;
+        }
+    }
+
+    > :last-child:hover {
+        background-color: var(--bg-hover);
+    }
 }

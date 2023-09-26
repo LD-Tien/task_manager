@@ -1,31 +1,58 @@
 import SidebarItem from "./SidebarItem";
 import styles from "./Sidebar.module.scss";
-import { SIDEBAR_DEFAULT_ITEM } from "../../../../store/constraints";
+import TextInput from "../../../TextInput";
+import { default as MenuPopper } from "../../../Popper/Menu";
+import {
+  CONTEXT_MENU_USER_LIST,
+} from "../../../../store/constraints";
 
-function Sidebar({ idActive, setIdActive }) {
-  function handleClick(idList) {
-    setIdActive(idList);
+function Sidebar({
+  listActive,
+  setListActive,
+  defaultList = [],
+  userList = [],
+}) {
+  function handleClick(listActive) {
+    setListActive(listActive);
   }
 
   return (
     <div className={styles["wrapper"]}>
-      {SIDEBAR_DEFAULT_ITEM.map((item) => {
-        return (
-          <SidebarItem
-            key={item.id}
-            id={item.id}
-            icon={item.icon}
-            isActive={item.id === idActive}
-            onClick={handleClick}
-          >
-            {item.title}
-          </SidebarItem>
-        );
-      })}
-      {/* <SidebarItem icon={<FontAwesomeIcon icon={faSun}/>}>My Day</SidebarItem>
-        <SidebarItem icon={<FontAwesomeIcon icon={faStar}/>}>Important</SidebarItem>
-        <SidebarItem icon={<FontAwesomeIcon icon={faCalendar}/>}>Planned</SidebarItem>
-        <SidebarItem icon={<FontAwesomeIcon icon={faHouse}/>} isActive totalTasks={9}>Tasks</SidebarItem> */}
+      <div className={styles["default-list"]}>
+        {defaultList.map((item) => {
+          return (
+            <SidebarItem
+              key={item._id}
+              {...item}
+              isActive={item._id === listActive._id}
+              onClick={handleClick}
+            />
+          );
+        })}
+      </div>
+
+      <div className={styles["user-list"]}>
+        {userList.map((item) => {
+          return (
+            <MenuPopper
+              key={item._id}
+              trigger="contextmenu"
+              placement="bottom"
+              items={CONTEXT_MENU_USER_LIST}
+            >
+              <div>
+                <SidebarItem
+                  key={item._id}
+                  {...item}
+                  isActive={item._id === listActive._id}
+                  onClick={handleClick}
+                />
+              </div>
+            </MenuPopper>
+          );
+        })}
+        <TextInput placeholder="New list"/>
+      </div>
     </div>
   );
 }

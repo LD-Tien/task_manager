@@ -217,35 +217,37 @@ function Todo() {
         <div className={styles["main-content"]}>
           <div className={styles["header"]}>
             <Toolbar title={listActive.title} icon={listActive.icon} />
-            <TextInput planOptions />
+            <div className={styles["add-task"]}>
+              <TextInput planOptions />
+            </div>
           </div>
           <div className={styles["tasks-list"]}>
-            {tasks.map((task, index) => {
+            {tasks.map((task) => {
               if (task._id === taskIdActive) {
                 taskActive = task;
               }
               if (listActive._id === "MyDay") {
-                if (!task.myDay) return <></>;
+                if (!task.myDay) return null;
               } else if (listActive._id === "Important") {
-                if (!task.isImportant) return <></>;
+                if (!task.isImportant) return null;
               } else if (listActive._id === "Planned") {
-                if (!task.planned) return <></>;
+                if (!task.planned) return null;
               } else if (listActive._id === "Tasks") {
-                if (!!task.listId) return <></>;
+                if (!!task.listId) return null;
               } else if (listActive._id !== task.listId) {
-                return <></>;
+                return null;
               }
               return (
                 <MenuPopper
-                  key={index}
-                  followMouse={"initial"}
-                  trigger={"contextmenu"}
+                  key={task._id}
+                  followMouse="initial"
+                  trigger="contextmenu"
                   placement="right-start"
                   items={CONTEXT_MENU_TASK}
                 >
                   <div>
                     <TaskItem
-                      key={index}
+                      key={task._id}
                       {...task}
                       isActive={task._id === taskIdActive}
                       onClick={handleTaskClick}
