@@ -1,0 +1,48 @@
+.wrapper {
+  .header {
+    padding: 0 16px 16px;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 0.1rem solid var(--bg-primary);
+    > * {
+      margin-right: 12px;
+      font-weight: 600;
+    }
+
+    .title {
+      color: var(--font-color-primary);
+    }
+
+    .total {
+      color: var(--font-color-secondary);
+      font-size: 500;
+    }
+  }
+
+  .body {
+    margin: 0;
+    display: none;
+
+    > *{
+        margin-bottom: 8px;
+    }
+  }
+}
+
+.show {
+  .header {
+    border: none;
+
+    .icon {
+      rotate: 45;
+    }
+  }
+
+  .body {
+    display: block;
+  }
+}
