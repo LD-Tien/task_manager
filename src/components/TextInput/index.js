@@ -9,11 +9,11 @@ import Button from "../Button";
 import { default as MenuPopper } from "../Popper/Menu";
 import { DUE_MENU_POPPER, REMIND_MENU_POPPER, REPEAT_MENU_POPPER } from "../../store/constraints";
 
-function TextInput({ planOptions }) {
+function TextInput({ planOptions, placeholder="Add a task", icon=<FontAwesomeIcon icon={faPlus} />}) {
   return (
     <div className={styles["wrapper"]}>
-      <FontAwesomeIcon icon={faPlus} />
-      <input type="text" placeholder="Add a task" />
+      {icon}
+      <input type="text" placeholder={placeholder}/>
       {planOptions ? (
         <div className={styles["plan-options"]}>
           <MenuPopper
