@@ -10,9 +10,14 @@
   
     .main-content {
       flex: 1;
+      padding: 24px;
       height: calc(100vh - 48px);
       overflow-y: auto;
       background-color: var(--bg-secondary);
+
+      > * {
+        margin-bottom: 16px;
+      }
   
       .header {
         position: sticky;
@@ -20,12 +25,22 @@
         background-color: var(--bg-secondary);
         display: flex;
         flex-direction: column;
-        padding: 0 24px 8px;
+        border-bottom: 0.1rem solid var(--bg-primary-accent);
+        
+        > * {
+          margin-bottom: 16px;
+        }
 
         .add-task {
           > * {
             border-radius: 8px;
           }
+        }
+      }
+
+      .tasks-list {
+        > * {
+          margin-bottom: 8px;
         }
       }
     }
