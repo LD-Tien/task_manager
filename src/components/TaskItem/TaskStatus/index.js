@@ -12,43 +12,43 @@ import {
   faRotate,
 } from "@fortawesome/free-solid-svg-icons";
 
-function TaskStatus(params) {
-  if (!params) {
+function TaskStatus(data) {
+  if (!data) {
     return;
   }
   return (
     <div className={styles["wrapper"]}>
-      {params.myDay && (
+      {data.myDay && (
         <span className={styles["task-status"]}>
           <FontAwesomeIcon icon={faSun} />
           <span className={styles["content"]}>My Day</span>
         </span>
       )}
-      {params.subTasks && (
+      {data.subTasks && (
         <span className={styles["task-status"]}>
-          <span>{params.subTasks.reduce((accumulator, currentValue) => currentValue.isChecked ? accumulator + 1 : accumulator,0)}</span>
+          <span>{data.subTasks.reduce((accumulator, currentValue) => currentValue.isCompleted ? accumulator + 1 : accumulator,0)}</span>
           <span>of</span>
-          <span>{params.subTasks.length}</span>
+          <span>{data.subTasks.length}</span>
         </span>
       )}
-      {params.planned && (
+      {data.planned && (
         <span className={styles["task-status"]}>
           <FontAwesomeIcon icon={faCalendarDay} />
-          <span>{params.planned}</span>
-          {params.repeat && <FontAwesomeIcon icon={faRotate} />}
+          <span>{data.planned}</span>
+          {data.repeat && <FontAwesomeIcon icon={faRotate} />}
         </span>
       )}
-      {params.category && Object.keys(params.category).length !== 0 && (
+      {data.category && Object.keys(data.category).length !== 0 && (
         <span className={styles["task-status"]}>
-          <FontAwesomeIcon icon={faCircle} style={{color: params.category.color}}/>
-          <span className={styles["content"]} style={{color: params.category.color}}>{params.category.name}</span>
+          <FontAwesomeIcon icon={faCircle} style={{color: data.category.color}}/>
+          <span className={styles["content"]} style={{color: data.category.color}}>{data.category.name}</span>
         </span>
       )}
-      {(params.notification || params.note || params.files) && (
+      {(data.notification || data.note || data.files) && (
         <span className={styles["task-status"]}>
-          {params.notification && <FontAwesomeIcon icon={faBell} />}
-          {params.note && <FontAwesomeIcon icon={faNoteSticky} />}
-          {params.files && <FontAwesomeIcon icon={faPaperclip} />}
+          {data.notification && <FontAwesomeIcon icon={faBell} />}
+          {data.note && <FontAwesomeIcon icon={faNoteSticky} />}
+          {data.files && <FontAwesomeIcon icon={faPaperclip} />}
         </span>
       )}
     </div>

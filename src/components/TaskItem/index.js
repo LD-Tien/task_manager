@@ -12,25 +12,13 @@ import { useState } from "react";
 
 
 function TaskItem({
-  _id,
-  title,
-  isSubTask,
-  isChecked,
-  isImportant,
+  data,
   isActive,
   editable,
-  onClick,
-  ...props
+  setTaskActive
 }) {
-  const [isCompleted, setIsCompleted] = useState(isChecked);
-  const [taskName, setTaskName] = useState(title);
-  const [oldTaskID, setOldTaskID] = useState(_id);
-
-  if (oldTaskID !== _id) {
-    // When rendering a task different from the previous task
-    setTaskName(title);
-    setOldTaskID(_id);
-  }
+  const [isCompleted, setIsCompleted] = useState(data.isCompleted);
+  const [taskName, setTaskName] = useState(data.title);
 
   function handleChecked() {
     setIsCompleted(!isCompleted);
@@ -45,17 +33,17 @@ function TaskItem({
       className={`${styles["wrapper"]} ${
         isCompleted ? styles["checked"] : ""
       } ${isActive ? styles["active"] : ""} ${
-        isSubTask ? styles["sub-task"] : ""
+        data.isSubTask ? styles["sub-task"] : ""
       }`}
       onClick={() => {
         if (!editable) {
-          onClick(_id);
+          setTaskActive(data);
         }
       }}
       onContextMenu={(e) => {
-        if (!isSubTask && !editable) {
+        if (!data.isSubTask && !editable) {
           e.preventDefault();
-          onClick(_id);
+          setTaskActive(data);
         }
       }}
     >
@@ -69,12 +57,12 @@ function TaskItem({
           />
         ) : (
           <>
-            <p className={styles["task-title"]}>{title}</p>
-            <TaskStatus {...props} />
+            <p className={styles["task-title"]}>{data.title}</p>
+            <TaskStatus {...data} />
           </>
         )}
       </div>
-      {isSubTask ? (
+      {data.isSubTask ? (
         <Checkbox
           unCheckIcon={
             <FontAwesomeIcon icon={faXmark} style={{ color: "#a19f9d" }} />
@@ -83,7 +71,7 @@ function TaskItem({
         />
       ) : (
         <Checkbox
-          status={isImportant}
+          status={data.isImportant}
           unCheckIcon={<FontAwesomeIcon icon={faStar} />}
           checkedIcon={<FontAwesomeIcon icon={faStarSolid} />}
         />

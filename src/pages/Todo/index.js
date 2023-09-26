@@ -21,10 +21,10 @@ function Todo() {
       _id: 1,
       title: "Task1",
       subTasks: [
-        { isChecked: true, title: "SubTask1" },
-        { isChecked: true, title: "SubTask2" },
-        { isChecked: false, title: "SubTask2" },
-        { isChecked: true, title: "SubTask2" },
+        { _id: 11, isCompleted: true, title: "SubTask1" },
+        { _id: 12, isCompleted: true, title: "SubTask2" },
+        { _id: 13, isCompleted: false, title: "SubTask2" },
+        { _id: 14, isCompleted: true, title: "SubTask2" },
       ],
       note: "Note 1",
       files: null,
@@ -37,15 +37,16 @@ function Todo() {
       repeat: "daily",
       myDay: true,
       isImportant: true,
-      isChecked: false,
+      isCompleted: false,
       listId: "01",
+      userId: "01",
     },
     {
       _id: 2,
       title: "Task2",
       subTasks: [
-        { isChecked: false, title: "SubTask1" },
-        { isChecked: false, title: "SubTask2" },
+        { _id: 21, isCompleted: false, title: "SubTask1" },
+        { _id: 22, isCompleted: false, title: "SubTask2" },
       ],
       note: null,
       files: null,
@@ -58,15 +59,16 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: false,
+      isCompleted: false,
       listId: "01",
+      userId: "01",
     },
     {
       _id: 3,
       title: "Task3",
       subTasks: [
-        { isChecked: false, title: "SubTask1" },
-        { isChecked: false, title: "SubTask2" },
+        { _id: 31, isCompleted: false, title: "SubTask1" },
+        { _id: 32, isCompleted: false, title: "SubTask2" },
       ],
       note: null,
       files: null,
@@ -79,15 +81,16 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: false,
+      isCompleted: false,
       listId: "01",
+      userId: "01",
     },
     {
       _id: 4,
       title: "Task4",
       subTasks: [
-        { isChecked: false, title: "SubTask1" },
-        { isChecked: false, title: "SubTask2" },
+        { _id: 41, isCompleted: false, title: "SubTask1" },
+        { _id: 42, isCompleted: false, title: "SubTask2" },
       ],
       note: null,
       files: null,
@@ -100,15 +103,16 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: true,
+      isCompleted: true,
       listId: "",
+      userId: "01",
     },
     {
       _id: 5,
       title: "Task5",
       subTasks: [
-        { isChecked: false, title: "SubTask1" },
-        { isChecked: false, title: "SubTask2" },
+        { _id: 51, isCompleted: false, title: "SubTask1" },
+        { _id: 52, isCompleted: false, title: "SubTask2" },
       ],
       note: null,
       files: null,
@@ -121,15 +125,16 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: true,
+      isCompleted: true,
       listId: "",
+      userId: "01",
     },
     {
       _id: 6,
       title: "Task6",
       subTasks: [
-        { isChecked: false, title: "SubTask1" },
-        { isChecked: false, title: "SubTask2" },
+        { _id: 61, isCompleted: false, title: "SubTask1" },
+        { _id: 62, isCompleted: false, title: "SubTask2" },
       ],
       note: null,
       files: null,
@@ -142,15 +147,16 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: false,
+      isCompleted: false,
       listId: "02",
+      userId: "01",
     },
     {
       _id: 7,
       title: "Task7",
       subTasks: [
-        { isChecked: false, title: "SubTask1" },
-        { isChecked: false, title: "SubTask2" },
+        { _id: 71, isCompleted: false, title: "SubTask1" },
+        { _id: 72, isCompleted: false, title: "SubTask2" },
       ],
       note: null,
       files: null,
@@ -163,15 +169,16 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: false,
+      isCompleted: false,
       listId: "02",
+      userId: "01",
     },
     {
       _id: 8,
       title: "Task8",
       subTasks: [
-        { isChecked: false, title: "SubTask1" },
-        { isChecked: false, title: "SubTask2" },
+        { _id: 81, isCompleted: false, title: "SubTask1" },
+        { _id: 82, isCompleted: false, title: "SubTask2" },
       ],
       note: null,
       files: null,
@@ -184,8 +191,9 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: true,
+      isCompleted: true,
       listId: "02",
+      userId: "01",
     },
   ];
 
@@ -199,11 +207,7 @@ function Todo() {
   ];
 
   const [listActive, setListActive] = useState(SIDEBAR_DEFAULT_ITEM[0]);
-  const [taskIdActive, setTaskIdActive] = useState(1);
-  let taskActive;
-  function handleTaskClick(taskID) {
-    setTaskIdActive(taskID);
-  }
+  const [taskActive, setTaskActive] = useState(tasks[1]);
 
   return (
     <div className={styles["wrapper"]}>
@@ -224,14 +228,10 @@ function Todo() {
           </div>
           <div className={styles["tasks-list"]}>
             {tasks.map((task) => {
-              if (task.isChecked) {
+              if (task.isCompleted) {
                 return null;
               }
 
-              if (task._id === taskIdActive) {
-                taskActive = task;
-              }
-              
               if (listActive._id === "MyDay") {
                 if (!task.myDay) return null;
               } else if (listActive._id === "Important") {
@@ -254,9 +254,9 @@ function Todo() {
                   <div>
                     <TaskItem
                       key={task._id}
-                      {...task}
-                      isActive={task._id === taskIdActive}
-                      onClick={handleTaskClick}
+                      data={task}
+                      isActive={task._id === taskActive._id}
+                      setTaskActive={setTaskActive}
                     />
                   </div>
                 </MenuPopper>
@@ -266,12 +266,8 @@ function Todo() {
           <div className={styles["tasks-list-completed"]}>
             <Accordion title="Completed" totalTasksCompleted={10}>
               {tasks.map((task) => {
-                if (!task.isChecked) {
+                if (!task.isCompleted) {
                   return null;
-                }
-
-                if (task._id === taskIdActive) {
-                  taskActive = task;
                 }
 
                 if (listActive._id === "MyDay") {
@@ -296,9 +292,9 @@ function Todo() {
                     <div>
                       <TaskItem
                         key={task._id}
-                        {...task}
-                        isActive={task._id === taskIdActive}
-                        onClick={handleTaskClick}
+                        data={task}
+                        isActive={task._id === taskActive._id}
+                        setTaskActive={setTaskActive}
                       />
                     </div>
                   </MenuPopper>

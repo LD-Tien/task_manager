@@ -21,11 +21,11 @@ function Details({ task }) {
   return (
     <div className={styles["wrapper"]}>
       <div>
-        <TaskItem editable {...task} />
+        <TaskItem key={task._id} editable data={task} />
       </div>
       <GroupItem>
-        {task.subTasks.map((subTask, index) => {
-          return <TaskItem key={index} editable isSubTask {...subTask} />;
+        {task.subTasks.map((subTask) => {
+          return <TaskItem key={subTask._id} editable isSubTask data={subTask} />;
         })}
         <TextInput />
       </GroupItem>
