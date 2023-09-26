@@ -13,6 +13,7 @@ import Header from "../../components/Layouts/components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList } from "@fortawesome/free-solid-svg-icons";
 import TextInput from "../../components/TextInput";
+import Accordion from "../../components/Accordion";
 
 function Todo() {
   const tasks = [
@@ -99,7 +100,7 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: false,
+      isChecked: true,
       listId: "",
     },
     {
@@ -120,7 +121,7 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: false,
+      isChecked: true,
       listId: "",
     },
     {
@@ -183,7 +184,7 @@ function Todo() {
       repeat: null,
       myDay: false,
       isImportant: false,
-      isChecked: false,
+      isChecked: true,
       listId: "02",
     },
   ];
@@ -223,9 +224,14 @@ function Todo() {
           </div>
           <div className={styles["tasks-list"]}>
             {tasks.map((task) => {
+              if (task.isChecked) {
+                return null;
+              }
+
               if (task._id === taskIdActive) {
                 taskActive = task;
               }
+              
               if (listActive._id === "MyDay") {
                 if (!task.myDay) return null;
               } else if (listActive._id === "Important") {
@@ -256,6 +262,49 @@ function Todo() {
                 </MenuPopper>
               );
             })}
+          </div>
+          <div className={styles["tasks-list-completed"]}>
+            <Accordion title="Completed" totalTasksCompleted={10}>
+              {tasks.map((task) => {
+                if (!task.isChecked) {
+                  return null;
+                }
+
+                if (task._id === taskIdActive) {
+                  taskActive = task;
+                }
+
+                if (listActive._id === "MyDay") {
+                  if (!task.myDay) return null;
+                } else if (listActive._id === "Important") {
+                  if (!task.isImportant) return null;
+                } else if (listActive._id === "Planned") {
+                  if (!task.planned) return null;
+                } else if (listActive._id === "Tasks") {
+                  if (!!task.listId) return null;
+                } else if (listActive._id !== task.listId) {
+                  return null;
+                }
+                return (
+                  <MenuPopper
+                    key={task._id}
+                    followMouse="initial"
+                    trigger="contextmenu"
+                    placement="right-start"
+                    items={CONTEXT_MENU_TASK}
+                  >
+                    <div>
+                      <TaskItem
+                        key={task._id}
+                        {...task}
+                        isActive={task._id === taskIdActive}
+                        onClick={handleTaskClick}
+                      />
+                    </div>
+                  </MenuPopper>
+                );
+              })}
+            </Accordion>
           </div>
         </div>
         <div className={styles["detail"]}>
