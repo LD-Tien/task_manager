@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styles from "./AddTask.module.scss";
+import styles from "./TextInput.module.scss";
 import {
   faBell,
   faCalendar,
@@ -9,7 +9,7 @@ import Button from "../Button";
 import { default as MenuPopper } from "../Popper/Menu";
 import { DUE_MENU_POPPER, REMIND_MENU_POPPER, REPEAT_MENU_POPPER } from "../../store/constraints";
 
-function AddTask({ planOptions }) {
+function TextInput({ planOptions }) {
   return (
     <div className={styles["wrapper"]}>
       <FontAwesomeIcon icon={faPlus} />
@@ -51,4 +51,4 @@ function AddTask({ planOptions }) {
   );
 }
 
-export default AddTask;
+export default TextInput;

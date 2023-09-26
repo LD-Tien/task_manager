@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AddTask from "../../../AddTask";
 import Button from "../../../Button";
 import TaskItem from "../../../TaskItem";
 import BottomBar from "./BottomBar";
@@ -15,6 +14,7 @@ import {
 import Note from "../../../Note";
 import { default as MenuPopper } from "../../../Popper/Menu";
 import { REMIND_MENU_POPPER, DUE_MENU_POPPER, REPEAT_MENU_POPPER } from "../../../../store/constraints";
+import TextInput from "../../../TextInput";
 
 
 function Details({ task }) {
@@ -27,7 +27,7 @@ function Details({ task }) {
         {task.subTasks.map((subTask, index) => {
           return <TaskItem key={index} editable isSubTask {...subTask} />;
         })}
-        <AddTask />
+        <TextInput />
       </GroupItem>
       <GroupItem>
         <Button leftIcon={<FontAwesomeIcon icon={faSun} />} item isActive>

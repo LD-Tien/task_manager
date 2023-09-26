@@ -2,12 +2,17 @@ import styles from "./Todo.module.scss";
 import { useState } from "react";
 import Details from "../../components/Layouts/components/Details";
 import Toolbar from "../../components/Toolbar";
-import AddTask from "../../components/AddTask";
 import TaskItem from "../../components/TaskItem";
 import { default as MenuPopper } from "../../components/Popper/Menu";
-import { CONTEXT_MENU_TASK } from "../../store/constraints";
+import {
+  CONTEXT_MENU_TASK,
+  SIDEBAR_DEFAULT_ITEM,
+} from "../../store/constraints";
 import Sidebar from "../../components/Layouts/components/Sidebar";
 import Header from "../../components/Layouts/components/Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons";
+import TextInput from "../../components/TextInput";
 
 function Todo() {
   const tasks = [
@@ -32,7 +37,7 @@ function Todo() {
       myDay: true,
       isImportant: true,
       isChecked: false,
-      list: "Tasks",
+      listId: "01",
     },
     {
       _id: 2,
@@ -53,7 +58,7 @@ function Todo() {
       myDay: false,
       isImportant: false,
       isChecked: false,
-      list: "Tasks",
+      listId: "01",
     },
     {
       _id: 3,
@@ -74,7 +79,7 @@ function Todo() {
       myDay: false,
       isImportant: false,
       isChecked: false,
-      list: "Tasks",
+      listId: "01",
     },
     {
       _id: 4,
@@ -95,7 +100,7 @@ function Todo() {
       myDay: false,
       isImportant: false,
       isChecked: false,
-      list: "Tasks",
+      listId: "",
     },
     {
       _id: 5,
@@ -116,7 +121,7 @@ function Todo() {
       myDay: false,
       isImportant: false,
       isChecked: false,
-      list: "Tasks",
+      listId: "",
     },
     {
       _id: 6,
@@ -137,7 +142,7 @@ function Todo() {
       myDay: false,
       isImportant: false,
       isChecked: false,
-      list: "Tasks",
+      listId: "02",
     },
     {
       _id: 7,
@@ -158,7 +163,7 @@ function Todo() {
       myDay: false,
       isImportant: false,
       isChecked: false,
-      list: "Tasks",
+      listId: "02",
     },
     {
       _id: 8,
@@ -179,31 +184,56 @@ function Todo() {
       myDay: false,
       isImportant: false,
       isChecked: false,
-      list: "Tasks",
+      listId: "02",
     },
   ];
 
-  const [idActive, setIdActive] = useState("Tasks");
-  const [taskIDActive, setTaskIDActive] = useState(1);
+  const userList = [
+    { _id: "01", icon: <FontAwesomeIcon icon={faList} />, title: "List 1" },
+    {
+      _id: "02",
+      icon: <FontAwesomeIcon icon={faList} />,
+      title: "List 2",
+    },
+  ];
+
+  const [listActive, setListActive] = useState(SIDEBAR_DEFAULT_ITEM[0]);
+  const [taskIdActive, setTaskIdActive] = useState(1);
   let taskActive;
-  function handleClick(taskID) {
-    setTaskIDActive(taskID);
+  function handleTaskClick(taskID) {
+    setTaskIdActive(taskID);
   }
 
   return (
     <div className={styles["wrapper"]}>
       <Header />
       <div className={styles["content"]}>
-        <Sidebar idActive={idActive} setIdActive={setIdActive} />
+        <Sidebar
+          listActive={listActive}
+          setListActive={setListActive}
+          defaultList={SIDEBAR_DEFAULT_ITEM}
+          userList={userList}
+        />
         <div className={styles["main-content"]}>
           <div className={styles["header"]}>
-            <Toolbar title={idActive}/>
-            <AddTask planOptions />
+            <Toolbar title={listActive.title} icon={listActive.icon} />
+            <TextInput planOptions />
           </div>
           <div className={styles["tasks-list"]}>
-            {tasks.map((value, index) => {
-              if (value._id === taskIDActive) {
-                taskActive = value;
+            {tasks.map((task, index) => {
+              if (task._id === taskIdActive) {
+                taskActive = task;
+              }
+              if (listActive._id === "MyDay") {
+                if (!task.myDay) return <></>;
+              } else if (listActive._id === "Important") {
+                if (!task.isImportant) return <></>;
+              } else if (listActive._id === "Planned") {
+                if (!task.planned) return <></>;
+              } else if (listActive._id === "Tasks") {
+                if (!!task.listId) return <></>;
+              } else if (listActive._id !== task.listId) {
+                return <></>;
               }
               return (
                 <MenuPopper
@@ -216,9 +246,9 @@ function Todo() {
                   <div>
                     <TaskItem
                       key={index}
-                      {...value}
-                      isActive={value._id === taskIDActive}
-                      onClick={handleClick}
+                      {...task}
+                      isActive={task._id === taskIdActive}
+                      onClick={handleTaskClick}
                     />
                   </div>
                 </MenuPopper>
