@@ -1,5 +1,5 @@
 .wrapper {
-  display: inline;
+  display: flex;
   border: none;
   font-size: 1.6rem;
 
@@ -42,13 +42,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 16px;
+    padding: 8px 12px;  
     color: var(--font-color-secondary);
 
     .text {
       flex: 1;
       text-align: left;
       padding: 0 8px;
+    }
+
+    svg {
+      width: 16px;
+      text-align: left;
     }
 
     .sub-text {
