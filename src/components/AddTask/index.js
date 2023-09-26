@@ -7,7 +7,7 @@ import {
 import { faPlus, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Button";
 import { default as MenuPopper } from "../Popper/Menu";
-import { DUE_MENU_POPPER, REPEAT_MENU_POPPER } from "../../store/constraints";
+import { DUE_MENU_POPPER, REMIND_MENU_POPPER, REPEAT_MENU_POPPER } from "../../store/constraints";
 
 function AddTask({ planOptions }) {
   return (
@@ -28,7 +28,7 @@ function AddTask({ planOptions }) {
           <MenuPopper
             trigger="click"
             placement="bottom"
-            items={DUE_MENU_POPPER}
+            items={REMIND_MENU_POPPER}
           >
             <div>
               <Button leftIcon={<FontAwesomeIcon icon={faBell} />} small />
