@@ -32,8 +32,19 @@
         }
 
         .add-task {
-          > * {
-            border-radius: 8px;
+          display: flex;
+          align-items: center;
+          background-color: var(--bg-primary);
+          gap: 8px;
+          border-radius: 8px;
+          overflow: hidden;
+          padding-right: 8px;
+          > :first-child {
+            flex: 1;
+          }
+
+          .plan-options {
+            display: flex;
           }
         }
       }

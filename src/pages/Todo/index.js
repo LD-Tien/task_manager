@@ -1,19 +1,25 @@
 import styles from "./Todo.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Details from "../../components/Layouts/components/Details";
 import Toolbar from "../../components/Toolbar";
 import TaskItem from "../../components/TaskItem";
 import { default as MenuPopper } from "../../components/Popper/Menu";
 import {
   CONTEXT_MENU_TASK,
+  DUE_MENU_POPPER,
+  REMIND_MENU_POPPER,
+  REPEAT_MENU_POPPER,
   SIDEBAR_DEFAULT_ITEM,
 } from "../../store/constraints";
 import Sidebar from "../../components/Layouts/components/Sidebar";
 import Header from "../../components/Layouts/components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList } from "@fortawesome/free-solid-svg-icons";
+import { faList, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import TextInput from "../../components/TextInput";
 import Accordion from "../../components/Accordion";
+import Button from "../../components/Button";
+import { faBell, faCalendar } from "@fortawesome/free-regular-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 function Todo() {
   const tasks = [
@@ -208,8 +214,23 @@ function Todo() {
 
   const [listActive, setListActive] = useState(SIDEBAR_DEFAULT_ITEM[0]);
   const [taskActive, setTaskActive] = useState(tasks[1]);
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState("");
+  // const [tasks, setTasks] = useState([]);
 
-  return (
+  useEffect(() => {
+    fetch("/checkLoginToken")
+      .then((res) => res.json())
+      .then((result) => {
+        if (result) {
+          setUserId(result);
+        } else {
+          navigate("/login");
+        }
+      });
+  }, [navigate]);
+
+  return userId ? (
     <div className={styles["wrapper"]}>
       <Header />
       <div className={styles["content"]}>
@@ -223,7 +244,45 @@ function Todo() {
           <div className={styles["header"]}>
             <Toolbar title={listActive.title} icon={listActive.icon} />
             <div className={styles["add-task"]}>
-              <TextInput planOptions />
+              <TextInput />
+              <div className={styles["plan-options"]}>
+                <MenuPopper
+                  trigger="click"
+                  placement="bottom"
+                  items={DUE_MENU_POPPER}
+                >
+                  <div>
+                    <Button
+                      leftIcon={<FontAwesomeIcon icon={faCalendar} />}
+                      small
+                    />
+                  </div>
+                </MenuPopper>
+                <MenuPopper
+                  trigger="click"
+                  placement="bottom"
+                  items={REMIND_MENU_POPPER}
+                >
+                  <div>
+                    <Button
+                      leftIcon={<FontAwesomeIcon icon={faBell} />}
+                      small
+                    />
+                  </div>
+                </MenuPopper>
+                <MenuPopper
+                  trigger="click"
+                  placement="bottom"
+                  items={REPEAT_MENU_POPPER}
+                >
+                  <div>
+                    <Button
+                      leftIcon={<FontAwesomeIcon icon={faRepeat} />}
+                      small
+                    />
+                  </div>
+                </MenuPopper>
+              </div>
             </div>
           </div>
           <div className={styles["tasks-list"]}>
@@ -308,6 +367,8 @@ function Todo() {
         </div>
       </div>
     </div>
+  ) : (
+    <></>
   );
 }
 
