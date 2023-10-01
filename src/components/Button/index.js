@@ -7,11 +7,15 @@ function Button({
   rightIcon,
   item,
   small,
+  medium,
+  centerText,
   href,
   isActive,
   isFile,
   subText,
   danger,
+  primary,
+  disabled,
   children,
   onClick,
   onClickCancel,
@@ -22,11 +26,21 @@ function Button({
   }
   return (
     <div
-      className={`${styles["wrapper"]} ${item ? styles["item"] : ""} ${
-        small ? styles["small"] : ""
-      } ${isActive ? styles["active"] : ""} ${isFile ? styles["file"] : ""} ${danger ? styles["danger"] : ""}`}
+      className={`${styles["wrapper"]} ${item ? styles["item"] : null} ${
+        small ? styles["small"] : medium ? styles["medium"] : null
+      } ${isActive ? styles["active"] : null} ${
+        isFile ? styles["file"] : null
+      } ${danger ? styles["danger"] : null} ${
+        centerText ? styles["center-text"] : null
+      } ${disabled ? styles["disabled"] : null} ${
+        primary ? styles["primary"] : null
+      }`}
     >
-      <Comp href={!!href ? href : null} target={!!href ? "_blank" : null}>
+      <Comp
+        onClick={onClick}
+        href={!!href ? href : null}
+        target={!!href ? "_blank" : null}
+      >
         {leftIcon && <span className={styles["leftIcon"]}>{leftIcon}</span>}
         {children && <span className={styles["text"]}>{children}</span>}
         {subText && <span className={styles["sub-text"]}>{subText}</span>}

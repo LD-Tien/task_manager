@@ -1,44 +1,53 @@
 .wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.6rem;
+  color: var(--font-color-brand);
+
+  .input {
+    padding: 0 16px;
     display: flex;
     align-items: center;
     height: 52px;
-    color: var(--font-color-brand);
-    font-size: 1.6rem;
     background-color: var(--bg-primary);
-    padding: 0 16px;
 
     > * {
-        margin: 0 2px;
+      margin: 0 2px;
     }
 
     svg {
-        width: 16px;
+      width: 16px;
     }
-    
-    
+
     input {
-        background-color: transparent;
-        flex: 1;
-        height: 100%;
-        border: none;
-        padding: 0 8px;
-        font-size: 1.5rem;
-        color: var(--font-color-primary);
-        outline: none;
+      background-color: transparent;
+      flex: 1;
+      height: 100%;
+      border: none;
+      padding: 0 8px;
+      font-size: 1.5rem;
+      color: var(--font-color-primary);
+      outline: none;
     }
-    
+
     input:focus::placeholder {
-        color: var(--font-color-primary);
-    }
-    
-    input::placeholder {
-        color: var(--font-color-brand);
-        font-size: 1.5rem;
+      color: var(--font-color-primary);
     }
 
-    .plan-options {
-        display: flex;
+    input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 500px var(--bg-primary) inset;
+      -webkit-text-fill-color: var(--font-color-primary);
     }
 
+    ::-ms-reveal {
+      filter: invert(100%);
+    }
+  }
+
+  .error-text {
+    // display: none;
+    color: var(--font-color-warning) !important;
+    font-size: 1.2rem;
+    text-align: right;
+  }
 }
-
