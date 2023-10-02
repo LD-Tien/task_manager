@@ -214,23 +214,8 @@ function Todo() {
 
   const [listActive, setListActive] = useState(SIDEBAR_DEFAULT_ITEM[0]);
   const [taskActive, setTaskActive] = useState(tasks[1]);
-  const navigate = useNavigate();
-  const [userId, setUserId] = useState("");
-  // const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {
-    fetch("/checkLoginToken")
-      .then((res) => res.json())
-      .then((result) => {
-        if (result) {
-          setUserId(result);
-        } else {
-          navigate("/login");
-        }
-      });
-  }, [navigate]);
-
-  return userId ? (
+  return (
     <div className={styles["wrapper"]}>
       <Header />
       <div className={styles["content"]}>
@@ -367,8 +352,6 @@ function Todo() {
         </div>
       </div>
     </div>
-  ) : (
-    <></>
   );
 }
 

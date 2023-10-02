@@ -32,6 +32,8 @@ function Signup() {
       .then((data) => {
         if (!data.errorMessage) {
           // signup successfully
+          document.cookie = "TMToken = " + data.token;
+          navigate("/home")
           setErrorTextSignup("");
         } else {
           // login failed
