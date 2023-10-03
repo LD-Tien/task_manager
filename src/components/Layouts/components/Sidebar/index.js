@@ -2,9 +2,7 @@ import SidebarItem from "./SidebarItem";
 import styles from "./Sidebar.module.scss";
 import TextInput from "../../../TextInput";
 import { default as MenuPopper } from "../../../Popper/Menu";
-import {
-  CONTEXT_MENU_USER_LIST,
-} from "../../../../store/constraints";
+import { CONTEXT_MENU_USER_LIST } from "../../../../store/constraints";
 
 function Sidebar({
   listActive,
@@ -12,9 +10,12 @@ function Sidebar({
   defaultList = [],
   userList = [],
 }) {
+  
   function handleClick(listActive) {
     setListActive(listActive);
   }
+
+  document.title = listActive.title;
 
   return (
     <div className={styles["wrapper"]}>
@@ -51,7 +52,7 @@ function Sidebar({
             </MenuPopper>
           );
         })}
-        <TextInput placeholder="New list"/>
+        <TextInput placeholder="New list" />
       </div>
     </div>
   );
