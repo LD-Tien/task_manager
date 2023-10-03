@@ -10,12 +10,12 @@ function Sidebar({
   defaultList = [],
   userList = [],
 }) {
-  
+
   function handleClick(listActive) {
     setListActive(listActive);
   }
 
-  document.title = listActive.title;
+  document.title = listActive.title + " - Task Manager";
 
   return (
     <div className={styles["wrapper"]}>
