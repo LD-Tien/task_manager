@@ -1,5 +1,7 @@
 import { useState } from "react";
 import styles from "./SidebarItem.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons";
 
 function SidebarItem({ isActive, onClick, editable = false, ...dataItem }) {
   const [listName, setListName] = useState(dataItem.title);
@@ -25,7 +27,7 @@ function SidebarItem({ isActive, onClick, editable = false, ...dataItem }) {
       }}
       className={`${styles["wrapper"]} ${isActive && styles["active"]}`}
     >
-      <span className={styles["icon"]}>{dataItem.icon}</span>
+      <span className={styles["icon"]}>{dataItem.icon ? dataItem.icon : <FontAwesomeIcon icon={faList}/>}</span>
       {!editable ? (
         <span className={styles["title"]}>{dataItem.title}</span>
       ) : (

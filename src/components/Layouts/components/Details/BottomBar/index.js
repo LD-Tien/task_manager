@@ -3,12 +3,20 @@ import styles from "./BottomBar.module.scss";
 import { faCircleXmark, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import Button from "../../../../Button";
 
-function BottomBar(params) {
+function BottomBar({ onClickDelete = () => {}, onClickClose = () => {} }) {
   return (
     <div className={styles["wrapper"]}>
-      <Button leftIcon={<FontAwesomeIcon icon={faCircleXmark} />} small />
+      <Button
+        leftIcon={<FontAwesomeIcon icon={faCircleXmark} />}
+        small
+        onClick={onClickClose}
+      />
       <p className={styles["create-date"]}>Create on Sun, September 10</p>
-      <Button leftIcon={<FontAwesomeIcon icon={faTrashCan} />} small/>
+      <Button
+        leftIcon={<FontAwesomeIcon icon={faTrashCan} />}
+        small
+        onClick={onClickDelete}
+      />
     </div>
   );
 }

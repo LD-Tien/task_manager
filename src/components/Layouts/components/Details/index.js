@@ -17,7 +17,8 @@ import { REMIND_MENU_POPPER, DUE_MENU_POPPER, REPEAT_MENU_POPPER } from "../../.
 import TextInput from "../../../TextInput";
 
 
-function Details({ task }) {
+function Details({ task, setTaskActive }) {
+  if(task._id === -1) return;
   return (
     <div className={styles["wrapper"]}>
       <div>
@@ -73,7 +74,7 @@ function Details({ task }) {
       <GroupItem>
         <Note />
       </GroupItem>
-      <BottomBar />
+      <BottomBar onClickClose={() => {setTaskActive({ _id: -1 })}}/>
     </div>
   );
 }
