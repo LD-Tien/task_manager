@@ -1,34 +1,36 @@
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 290px;
-    height: calc(100vh - 48px);
-    background-color: var(--bg-primary-accent);
-    padding: 16px 0px;
-    overflow-y: auto;
-    
-    > * {
-        margin-bottom: 8px;
-        padding-bottom: 8px;
-    }
+  display: flex;
+  flex-direction: column;
+  width: 290px;
+  height: calc(100vh - 48px);
+  background-color: var(--bg-primary-accent);
+  padding: 16px 0px;
+  overflow-y: auto;
+
+  > * {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+  }
 }
 
 .default-list {
-    border-bottom: 0.1rem solid var(--bg-active);
+  border-bottom: 0.1rem solid var(--bg-active);
 }
 
 .user-list {
+  form {
     > :last-child {
-        margin: 0;
-        border-radius: 0;
+      margin: 0;
+      border-radius: 0;
 
-        > * {
-            padding: 0 24px;
-            gap: 12px;
-        }
+      > * {
+        padding: 0 24px;
+        gap: 12px;
+      }
     }
 
     > :last-child:hover {
-        background-color: var(--bg-hover);
+      background-color: var(--bg-hover);
     }
+  }
 }

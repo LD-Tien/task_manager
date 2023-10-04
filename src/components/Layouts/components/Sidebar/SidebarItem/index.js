@@ -3,33 +3,51 @@ import styles from "./SidebarItem.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList } from "@fortawesome/free-solid-svg-icons";
 
-function SidebarItem({ isActive, onClick, editable = false, ...dataItem }) {
-  const [listName, setListName] = useState(dataItem.title);
+function SidebarItem({
+  isActive,
+  onClick,
+  editable = false,
+  handleUpdate = () => {},
+  onBlur = () => {},
+  data,
+}) {
+  const [listName, setListName] = useState(data.title);
 
   function handelChange(input) {
     setListName(input);
+    data.title = input;
+  }
+
+  function handleUpdateList(data) {
+    fetch(`/updateList/${data._id}`, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ title: data.title }),
+    });
   }
 
   function handleKeyDown(e) {
-    if(e.key === "Enter") {
-      console.log("enter")
+    if (e.key === "Enter") {
+      console.log("enter");
     }
   }
 
   return (
     <div
       onClick={() => {
-        onClick(dataItem);
+        onClick(data);
       }}
       onContextMenu={(e) => {
-        onClick(dataItem);
+        onClick(data);
         e.preventDefault();
       }}
       className={`${styles["wrapper"]} ${isActive && styles["active"]}`}
     >
-      <span className={styles["icon"]}>{dataItem.icon ? dataItem.icon : <FontAwesomeIcon icon={faList}/>}</span>
+      <span className={styles["icon"]}>
+        {data.icon ? data.icon : <FontAwesomeIcon icon={faList} />}
+      </span>
       {!editable ? (
-        <span className={styles["title"]}>{dataItem.title}</span>
+        <span className={styles["title"]}>{data.title}</span>
       ) : (
         <input
           type="text"
@@ -37,10 +55,15 @@ function SidebarItem({ isActive, onClick, editable = false, ...dataItem }) {
           value={listName}
           onChange={(e) => handelChange(e.target.value)}
           onKeyDown={handleKeyDown}
+          onBlur={() => {
+            onBlur();
+            handleUpdateList(data);
+          }}
+          autoFocus
         ></input>
       )}
-      {dataItem.totalTasks && (
-        <span className={styles["totalTasks"]}>{dataItem.totalTasks}</span>
+      {data.total !== 0 && (
+        <span className={styles["totalTasks"]}>{data.total}</span>
       )}
     </div>
   );
