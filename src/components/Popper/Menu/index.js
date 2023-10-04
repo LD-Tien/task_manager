@@ -1,10 +1,16 @@
 import Tippy from "@tippyjs/react/headless";
-import {followCursor} from 'tippy.js/headless';
+import { followCursor } from "tippy.js/headless";
 import styles from "./Menu.module.scss";
 import Popper from "..";
 import Button from "../../Button";
 
-function Menu({ trigger, followMouse, placement="bottom", items = [], children }) {
+function Menu({
+  trigger,
+  followMouse,
+  placement = "bottom",
+  items = [],
+  children,
+}) {
   return (
     <div>
       <Tippy
@@ -29,7 +35,15 @@ function Menu({ trigger, followMouse, placement="bottom", items = [], children }
                     <>
                       {item.options.map((item, index) => {
                         return (
-                          <Button key={index} subText={item.subTitle} small item danger={!!item.danger} leftIcon={item.icon}>
+                          <Button
+                            key={index}
+                            subText={item.subTitle}
+                            small
+                            item
+                            danger={!!item.danger}
+                            leftIcon={item.icon}
+                            onClick={!!item.onClick ? item.onClick : () => {}}
+                          >
                             {item.title}
                           </Button>
                         );
@@ -38,7 +52,12 @@ function Menu({ trigger, followMouse, placement="bottom", items = [], children }
                   );
                 } else if (!!item.customOptions) {
                   jsx = (
-                    <Button small item danger={!!item.danger} leftIcon={item.customOptions.icon}>
+                    <Button
+                      small
+                      item
+                      danger={!!item.danger}
+                      leftIcon={item.customOptions.icon}
+                    >
                       {item.customOptions.title}
                     </Button>
                   );
