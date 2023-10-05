@@ -7,6 +7,7 @@ import Button from "../../Button";
 function Menu({
   trigger,
   followMouse,
+  hiddenClickInside = true,
   placement = "bottom",
   items = [],
   children,
@@ -19,6 +20,19 @@ function Menu({
         followCursor={!!followMouse ? followMouse : false}
         plugins={[followCursor]}
         placement={placement}
+        onShow={(instance) => {
+          hiddenClickInside && setTimeout(() => {
+            // "onShown" function not working
+            // convert to asynchronous wait for tippy render
+            document.querySelector("[data-tippy-root]").addEventListener(
+              "click",
+              (event) => {
+                instance.hide(); //close tippy when click inside menu
+              },
+              { once: true }
+            );
+          }, 0);
+        }}
         render={(attrs) => (
           <div className={styles["menu-list"]} tabIndex="-1" {...attrs}>
             <Popper>
