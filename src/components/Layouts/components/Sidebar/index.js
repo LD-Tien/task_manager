@@ -127,7 +127,7 @@ function Sidebar({
 
       <div className={styles["user-list"]}>
         {renderUserLists(userLists)}
-        <form method="POST" onSubmit={handleAddNewList}>
+        <form method="POST" autoComplete="off" onSubmit={handleAddNewList}>
           <TextInput
             name={"title"}
             placeholder="New list"
