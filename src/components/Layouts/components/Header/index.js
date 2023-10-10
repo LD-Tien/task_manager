@@ -20,7 +20,7 @@ function Header() {
   const [isShowModalAccount, setIsShowModalAccount] = useState(false);
   let userData = useRef("");
   useLayoutEffect(() => {
-    fetch("/getUser", { method: "GET", "content-type": "application/json" })
+    fetch("/getUser")
       .then((res) => res.json())
       .then((data) => {
         userData.current = data;
@@ -31,14 +31,14 @@ function Header() {
       <Link href="/home" className={styles["brand"]}>
         Task Manager
       </Link>
-      <div className={styles["search"]}>
+      {/* <div className={styles["search"]}>
         <FontAwesomeIcon icon={faSearch} className={styles["search-icon"]} />
         <input
           type="search"
           className={styles["search-input"]}
           placeholder="Search"
         />
-      </div>
+      </div> */}
       <div className={styles["button-list"]}>
         <Menu
           trigger="mouseenter"
@@ -48,14 +48,15 @@ function Header() {
               options: [
                 {
                   title: "Account",
-                  icon: <FontAwesomeIcon icon={faUser} />,
+                  leftIcon: <FontAwesomeIcon icon={faUser} />,
                   onClick: function (e) {
                     setIsShowModalAccount(true);
                   },
                 },
                 {
                   title: "Dark / Light",
-                  icon: <FontAwesomeIcon icon={faCircleHalfStroke} />,
+                  leftIcon: <FontAwesomeIcon icon={faCircleHalfStroke} />,
+                  disable: true,
                   onClick: function (e) {},
                 },
               ],
@@ -63,7 +64,7 @@ function Header() {
             {
               options: [
                 {
-                  icon: <FontAwesomeIcon icon={faRightFromBracket} />,
+                  leftIcon: <FontAwesomeIcon icon={faRightFromBracket} />,
                   title: "Log out",
                   danger: true,
                   onClick: function (e) {
@@ -93,7 +94,7 @@ function Header() {
         </Menu>
       </div>
       <Modal
-        title="Account"
+        title="Account (Not working)"
         isShow={isShowModalAccount}
         setIsShow={setIsShowModalAccount}
       >
@@ -109,6 +110,7 @@ function Header() {
               leftIcon={<FontAwesomeIcon icon={faFloppyDisk} />}
               small
               primary
+              disable
             ></Button>
           </div>
           <label>Change password</label>
@@ -122,7 +124,7 @@ function Header() {
             type="password"
             placeholder="New password"
           />
-          <Button item medium centerText primary>
+          <Button item medium disable centerText primary>
             Change password
           </Button>
         </form>
