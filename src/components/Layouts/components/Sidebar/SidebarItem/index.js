@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./SidebarItem.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList } from "@fortawesome/free-solid-svg-icons";
+import taskManager from "../../../../../models/TaskManger";
 
 function SidebarItem({
   isActive,
@@ -11,8 +12,8 @@ function SidebarItem({
   data,
 }) {
   const [listName, setListName] = useState(data.title);
-
   function handelChange(input) {
+    if (input.length > 30) return;
     setListName(input);
   }
 
@@ -24,26 +25,19 @@ function SidebarItem({
       setListName(data.title);
       return;
     }
-
-    fetch(`/updateList/${data._id}`, {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ title: listNameUpdate }),
-    }).then((res) => {
-      if (res.status === 200) {
-        setListName(listNameUpdate);
-        data.title = listNameUpdate;
+    data.updateList(listNameUpdate).then((result) => {
+      if (result.code === 200) {
+        taskManager.setUserLists(taskManager.getAllList()); // refresh
       }
     });
   }
 
   function handleKeyDown(e) {
     if (e.key === "Enter") {
-      handleUpdateList(data);
+      handleUpdateList();
       onBlur();
     }
   }
-
   return (
     <div
       onClick={() => {
@@ -56,7 +50,7 @@ function SidebarItem({
       className={`${styles["wrapper"]} ${isActive && styles["active"]}`}
     >
       <span className={styles["icon"]}>
-        {data.icon ? data.icon : <FontAwesomeIcon icon={faList} />}
+        {data.leftIcon ? data.leftIcon : <FontAwesomeIcon icon={faList} />}
       </span>
       {!editable ? (
         <span className={styles["title"]}>{listName}</span>

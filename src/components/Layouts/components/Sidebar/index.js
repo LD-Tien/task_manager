@@ -1,102 +1,57 @@
+import { useState } from "react";
+
 import SidebarItem from "./SidebarItem";
 import styles from "./Sidebar.module.scss";
 import TextInput from "../../../TextInput";
 import { default as MenuPopper } from "../../../Popper/Menu";
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faICursor } from "@fortawesome/free-solid-svg-icons";
-import { faClone, faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import taskManager from "../../../../models/TaskManger";
+import TasksList from "../../../../models/TasksList";
+import { CONTEXT_MENU_LIST } from "../../../../store/constraints";
 
-function Sidebar({
-  listActive,
-  setListActive,
-  defaultList = [],
-  userLists = [],
-  setUserLists,
-}) {
+function Sidebar({ listActive, defaultList = [], userLists = [] }) {
   const [newList, setNewList] = useState("");
   const [editableListId, setEditableListId] = useState("");
+  taskManager.setEditableListId = setEditableListId;
 
   function handleClick(listActive) {
-    setListActive(listActive);
+    taskManager.setListActive(listActive);
+    taskManager.setTaskActive({ _id: -1 });
   }
 
   function handleChange(input) {
+    if (input.length > 30) return;
     setNewList(input);
   }
 
-  function handleAddNewList(e) {
+  async function handleAddNewList(e) {
     e.preventDefault();
-    fetch("/addNewList", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({ title: newList }),
-    })
-      .then((res) => res.json())
-      .then((list) => {
-        setUserLists([...userLists, list]);
-        setNewList("");
-        setListActive(list);
-      });
+    if (newList.trim() === "") return;
+    setNewList("");
+    const taskList = new TasksList();
+    taskList.addList(newList).then((result) => {
+      if (result.code === 200) {
+        taskManager.setListActive(taskList);
+        taskManager.setUserLists(taskManager.getAllList());
+      }
+    });
   }
 
-  function renderUserLists(usrLists) {
-    return userLists.map((item) => {
+  function renderUserLists() {
+    return userLists.map((list) => {
       return (
         <MenuPopper
-          key={item._id}
+          key={list._id}
+          list={list}
           trigger="contextmenu"
           placement="bottom"
-          items={[
-            {
-              options: [
-                {
-                  icon: <FontAwesomeIcon icon={faICursor} />,
-                  title: "Rename list",
-                  onClick: function () {
-                    setEditableListId(item._id);
-                  },
-                },
-                {
-                  icon: <FontAwesomeIcon icon={faClone} />,
-                  title: "Duplicate list",
-                },
-              ],
-            },
-
-            {
-              options: [
-                {
-                  icon: <FontAwesomeIcon icon={faTrashCan} />,
-                  title: "Delete list",
-                  danger: true,
-                  onClick: async function () {
-                    await fetch(`/deleteList/${item._id}`, {
-                      method: "DELETE",
-                    }).then((res) => {
-                      if (res.status === 200) {
-                        setUserLists([
-                          ...userLists.filter(
-                            (value) => value._id !== item._id
-                          ),
-                        ]);
-                        setListActive(defaultList[0]);
-                      }
-                    });
-                  },
-                },
-              ],
-            },
-          ]}
+          items={CONTEXT_MENU_LIST}
         >
           <div>
             <SidebarItem
-              key={item._id}
-              data={item}
-              isActive={item._id === listActive._id}
-              editable={editableListId === item._id}
+              key={list._id}
+              data={list}
+              isActive={list._id === listActive._id}
+              editable={editableListId === list._id}
               onBlur={() => {
                 setEditableListId(false);
               }}
