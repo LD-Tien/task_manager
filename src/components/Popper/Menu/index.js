@@ -1,8 +1,9 @@
-import Tippy from "@tippyjs/react/headless";
+import Tippy, { tippy } from "@tippyjs/react/headless";
 import { followCursor } from "tippy.js/headless";
 import styles from "./Menu.module.scss";
 import Popper from "..";
 import Button from "../../Button";
+import TextInput from "../../TextInput";
 
 function Menu({
   trigger,
@@ -11,6 +12,7 @@ function Menu({
   placement = "bottom",
   items = [],
   children,
+  ...props
 }) {
   return (
     <div>
@@ -21,17 +23,52 @@ function Menu({
         plugins={[followCursor]}
         placement={placement}
         onShow={(instance) => {
-          hiddenClickInside && setTimeout(() => {
-            // "onShown" function not working
-            // convert to asynchronous wait for tippy render
-            document.querySelector("[data-tippy-root]").addEventListener(
-              "click",
-              (event) => {
-                instance.hide(); //close tippy when click inside menu
-              },
-              { once: true }
-            );
-          }, 0);
+          hiddenClickInside &&
+            setTimeout(() => {
+              // "onShown" function not working
+              // convert to asynchronous wait for tippy rendered
+              const tippyRoot = document.querySelector("[data-tippy-root]");
+              if (tippyRoot) {
+                tippyRoot
+                  .querySelectorAll(".options button")
+                  .forEach((button) => {
+                    button.addEventListener(
+                      "click",
+                      () => {
+                        instance.hide(); //close tippy when click inside menu
+                      },
+                      { once: true }
+                    );
+                  });
+
+                const button = tippyRoot.querySelector(".customOptions button");
+                const input = tippyRoot.querySelector(".customOptions input");
+
+                if (button && input) {
+                  button.addEventListener("click", () => {
+                    input.showPicker();
+                  });
+                  input.addEventListener(
+                    "change",
+                    (e) => {
+                      if (props.handleUpdate && props.task) {
+                        if(props.updateRemind) {
+                          props.task.isSendNotification = false;
+                          props.task.remind = e.target.value;
+                        }
+                        if(props.updatePlanned) {
+                          props.task.planned = e.target.value;
+                        }
+                        props.handleUpdate();
+                      }
+                      instance.hide();
+                      tippyRoot.remove();
+                    },
+                    { once: true }
+                  );
+                }
+              }
+            });
         }}
         render={(attrs) => (
           <div className={styles["menu-list"]} tabIndex="-1" {...attrs}>
@@ -46,34 +83,48 @@ function Menu({
                   );
                 } else if (!!item.options) {
                   jsx = (
-                    <>
+                    <div className="options">
                       {item.options.map((item, index) => {
                         return (
                           <Button
                             key={index}
-                            subText={item.subTitle}
                             small
                             item
-                            danger={!!item.danger}
-                            leftIcon={item.icon}
-                            onClick={!!item.onClick ? item.onClick : () => {}}
+                            {...item}
+                            onClick={
+                              !!item.onClick
+                                ? () => {
+                                    item.onClick({ ...props });
+                                  }
+                                : () => {}
+                            }
                           >
                             {item.title}
                           </Button>
                         );
                       })}
-                    </>
+                    </div>
                   );
                 } else if (!!item.customOptions) {
                   jsx = (
-                    <Button
-                      small
-                      item
-                      danger={!!item.danger}
-                      leftIcon={item.customOptions.icon}
+                    <div
+                      className="customOptions"
+                      style={{ margin: "0px", padding: "0px", height: "40px" }}
                     >
-                      {item.customOptions.title}
-                    </Button>
+                      <Button
+                        small
+                        item
+                        {...item.customOptions}
+                        onClick={
+                          !!item.customOptions.onClick
+                            ? () => item.customOptions.onClick({ ...props })
+                            : () => {}
+                        }
+                      >
+                        {item.customOptions.title}
+                      </Button>
+                      {item.customOptions.inputDateHidden}
+                    </div>
                   );
                 }
                 return (

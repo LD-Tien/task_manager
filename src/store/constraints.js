@@ -1,43 +1,117 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendar,
+  faCalendarPlus,
   faCheckCircle,
   faClock,
+  faClone,
   faCopy,
   faStar,
   faSun,
   faTrashCan,
 } from "@fortawesome/free-regular-svg-icons";
-import { faListCheck } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDownAZ, faICursor, faListCheck } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import taskManager from "../models/TaskManger";
+
+
+export const SORT_ITEM = [
+  { headerTitle: "Sort by" },
+  {
+    options: [
+      {
+        leftIcon: <FontAwesomeIcon icon={faCalendar} />,
+        title: "Due date",
+        disable: true,
+      },
+      {
+        leftIcon: <FontAwesomeIcon icon={faArrowDownAZ} />,
+        title: "Alphabetically",
+        disable: true
+      },
+      {
+        leftIcon: <FontAwesomeIcon icon={faCalendarPlus} />,
+        title: "Creation date",
+        disable: true
+      },
+    ],
+  },
+];
 
 export const REMIND_MENU_POPPER = [
   { headerTitle: "Reminder" },
   {
     options: [
       {
-        icon: <FontAwesomeIcon icon={faClock} />,
-        title: "Later today",
-        subTitle: "",
-        color: "",
+        leftIcon: <FontAwesomeIcon icon={faClock} />,
+        title: "3 hours later",
+        disable: false,
+        onClick: function ({ task, handleUpdate, setRemind }) {
+          if (setRemind) {
+            // set remind for new task
+            setRemind(moment().add(3, "hours").calendar());
+            return;
+          }
+          // update
+          task.isSendNotification = false;
+          task.remind = moment().add(3, "hours").format();
+          handleUpdate();
+        },
       },
       {
-        icon: <FontAwesomeIcon icon={faClock} />,
+        leftIcon: <FontAwesomeIcon icon={faClock} />,
         title: "Tomorrow",
-        subTitle: "Sun, 9 AM",
-        color: "",
+        subTitle: `${moment().add(1, "day").format("ddd[,]")} 9 AM`,
+        onClick: function ({ task, handleUpdate, setRemind }) {
+          if (setRemind) {
+            // set remind for new task
+            setRemind(moment().add(3, "hours").calendar());
+            return;
+          }
+          task.isSendNotification = false;
+          task.remind = moment()
+            .add(1, "day")
+            .set({ hour: 9, minute: 0, second: 0 })
+            .format();
+          handleUpdate();
+        },
       },
       {
-        icon: <FontAwesomeIcon icon={faClock} />,
-        title: "Later today",
-        subTitle: "Sun, 9 AM",
-        color: "",
+        leftIcon: <FontAwesomeIcon icon={faClock} />,
+        title: "Next week",
+        subTitle: "Mon, 9 AM",
+        onClick: function ({ task, handleUpdate, setRemind }) {
+          if (setRemind) {
+            // set remind for new task
+            setRemind(moment().add(3, "hours").calendar());
+            return;
+          }
+
+          task.isSendNotification = false;
+          task.remind = moment()
+            .set({ hour: 9, minute: 0, second: 0 })
+            .add(8 - moment().isoWeekday(), "days")
+            .format();
+          handleUpdate();
+        },
       },
     ],
   },
   {
     customOptions: {
-      icon: <FontAwesomeIcon icon={faClock} />,
+      leftIcon: <FontAwesomeIcon icon={faClock} />,
       title: "Pick a date & time",
+      inputDateHidden: (
+        <input
+          id="input-picker"
+          type="datetime-local"
+          style={{
+            width: "0px",
+            height: "0px",
+            border: "none",
+          }}
+        />
+      ),
     },
   },
 ];
@@ -47,139 +121,208 @@ export const DUE_MENU_POPPER = [
   {
     options: [
       {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
+        leftIcon: <FontAwesomeIcon icon={faCalendar} />,
         title: "Today",
-        subTitle: "Sun",
-        color: "",
+        subTitle: moment().format("ddd"),
+        onClick: function ({ task, handleUpdate }) {
+          task.planned = moment().format();
+          handleUpdate();
+        },
       },
       {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
+        leftIcon: <FontAwesomeIcon icon={faCalendar} />,
         title: "Tomorrow",
-        subTitle: "Mon",
-        color: "",
+        subTitle: moment().add(1, "days").format("ddd"),
+        onClick: function ({ task, handleUpdate }) {
+          task.planned = moment().add(1, "day").format();
+          handleUpdate();
+        },
       },
       {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
+        leftIcon: <FontAwesomeIcon icon={faCalendar} />,
         title: "Next week",
         subTitle: "Mon",
-        color: "",
+        onClick: function ({ task, handleUpdate }) {
+          task.planned = moment()
+            .add(8 - moment().isoWeekday(), "days")
+            .format();
+          handleUpdate();
+        },
       },
     ],
   },
   {
     customOptions: {
-      icon: <FontAwesomeIcon icon={faCalendar} />,
+      leftIcon: <FontAwesomeIcon icon={faCalendar} />,
       title: "Pick a date",
       color: "",
+      inputDateHidden: (
+        <input
+          id="input-picker"
+          type="date"
+          style={{
+            width: "0px",
+            height: "0px",
+            border: "none",
+          }}
+        />
+      ),
     },
   },
 ];
 
-export const REPEAT_MENU_POPPER = [
-  { headerTitle: "Repeat" },
-  {
-    options: [
-      {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
-        title: "Daily",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
-        title: "Weekdays",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
-        title: "Weekly",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
-        title: "Monthly",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
-        title: "Yearly",
-      },
-    ],
-  },
-  {
-    customOptions: {
-      icon: <FontAwesomeIcon icon={faCalendar} />,
-      title: "Custom",
-    },
-  },
-];
+// export const REPEAT_MENU_POPPER = [
+//   { headerTitle: "Repeat" },
+//   {
+//     options: [
+//       {
+//         leftIcon: <FontAwesomeIcon icon={faCalendar} />,
+//         title: "Daily",
+//       },
+//       {
+//         leftIcon: <FontAwesomeIcon icon={faCalendar} />,
+//         title: "Weekdays",
+//       },
+//       {
+//         leftIcon: <FontAwesomeIcon icon={faCalendar} />,
+//         title: "Weekly",
+//       },
+//       {
+//         leftIcon: <FontAwesomeIcon icon={faCalendar} />,
+//         title: "Monthly",
+//       },
+//       {
+//         leftIcon: <FontAwesomeIcon icon={faCalendar} />,
+//         title: "Yearly",
+//       },
+//     ],
+//   },
+//   {
+//     options: [
+//       {
+//         leftIcon: <FontAwesomeIcon icon={faCalendar} />,
+//         title: "Custom",
+//       },
+//     ],
+//   },
+// ];
 
 export const CONTEXT_MENU_TASK = [
+  // {
+  //   options: [
+  //     {
+  //       leftIcon: <FontAwesomeIcon icon={faSun} />,
+  //       title: "Add to My Day",
+  //     },
+  //     {
+  //       leftIcon: <FontAwesomeIcon icon={faStar} />,
+  //       title: "Mark as important",
+  //     },
+  //     {
+  //       leftIcon: <FontAwesomeIcon icon={faCheckCircle} />,
+  //       title: "Mark as completed",
+  //     },
+  //   ],
+  // },
+  // {
+  //   options: [
+  //     {
+  //       leftIcon: <FontAwesomeIcon icon={faCalendar} />,
+  //       title: "Due today",
+  //     },
+  //     {
+  //       leftIcon: <FontAwesomeIcon icon={faCalendar} />,
+  //       title: "Due tomorrow",
+  //     },
+  //   ],
+  // },
+  // {
+  //   options: [
+  //     {
+  //       leftIcon: <FontAwesomeIcon icon={faListCheck} />,
+  //       title: "Create new list from this task",
+  //     },
+  //     {
+  //       leftIcon: <FontAwesomeIcon icon={faListCheck} />,
+  //       title: "Move task to...",
+  //     },
+  //     {
+  //       leftIcon: <FontAwesomeIcon icon={faCopy} />,
+  //       title: "Copy task to...",
+  //     },
+  //   ],
+  // },
   {
     options: [
       {
-        icon: <FontAwesomeIcon icon={faSun} />,
-        title: "Add to My Day",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faStar} />,
-        title: "Mark as important",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faCheckCircle} />,
-        title: "Mark as completed",
-      },
-    ],
-  },
-  {
-    options: [
-      {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
-        title: "Due today",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
-        title: "Due tomorrow",
-      },
-    ],
-  },
-  {
-    options: [
-      {
-        icon: <FontAwesomeIcon icon={faListCheck} />,
-        title: "Create new list from this task",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faListCheck} />,
-        title: "Move task to...",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faCopy} />,
-        title: "Copy task to...",
-      },
-    ],
-  },
-  {
-    options: [
-      {
-        icon: <FontAwesomeIcon icon={faTrashCan} />,
+        leftIcon: <FontAwesomeIcon icon={faTrashCan} />,
         title: "Delete task",
         danger: true,
+        onClick: function ({ task }) {
+          task.deleteTask().then((result) => {
+            if (result.code === 200) {
+              taskManager.setTasks(taskManager.getAllTask());
+              taskManager.setTaskActive({ _id: -1 });
+            }
+          });
+        },
       },
     ],
   },
 ];
 
 export const SIDEBAR_DEFAULT_ITEM = [
-  { _id: "MyDay", icon: <FontAwesomeIcon icon={faSun} />, title: "My Day" },
+  { _id: "MyDay", leftIcon: <FontAwesomeIcon icon={faSun} />, title: "My Day" },
   {
     _id: "Important",
-    icon: <FontAwesomeIcon icon={faStar} />,
+    leftIcon: <FontAwesomeIcon icon={faStar} />,
     title: "Important",
   },
   {
     _id: "Planned",
-    icon: <FontAwesomeIcon icon={faCalendar} />,
+    leftIcon: <FontAwesomeIcon icon={faCalendar} />,
     title: "Planned",
   },
   {
     _id: "Tasks",
-    icon: <FontAwesomeIcon icon={faListCheck} />,
+    leftIcon: <FontAwesomeIcon icon={faListCheck} />,
     title: "Tasks",
+  },
+];
+
+export const CONTEXT_MENU_LIST = [
+  {
+    options: [
+      {
+        leftIcon: <FontAwesomeIcon icon={faICursor} />,
+        title: "Rename list",
+        onClick: function ({ list }) {
+          taskManager.setEditableListId(list._id);
+        },
+      },
+      {
+        leftIcon: <FontAwesomeIcon icon={faClone} />,
+        title: "Duplicate list",
+        disable: true,
+      },
+    ],
+  },
+
+  {
+    options: [
+      {
+        leftIcon: <FontAwesomeIcon icon={faTrashCan} />,
+        title: "Delete list",
+        danger: true,
+        onClick: async function ({ list }) {
+          list.deleteList().then((result) => {
+            if (result.code === 200) {
+              taskManager.setUserLists(taskManager.getAllList());
+              taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
+            }
+          });
+        },
+      },
+    ],
   },
 ];

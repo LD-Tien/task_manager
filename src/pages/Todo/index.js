@@ -1,5 +1,12 @@
 import styles from "./Todo.module.scss";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Details from "../../components/Layouts/components/Details";
 import Toolbar from "../../components/Toolbar";
 import TaskItem from "../../components/TaskItem";
@@ -19,26 +26,29 @@ import TextInput from "../../components/TextInput";
 import Accordion from "../../components/Accordion";
 import Button from "../../components/Button";
 import { faBell, faCalendar } from "@fortawesome/free-regular-svg-icons";
+import moment from "moment";
+import taskManager from "../../models/TaskManger";
+import Task from "../../models/Task";
 
 function Todo() {
   const [listActive, setListActive] = useState(SIDEBAR_DEFAULT_ITEM[0]);
   const [tasks, setTasks] = useState([]);
   const [taskActive, setTaskActive] = useState({ _id: -1 });
+  const [titleNewTask, setTitleNewTask] = useState("");
+  const [planned, setPlanned] = useState(""); // for new task
+  const [remind, setRemind] = useState(""); // for new task
   let [userLists, setUserLists] = useState([]);
   let defaultLists = useRef(SIDEBAR_DEFAULT_ITEM);
 
-  async function getDataFromAPI() {
-    await fetch("/tasks")
-      .then((res) => res.json())
-      .then((data) => {
-        setTasks(data);
-      });
+  taskManager.setListActive = setListActive;
+  taskManager.setTasks = setTasks;
+  taskManager.setTaskActive = setTaskActive;
+  taskManager.setUserLists = setUserLists;
 
-    await fetch("/lists")
-      .then((res) => res.json())
-      .then((data) => {
-        setUserLists(data);
-      });
+  async function getData() {
+    await taskManager.getDataFromAPI();
+    setUserLists(taskManager.getAllList());
+    setTasks(taskManager.getAllTask());
   }
 
   // add total prop to list
@@ -46,7 +56,7 @@ function Todo() {
     return defaultLists.current.map((item) => {
       item.total = 0;
       for (let i = 0; i < tasks.length; i++) {
-        if (!tasks[i].isCompleted) {
+        if (tasks[i] && !tasks[i].isCompleted) {
           if (item._id === "MyDay") {
             tasks[i].myDay && item.total++;
           } else if (item._id === "Important") {
@@ -76,8 +86,97 @@ function Todo() {
     });
   }, [userLists, tasks]);
 
+  const createDataTask = () => {
+    return new Task({
+      title: titleNewTask,
+      subTasks: [],
+      listId:
+        listActive._id === "MyDay" ||
+        listActive._id === "Important" ||
+        listActive._id === "Planned" ||
+        listActive._id === "Tasks"
+          ? null
+          : listActive._id,
+      isImportant: listActive._id === "Important",
+      myDay: listActive._id === "MyDay",
+      planned: listActive._id === "Planned" ? moment().format("L") : "",
+      remind: "",
+      isSendNotification: false,
+      repeat: "",
+      files: [],
+      note: {
+        content: "",
+        updatedAt: "",
+      },
+    });
+  };
+
+  const handleAddTask = (e) => {
+    setTitleNewTask("");
+    e.preventDefault();
+    if (titleNewTask === "") return;
+
+    const task = createDataTask();
+
+    task.addTask().then((result) => {
+      if (result.code === 200) {
+        setTasks(taskManager.getAllTask());
+      }
+    });
+  };
+
+  const handleUpdateTask = (task) => {
+    task.updateTask().then((result) => {
+      if (result.code === 200) {
+        setTasks(taskManager.getAllTask);
+      }
+    });
+  };
+
+  useEffect(() => {
+    let timer;
+    function notificationRemind() {
+      tasks.forEach((task) => {
+        if (
+          !task.isSendNotification &&
+          moment(moment(task.remind).format()).isSameOrBefore(moment().format())
+        ) {
+          new Notification("Remind", {
+            body: task.title,
+          });
+          task.isSendNotification = true;
+          handleUpdateTask(task);
+        }
+      });
+    }
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        notificationRemind();
+        setTimeout(() => {
+          notificationRemind();
+          timer = setInterval(notificationRemind, 60000);
+        }, 62000 - (new Date().getSeconds() + 1) * 1000);
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function (permission) {
+          if (permission === "granted") {
+            notificationRemind();
+            setTimeout(() => {
+              notificationRemind();
+              timer = setInterval(notificationRemind, 60000);
+            }, 62000 - (new Date().getSeconds() + 1) * 1000);
+            timer = setInterval(notificationRemind, 60000);
+          }
+        });
+      }
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [tasks]);
+
   useLayoutEffect(() => {
-    getDataFromAPI();
+    getData();
   }, []);
 
   return (
@@ -87,6 +186,7 @@ function Todo() {
         <Sidebar
           listActive={listActive}
           setListActive={setListActive}
+          setTaskActive={setTaskActive}
           defaultList={defaultLists.current}
           userLists={userLists}
           setUserLists={setUserLists}
@@ -96,41 +196,33 @@ function Todo() {
             <Toolbar
               title={listActive.title}
               icon={
-                !!listActive.icon ? (
-                  listActive.icon
+                !!listActive.leftIcon ? (
+                  listActive.leftIcon
                 ) : (
                   <FontAwesomeIcon icon={faList} />
                 )
               }
             />
             <div className={styles["add-task"]}>
-              <TextInput />
-              <div className={styles["plan-options"]}>
-                <MenuPopper
-                  trigger="click"
-                  placement="bottom"
-                  items={DUE_MENU_POPPER}
-                >
-                  <div>
-                    <Button
-                      leftIcon={<FontAwesomeIcon icon={faCalendar} />}
-                      small
-                    />
-                  </div>
-                </MenuPopper>
-                <MenuPopper
-                  trigger="click"
-                  placement="bottom"
-                  items={REMIND_MENU_POPPER}
-                >
-                  <div>
-                    <Button
-                      leftIcon={<FontAwesomeIcon icon={faBell} />}
-                      small
-                    />
-                  </div>
-                </MenuPopper>
-                <MenuPopper
+              <form method="POST" autoComplete="off" onSubmit={handleAddTask}>
+                <TextInput
+                  name="title"
+                  value={titleNewTask}
+                  onChange={setTitleNewTask}
+                />
+              </form>
+              <Button
+                small
+                rounded
+                primary
+                disable={!titleNewTask.trim()}
+                onClick={(e) => {
+                  handleAddTask(e);
+                }}
+              >
+                Add
+              </Button>
+              {/* <MenuPopper
                   trigger="click"
                   placement="bottom"
                   items={REPEAT_MENU_POPPER}
@@ -141,8 +233,7 @@ function Todo() {
                       small
                     />
                   </div>
-                </MenuPopper>
-              </div>
+                </MenuPopper> */}
             </div>
           </div>
 
@@ -169,6 +260,7 @@ function Todo() {
                 return (
                   <MenuPopper
                     key={task._id}
+                    task={task}
                     followMouse="initial"
                     trigger="contextmenu"
                     placement="right-start"
@@ -176,10 +268,11 @@ function Todo() {
                   >
                     <div>
                       <TaskItem
-                        key={task._id}
+                        key={task}
                         data={task}
                         isActive={task._id === taskActive._id}
                         setTaskActive={setTaskActive}
+                        setTasks={setTasks}
                       />
                     </div>
                   </MenuPopper>
@@ -210,6 +303,7 @@ function Todo() {
                     return (
                       <MenuPopper
                         key={task._id}
+                        task={task}
                         followMouse="initial"
                         trigger="contextmenu"
                         placement="right-start"
@@ -221,6 +315,7 @@ function Todo() {
                             data={task}
                             isActive={task._id === taskActive._id}
                             setTaskActive={setTaskActive}
+                            setTasks={setTasks}
                           />
                         </div>
                       </MenuPopper>
@@ -232,7 +327,12 @@ function Todo() {
           </div>
         </div>
         <div className={styles["detail"]}>
-          <Details task={taskActive} setTaskActive={setTaskActive} />
+          <Details
+            key={taskActive._id}
+            task={taskActive}
+            setTasks={setTasks}
+            setTaskActive={setTaskActive}
+          />
         </div>
       </div>
     </div>

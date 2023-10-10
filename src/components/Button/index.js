@@ -12,41 +12,49 @@ function Button({
   href,
   isActive,
   isFile,
-  subText,
+  subTitle,
   danger,
   primary,
-  disabled,
+  disable,
   children,
   onClick,
   onClickCancel,
 }) {
   let Comp = "button";
-  if (!!href) {
+  let props = {};
+  if (href) {
     Comp = "a";
+    props.href = href;
+    props.target = "_blank";
+  }
+  if (typeof onClick === "function") {
+    props.onClick = (e) => {
+      onClick(e);
+    };
   }
   return (
     <div
-      className={`${styles["wrapper"]} ${item ? styles["item"] : null} ${
-        small ? styles["small"] : medium ? styles["medium"] : null
-      } ${isActive ? styles["active"] : null} ${
-        isFile ? styles["file"] : null
-      } ${danger ? styles["danger"] : null} ${
-        centerText ? styles["center-text"] : null
-      } ${disabled ? styles["disabled"] : null} ${
-        primary ? styles["primary"] : null
-      }`}
+      className={`${styles["wrapper"]} ${item ? styles["item"] : ""} ${
+        small ? styles["small"] : medium ? styles["medium"] : ""
+      } ${isActive ? styles["active"] : ""} ${isFile ? styles["file"] : ""} ${
+        danger ? styles["danger"] : ""
+      } ${centerText ? styles["center-text"] : ""} ${
+        disable ? styles["disable"] : ""
+      } ${primary ? styles["primary"] : ""}`}
     >
-      <Comp
-        onClick={onClick}
-        href={!!href ? href : null}
-        target={!!href ? "_blank" : null}
-      >
-        {leftIcon && <span className={styles["leftIcon"]}>{leftIcon}</span>}
+      <Comp {...props}>
+        {leftIcon && <span className={styles["left-icon"]}>{leftIcon}</span>}
         {children && <span className={styles["text"]}>{children}</span>}
-        {subText && <span className={styles["sub-text"]}>{subText}</span>}
-        {rightIcon && <span className={styles["rightIcon"]}>{rightIcon}</span>}
+        {subTitle && <span className={styles["sub-text"]}>{subTitle}</span>}
+        {rightIcon && <span className={styles["right-icon"]}>{rightIcon}</span>}
         {(isActive || isFile) && (
-          <span className={styles["cancel"]} onClick={onClickCancel}>
+          <span
+            className={styles["cancel"]}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClickCancel(e);
+            }}
+          >
             {<FontAwesomeIcon icon={faXmark} style={{ color: "#a19f9d" }} />}
           </span>
         )}

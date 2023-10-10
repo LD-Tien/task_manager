@@ -33,8 +33,27 @@
 
   > :last-child {
     position: sticky;
+    margin-top: auto;
     bottom: 0;
     padding-bottom: 12px;
     background-color: var(--bg-primary-accent);
+  }
+
+  .bottom-bar {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-top: 0.1rem solid var(--bg-active);
+    padding: 12px 0 0;
+
+    button {
+      color: var(--font-color-primary);
+    }
+
+    .create-date {
+      color: var(--font-color-secondary);
+      font-size: 1.4rem;
+    }
   }
 }

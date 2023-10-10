@@ -8,30 +8,53 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TaskStatus from "./TaskStatus";
 import { useState } from "react";
-
-
+import taskManager from "../../models/TaskManger";
 
 function TaskItem({
   data,
   isActive,
   editable,
-  setTaskActive
+  setTaskActive,
+  isSubTask,
+  parentTask,
 }) {
-  const [isCompleted, setIsCompleted] = useState(data.isCompleted);
   const [taskName, setTaskName] = useState(data.title);
-
-  function handleChecked() {
-    setIsCompleted(!isCompleted);
-  }
 
   function handleChange(e) {
     setTaskName(e.target.value);
+    data.title = e.target.value;
+  }
+
+  function handleUpdateTask(e) {
+    if (e) e.preventDefault();
+
+    if (isSubTask) {
+      parentTask.updateSubTask(data).then((result) => {
+        if (result.code === 200) {
+          taskManager.setTasks(taskManager.getAllTask());
+        }
+      });
+    } else {
+      data.updateTask().then((result) => {
+        if (result.code === 200) {
+          taskManager.setTasks(taskManager.getAllTask());
+        }
+      });
+    }
+  }
+
+  function handleDeleteSubTask() {
+    parentTask.deleteSubTask(data).then((result) => {
+      if (result.code === 200) {
+        taskManager.setTasks(taskManager.getAllTask());
+      }
+    });
   }
 
   return (
     <div
       className={`${styles["wrapper"]} ${
-        isCompleted ? styles["checked"] : ""
+        data.isCompleted ? styles["checked"] : ""
       } ${isActive ? styles["active"] : ""} ${
         data.isSubTask ? styles["sub-task"] : ""
       }`}
@@ -43,17 +66,24 @@ function TaskItem({
       onContextMenu={(e) => {
         if (!data.isSubTask && !editable) {
           e.preventDefault();
-          setTaskActive(data);
         }
       }}
     >
-      <Checkbox status={isCompleted} onClick={handleChecked} />
+      <Checkbox
+        status={data.isCompleted}
+        onClick={() => {
+          data.isCompleted = !data.isCompleted;
+          handleUpdateTask();
+        }}
+      />
       <div className={styles["task-content"]}>
         {editable ? (
           <input
             value={taskName}
             className={styles["task-title-input"]}
             onChange={handleChange}
+            onBlur={handleUpdateTask}
+            spellCheck="false"
           />
         ) : (
           <>
@@ -62,18 +92,26 @@ function TaskItem({
           </>
         )}
       </div>
-      {data.isSubTask ? (
+      {isSubTask ? (
         <Checkbox
           unCheckIcon={
-            <FontAwesomeIcon icon={faXmark} style={{ color: "#a19f9d" }} />
+            <FontAwesomeIcon
+              icon={faXmark}
+              style={{ color: "var(--font-color-secondary)" }}
+            />
           }
           checkedIcon={null}
+          onClick={handleDeleteSubTask}
         />
       ) : (
         <Checkbox
           status={data.isImportant}
           unCheckIcon={<FontAwesomeIcon icon={faStar} />}
           checkedIcon={<FontAwesomeIcon icon={faStarSolid} />}
+          onClick={() => {
+            data.isImportant = !data.isImportant;
+            handleUpdateTask();
+          }}
         />
       )}
     </div>

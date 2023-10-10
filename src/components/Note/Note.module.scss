@@ -6,6 +6,7 @@
   border: 3px solid transparent;
 
   .input {
+    height: max-content;
     flex: 1;
     background-color: transparent;
     color: var(--font-color-primary);

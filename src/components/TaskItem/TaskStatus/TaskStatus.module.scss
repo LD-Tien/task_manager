@@ -9,6 +9,7 @@
 .task-status::after {
   content: "\2022";
   margin-right: 4px;
+  color: var(--font-color-secondary);
 }
 
 .task-status:last-child::after {

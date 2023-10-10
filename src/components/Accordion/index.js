@@ -13,7 +13,7 @@ function Accordion({ title, children, total}) {
     setIsShow(!isShow);
   }
 
-  return children.length !== 0 ? (
+  return children.length > 0 ? (
     <div className={`${styles["wrapper"]} ${!!isShow ? styles["show"] : null}`}>
       <div onClick={handleClick} className={styles["header"]}>
         {!!isShow ? (

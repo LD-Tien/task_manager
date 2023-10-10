@@ -1,56 +1,20 @@
-import {
-  faArrowDownAZ,
-  faEllipsis,
-  faFilter,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./Toolbar.module.scss";
 import Button from "../Button";
-import {
-  faCalendar,
-  faCalendarPlus,
-  faStar,
-  faSun,
-} from "@fortawesome/free-regular-svg-icons";
+
 import { default as MenuPopper } from "../Popper/Menu";
+import { SORT_ITEM } from "../../store/constraints";
 
-const sort = [
-  { headerTitle: "Sort by" },
-  {
-    options: [
-      {
-        icon: <FontAwesomeIcon icon={faStar} />,
-        title: "Important",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faCalendar} />,
-        title: "Due date",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faSun} />,
-        title: "Added to My Day",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faArrowDownAZ} />,
-        title: "Alphabetically",
-      },
-      {
-        icon: <FontAwesomeIcon icon={faCalendarPlus} />,
-        title: "Creation date",
-      },
-    ],
-  },
-];
-
-function Toolbar({title, icon}) {
+function Toolbar({ title, icon }) {
   return (
     <div className={styles["wrapper"]}>
       <div className={styles["title"]}>
         {icon}
         <p>{title}</p>
-        <Button leftIcon={<FontAwesomeIcon icon={faEllipsis} />} small></Button>
+        {/* <Button leftIcon={<FontAwesomeIcon icon={faEllipsis} />} small></Button> */}
       </div>
-      <MenuPopper trigger="click" items={sort}>
+      <MenuPopper trigger="click" items={SORT_ITEM}>
         <div>
           <Button leftIcon={<FontAwesomeIcon icon={faFilter} />} small>
             Sort

@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import moment from "moment";
 import styles from "./TaskStatus.module.scss";
 import {
   faBell,
@@ -12,43 +13,73 @@ import {
   faRotate,
 } from "@fortawesome/free-solid-svg-icons";
 
-function TaskStatus(data) {
-  if (!data) {
+function TaskStatus(task) {
+  if (!task) {
     return;
   }
   return (
     <div className={styles["wrapper"]}>
-      {data.myDay && (
+      {task.myDay && (
         <span className={styles["task-status"]}>
           <FontAwesomeIcon icon={faSun} />
           <span className={styles["content"]}>My Day</span>
         </span>
       )}
-      {data.subTasks && (
+      {task.subTasks.length !== 0 && (
         <span className={styles["task-status"]}>
-          <span>{data.subTasks.reduce((accumulator, currentValue) => currentValue.isCompleted ? accumulator + 1 : accumulator,0)}</span>
+          <span>
+            {task.subTasks.reduce(
+              (accumulator, currentValue) =>
+                currentValue.isCompleted ? accumulator + 1 : accumulator,
+              0
+            )}
+          </span>
           <span>of</span>
-          <span>{data.subTasks.length}</span>
+          <span>{task.subTasks.length}</span>
         </span>
       )}
-      {data.planned && (
+      {task.planned &&
+        (moment(moment().format().split("T")[0]).isSameOrBefore(
+          moment(moment(task.planned).format().split("T")[0])
+        ) ? (
+          <span
+            className={styles["task-status"]}
+            style={{ color: "var(--font-color-brand)" }}
+          >
+            <FontAwesomeIcon icon={faCalendarDay} />
+            <span>{moment(task.planned).calendar().split(" ")[0]}</span>
+            {/* <span>{new Date(task.planned).toString().slice(0, 11)}</span> */}
+            {task.repeat && <FontAwesomeIcon icon={faRotate} />}
+          </span>
+        ) : (
+          <span
+            className={styles["task-status"]}
+            style={{ color: "var(--font-color-warning)" }}
+          >
+            <FontAwesomeIcon icon={faCalendarDay} />
+            <span>{moment(task.planned).calendar().split(" at")[0]}</span>
+            {task.repeat && <FontAwesomeIcon icon={faRotate} />}
+          </span>
+        ))}
+      {task.category && Object.keys(task.category).length !== 0 && (
         <span className={styles["task-status"]}>
-          <FontAwesomeIcon icon={faCalendarDay} />
-          <span>{data.planned}</span>
-          {data.repeat && <FontAwesomeIcon icon={faRotate} />}
+          <FontAwesomeIcon
+            icon={faCircle}
+            style={{ color: task.category.color }}
+          />
+          <span
+            className={styles["content"]}
+            style={{ color: task.category.color }}
+          >
+            {task.category.name}
+          </span>
         </span>
       )}
-      {data.category && Object.keys(data.category).length !== 0 && (
+      {(task.remind || task.note.content || task.files.length !== 0) && (
         <span className={styles["task-status"]}>
-          <FontAwesomeIcon icon={faCircle} style={{color: data.category.color}}/>
-          <span className={styles["content"]} style={{color: data.category.color}}>{data.category.name}</span>
-        </span>
-      )}
-      {(data.notification || data.note || data.files) && (
-        <span className={styles["task-status"]}>
-          {data.notification && <FontAwesomeIcon icon={faBell} />}
-          {data.note && <FontAwesomeIcon icon={faNoteSticky} />}
-          {data.files && <FontAwesomeIcon icon={faPaperclip} />}
+          {task.remind && <FontAwesomeIcon icon={faBell} />}
+          {task.note.content && <FontAwesomeIcon icon={faNoteSticky} />}
+          {task.files.length !== 0 && <FontAwesomeIcon icon={faPaperclip} />}
         </span>
       )}
     </div>
