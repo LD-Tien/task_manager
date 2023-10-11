@@ -1,80 +1,96 @@
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bg-primary-accent);
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary-accent);
+  flex: 1;
 
-    .content {
-      display: flex;
+  .content {
+    display: flex;
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 0px 24px 24px;
+    // min-width: 460px;
+    height: calc(100vh - 48px);
+    overflow-y: auto;
+    background-color: var(--bg-secondary);
+
+    > * {
+      margin-bottom: 16px;
     }
-  
-    .main-content {
-      flex: 1;
-      padding: 0px 24px 24px;
-      min-width: 460px;
-      height: calc(100vh - 48px);
-      overflow-y: auto;
+
+    .header {
+      position: sticky;
+      top: 0px;
       background-color: var(--bg-secondary);
+      display: flex;
+      flex-direction: column;
+      border-bottom: 0.1rem solid var(--bg-primary-accent);
+
+      > :first-child {
+        padding-top: 24px;
+      }
 
       > * {
         margin-bottom: 16px;
       }
-  
-      .header {
-        position: sticky;
-        top: 0px;
-        background-color: var(--bg-secondary);
+
+      .add-task {
         display: flex;
-        flex-direction: column;
-        border-bottom: 0.1rem solid var(--bg-primary-accent);
-
+        align-items: center;
+        background-color: var(--bg-primary);
+        gap: 8px;
+        border-radius: 8px;
+        overflow: hidden;
+        padding-right: 8px;
         > :first-child {
-          padding-top: 24px;
-        }
-        
-        > * {
-          margin-bottom: 16px;
+          flex: 1;
         }
 
-        .add-task {
-          display: flex;
-          align-items: center;
-          background-color: var(--bg-primary);
-          gap: 8px;
+        > :last-child {
           border-radius: 8px;
           overflow: hidden;
-          padding-right: 8px;
-          > :first-child {
-            flex: 1;
-          }
-
-          > :last-child {
-            border-radius: 8px;
-              overflow: hidden;
-          }
-        }
-      }
-
-      .tasks-list {
-        > * {
-          margin-bottom: 8px;
         }
       }
     }
+
+    .tasks-list {
+      > * {
+        margin-bottom: 8px;
+      }
+    }
   }
+}
+
+::-webkit-scrollbar {
+  width: 1px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--font-color-brand);
+  border-radius: 10px;
+}
+
+/* > PC medium resolution */
+@media (min-width: 1113px) {
+}
+
+/* Tablet - PC low resolution */
+@media (min-width: 740px) and (max-width: 1023px) {
+}
+
+/* PC low - medium resolution */
+@media (min-width: 1024px) and (max-width: 1239px) {
+}
+
+/* >= Tablet  */
+@media (min-width: 740px) {
   
-  ::-webkit-scrollbar {
-    width: 1px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey;
-    border-radius: 10px;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: var(--font-color-brand);
-    border-radius: 10px;
-  }
-  
+}

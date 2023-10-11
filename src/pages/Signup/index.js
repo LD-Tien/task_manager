@@ -113,7 +113,7 @@ function Signup() {
         <p className={styles["error-text"]}>{errorTextSignup}</p>
         <hr />
         <Link className={styles["link"]} to={"/login"} replace>
-          Already have a account
+          Already have an account
         </Link>
       </form>
     </div>
