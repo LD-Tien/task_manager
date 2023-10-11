@@ -61,6 +61,12 @@ function Details({ task, setTasks, setTaskActive }) {
 
   function handleUploadFile(fileInputElement) {
     const file = fileInputElement.files[0];
+    const fileSize = file.size / 1024 / 1024; // in MiB
+    if (fileSize > 10) {
+      alert("File size exceeds 10 MiB");
+      setFileName("");
+      return;
+    }
     const formData = new FormData();
     formData.append("fileName", file);
     fetch("/uploadFile", {
