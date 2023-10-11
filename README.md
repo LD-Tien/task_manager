@@ -1,4 +1,5 @@
 # Task Manager
+The design of website is based on the design of Microsoft To Do
 ### Front-end: ReactJS
 ### Back-end: ExpressJS + MongoDB -> https://github.com/LD-Tien/deploy-task-manager
 ### Demo: https://task-manager-n076.onrender.com/
