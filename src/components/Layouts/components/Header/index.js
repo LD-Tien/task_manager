@@ -13,6 +13,7 @@ import { faFloppyDisk, faUser } from "@fortawesome/free-regular-svg-icons";
 import Modal from "../../../Modal";
 import { useLayoutEffect, useRef, useState } from "react";
 import TextInput from "../../../TextInput";
+import { ACCOUNT_MENU } from "../../../../store/constraints";
 
 function Header() {
   const [isShowModalAccount, setIsShowModalAccount] = useState(false);
@@ -33,39 +34,9 @@ function Header() {
       <div className={styles["button-list"]}>
         <Menu
           trigger="mouseenter"
+          showModalAccount={setIsShowModalAccount}
           placement="bottom-end"
-          items={[
-            {
-              options: [
-                {
-                  title: "Account",
-                  leftIcon: <FontAwesomeIcon icon={faUser} />,
-                  onClick: function (e) {
-                    setIsShowModalAccount(true);
-                  },
-                },
-                {
-                  title: "Dark / Light",
-                  leftIcon: <FontAwesomeIcon icon={faCircleHalfStroke} />,
-                  disable: true,
-                  onClick: function (e) {},
-                },
-              ],
-            },
-            {
-              options: [
-                {
-                  leftIcon: <FontAwesomeIcon icon={faRightFromBracket} />,
-                  title: "Log out",
-                  danger: true,
-                  onClick: function (e) {
-                    document.cookie = "TMToken=;";
-                    window.location.replace("/login");
-                  },
-                },
-              ],
-            },
-          ]}
+          items={ACCOUNT_MENU}
         >
           <div className={styles["account"]}>
             <div>

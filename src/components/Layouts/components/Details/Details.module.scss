@@ -44,8 +44,12 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    border-top: 0.1rem solid var(--bg-active);
-    padding: 12px 0 0;
+    border-top: 0.1rem solid var(--bg-separator);
+    padding: 12px 0 12px;
+
+    > * {
+      border-radius: 8px;
+    }
 
     button {
       color: var(--font-color-primary);
@@ -57,3 +61,6 @@
     }
   }
 }
+
+
+

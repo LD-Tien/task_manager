@@ -1,6 +1,6 @@
 @import "normalize.css";
 
-:root {
+:root[data-theme="dark"] {
   // The :root selector matches the document's root element.
 
   --bg-primary: #252423;
@@ -38,6 +38,43 @@
   --bg-error: #4f2a0f;
 }
 
+:root[data-theme="light"] {
+  --bg-primary: #fff;
+  --bg-secondary: #f3f1f1;
+  --bg-tertiary: #fff;
+  --bg-primary-accent: #faf9f8;
+  --bg-hover: #f5f5f5;
+  --bg-hover-secondary: #fdfdfd;
+  --bg-hover-tertiary: #f5f5f5;
+  --bg-active: #eff6fc;
+  --bg-active-secondary: #f3f2f1;
+  --bg-active-tertiary: #f3f2f1;
+  --bg-separator: #e1dfdd;
+  --bg-border: #e1dfdd;
+  --bg-scrollbar: #8a8886;
+  --bg-shadow: rgba(0, 0, 0, 0.1);
+  --bg-brand: #2564cf;
+  --bg-brand-hover: #215aba;
+  --bg-brand-hover-secondary: #8c93a5;
+  --bg-brand-secondary: #ecf6fd;
+  --bg-brand-disable: #b7d7f6;
+  --font-color-primary: #292827;
+  --font-color-secondary: #605e5c;
+  --font-color-tertiary: #605e5c;
+  --font-color-warning: #a80000;
+  --font-color-brand: #2564cf;
+  --font-color-disable: #a19f9d;
+  --bg-ms-planner: #31752f;
+  --bg-ms-one-note: #7719aa;
+  --bg-ms-excel: #107c41;
+  --bg-ms-word: #185abd;
+  --bg-ms-power-point: #c43e1c;
+  --bg-ms-teams: #6355a8;
+  --bg-ms-loop: #8230ff;
+  --bg-warning: #fff4ce;
+  --bg-error: #fed9cc;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -55,5 +92,16 @@ body {
   text-rendering: optimizeSpeed;
   color: var(--font-color-primary);
   background-color: var(--bg-secondary);
-
 }
+
+
+::-webkit-scrollbar {
+  position: absolute;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-scrollbar);
+  border-radius: 10px;
+}
+

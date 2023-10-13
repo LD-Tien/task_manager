@@ -9,12 +9,15 @@ import {
   faStar,
   faSun,
   faTrashCan,
+  faUser,
 } from "@fortawesome/free-regular-svg-icons";
 import {
   faArrowDownAZ,
+  faCircleHalfStroke,
   faICursor,
   faListCheck,
   faMagnifyingGlass,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import taskManager from "../models/TaskManger";
@@ -343,6 +346,48 @@ export const CONTEXT_MENU_LIST = [
               taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
             }
           });
+        },
+      },
+    ],
+  },
+];
+
+export const ACCOUNT_MENU = [
+  {
+    options: [
+      {
+        title: "Account",
+        leftIcon: <FontAwesomeIcon icon={faUser} />,
+        onClick: function ({ showModalAccount }) {
+          showModalAccount(true);
+        },
+      },
+      {
+        title: "Dark / Light",
+        leftIcon: <FontAwesomeIcon icon={faCircleHalfStroke} />,
+        onClick: function () {
+          const root = document.querySelector("html");
+          const dataTheme = root.getAttribute("data-theme");
+          if (dataTheme === "dark") {
+            root.setAttribute("data-theme", "light");
+            localStorage.setItem("data-theme", "light")
+          } else {
+            root.setAttribute("data-theme", "dark");
+            localStorage.setItem("data-theme", "dark")
+          }
+        },
+      },
+    ],
+  },
+  {
+    options: [
+      {
+        leftIcon: <FontAwesomeIcon icon={faRightFromBracket} />,
+        title: "Log out",
+        danger: true,
+        onClick: function () {
+          document.cookie = "TMToken=;";
+          window.location.replace("/login");
         },
       },
     ],

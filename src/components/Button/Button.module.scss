@@ -4,7 +4,7 @@
   font-size: 1.6rem;
   user-select: none;
 
-  :hover {
+  &:hover {
     background-color: var(--bg-hover);
   }
 
@@ -37,7 +37,7 @@
   .text {
     width: 0;
   }
-  :hover {
+  &:hover {
     .cancel {
       display: block;
     }
@@ -93,8 +93,6 @@
   }
 }
 
-
-
 .small {
   min-height: 40px;
 }
@@ -134,6 +132,14 @@
 .primary {
   background-color: var(--bg-brand);
   * {
-    color: var(--font-color-primary);
+    color: #fff;
+  }
+
+  &:hover {
+    background-color: var(--bg-brand);
+    opacity: 0.8;
+    * {
+      color: var(--color-brand-secondary);
+    }
   }
 }

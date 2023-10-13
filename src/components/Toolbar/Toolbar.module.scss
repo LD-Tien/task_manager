@@ -3,6 +3,11 @@
     align-items: center;
     color: var(--font-color-brand);
     user-select: none;
+
+    > * {
+        border-radius: 8px;
+        overflow: hidden;
+    }
 }
 
 .title > * {
