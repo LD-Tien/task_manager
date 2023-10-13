@@ -4,6 +4,7 @@ import styles from "./Menu.module.scss";
 import Popper from "..";
 import Button from "../../Button";
 import TextInput from "../../TextInput";
+import moment from "moment";
 
 function Menu({
   trigger,
@@ -52,12 +53,14 @@ function Menu({
                     "change",
                     (e) => {
                       if (props.handleUpdate && props.task) {
-                        if(props.updateRemind) {
+                        if (props.updateRemind) {
                           props.task.isSendNotification = false;
-                          props.task.remind = e.target.value;
+                          props.task.remind = moment(e.target.value).format();
                         }
-                        if(props.updatePlanned) {
-                          props.task.planned = e.target.value;
+                        if (props.updatePlanned) {
+                          props.task.planned = moment(e.target.value)
+                            .set({ hour: 0, minute: 0, second: 0 })
+                            .format();
                         }
                         props.handleUpdate();
                       }
