@@ -14,18 +14,22 @@ function Toolbar({ title, icon }) {
         {icon}
         <p>
           {taskManager.searchKeywords
-            ? `${title} "${taskManager.searchKeywords}"`
+            ? taskManager.tasksSearched.length === 0
+              ? `No results found for keyword "${taskManager.searchKeywords}"`
+              : `${title} "${taskManager.searchKeywords}"`
             : title}
         </p>
         {/* <Button leftIcon={<FontAwesomeIcon icon={faEllipsis} />} small></Button> */}
       </div>
-      {!taskManager.searchKeywords && <MenuPopper trigger="click" items={SORT_ITEM}>
-        <div>
-          <Button leftIcon={<FontAwesomeIcon icon={faFilter} />} small>
-            Sort tasks by {taskManager.sortMode.toLowerCase()}
-          </Button>
-        </div>
-      </MenuPopper>}
+      {!taskManager.searchKeywords && (
+        <MenuPopper trigger="click" items={SORT_ITEM}>
+          <div>
+            <Button leftIcon={<FontAwesomeIcon icon={faFilter} />} small>
+              Sort tasks by {taskManager.sortMode.toLowerCase()}
+            </Button>
+          </div>
+        </MenuPopper>
+      )}
     </div>
   );
 }
