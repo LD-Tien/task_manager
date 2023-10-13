@@ -1,4 +1,5 @@
 import Task from "../models/Task";
+import { MODAL_DATA_ERROR_SERVER } from "../store/modalData";
 import TasksList from "./TasksList";
 import User from "./User";
 
@@ -14,8 +15,19 @@ class TaskManger {
       title: undefined,
       body: undefined,
       confirmContent: undefined,
+      confirmType: undefined,
+      cancelContent: undefined,
       onClickConfirm: undefined,
       onClickCancel: undefined,
+    };
+
+    this.showModalErrorServer = () => {
+      taskManager.confirmModalData = MODAL_DATA_ERROR_SERVER;
+      taskManager.confirmModalData.onClickConfirm = () => {
+        window.location.reload();
+      };
+      taskManager.setShowModalConfirm(true);
+      return { code: 500 };
     };
 
     this.getDataFromAPI = async () => {
@@ -23,19 +35,27 @@ class TaskManger {
       if (!result) {
         window.location.replace("/login");
       }
+
       await fetch("/getLists")
         .then((res) => res.json())
         .then((result) => {
           if (result.code === 200) {
             this.setAllList(result.data);
           }
+        })
+        .catch(() => {
+          return this.showModalErrorServer();
         });
+
       await fetch("/getTasks")
         .then((res) => res.json())
         .then((result) => {
           if (result.code === 200) {
             this.setAllTask(result.data);
           }
+        })
+        .catch(() => {
+          return this.showModalErrorServer();
         });
     };
 

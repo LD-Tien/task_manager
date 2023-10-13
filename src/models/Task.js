@@ -1,3 +1,4 @@
+import { MODAL_DATA_ERROR_SERVER } from "../store/modalData";
 import taskManager from "./TaskManger";
 
 class Note {
@@ -72,8 +73,13 @@ class Task {
             .then((result) => {
               if (result.code === 200) {
                 taskManager.addTask(new Task(result.data));
+              } else {
+                alert(result.message);
               }
               return result;
+            })
+            .catch(() => {
+              return taskManager.showModalErrorServer();
             });
         },
         writable: false,
@@ -97,6 +103,9 @@ class Task {
               if (result.code === 200) {
               }
               return result;
+            })
+            .catch(() => {
+              return taskManager.showModalErrorServer();
             });
         },
         writable: false,
@@ -120,6 +129,9 @@ class Task {
                 taskManager.deleteTask(task);
               }
               return result;
+            })
+            .catch(() => {
+              return taskManager.showModalErrorServer();
             });
         },
         writable: false,
@@ -140,6 +152,9 @@ class Task {
                 this.subTasks.push(new SubTask(result.data));
               }
               return result;
+            })
+            .catch(() => {
+              return taskManager.showModalErrorServer();
             });
         },
         writable: false,
@@ -157,6 +172,9 @@ class Task {
             .then((res) => res.json())
             .then((result) => {
               return result;
+            })
+            .catch(() => {
+              return taskManager.showModalErrorServer();
             });
         },
         writable: false,
@@ -176,6 +194,9 @@ class Task {
                 );
               }
               return result;
+            })
+            .catch(() => {
+              return taskManager.showModalErrorServer();
             });
         },
         writable: false,

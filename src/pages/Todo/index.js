@@ -18,14 +18,12 @@ import Button from "../../components/Button";
 import moment from "moment";
 import taskManager from "../../models/TaskManger";
 import Task from "../../models/Task";
-import Modal from "../../components/Modal";
 
 function Todo() {
   const [listActive, setListActive] = useState(SIDEBAR_DEFAULT_ITEM[0]);
   const [tasks, setTasks] = useState([]);
   const [taskActive, setTaskActive] = useState({ _id: -1 });
   const [titleNewTask, setTitleNewTask] = useState("");
-  const [showModalConfirm, setShowModalConfirm] = useState(true);
   let [userLists, setUserLists] = useState([]);
   let defaultLists = useRef(SIDEBAR_DEFAULT_ITEM);
 
@@ -33,7 +31,7 @@ function Todo() {
   taskManager.setTasks = setTasks;
   taskManager.setTaskActive = setTaskActive;
   taskManager.setUserLists = setUserLists;
-  taskManager.setShowModalConfirm = setShowModalConfirm;
+  
 
   async function getData() {
     await taskManager.getDataFromAPI();
@@ -358,18 +356,7 @@ function Todo() {
           />
         </div>
       </div>
-      <Modal
-        type="confirm"
-        isShow={showModalConfirm}
-        setIsShow={setShowModalConfirm}
-        title={taskManager.confirmModalData.title}
-        confirm={taskManager.confirmModalData.confirmContent}
-        confirmContent={taskManager.confirmModalData.confirmContent}
-        onClickConfirm={taskManager.confirmModalData.onClickConfirm}
-        onClickCancel={taskManager.confirmModalData.onClickCancel}
-      >
-        {taskManager.confirmModalData.body}
-      </Modal>
+      
     </div>
   );
 }

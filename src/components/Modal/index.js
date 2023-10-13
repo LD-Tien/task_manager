@@ -11,6 +11,7 @@ function Modal({
   setIsShow,
   onClickConfirm,
   confirmContent = "Delete",
+  confirmType = "normal",
   onClickCancel,
   cancelContent = "Cancel",
 }) {
@@ -48,7 +49,8 @@ function Modal({
                 </Button>
                 <Button
                   medium
-                  danger
+                  danger={confirmType === "danger"}
+                  primary={confirmType === "normal"}
                   onClick={() => {
                     if (onClickConfirm) {
                       onClickConfirm();

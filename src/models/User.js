@@ -1,10 +1,12 @@
+import taskManager from "./TaskManger";
+
 class User {
   constructor(userData) {
     if (userData) {
       this._id = userData._id || "";
       this.email = userData.email || "";
       this.username = userData.username || "";
-      this.password = userData.password || "";  
+      this.password = userData.password || "";
 
       this.login = async function () {
         return await fetch("/login", {
@@ -15,7 +17,9 @@ class User {
           body: JSON.stringify(this),
         })
           .then((res) => res.json())
-          .catch(console.log);
+          .catch(() => {
+            return taskManager.showModalErrorServer();
+          });
       };
 
       this.signup = async function () {
@@ -27,18 +31,22 @@ class User {
           body: JSON.stringify(this),
         })
           .then((res) => res.json())
-          .catch(console.log);
+          .catch(() => {
+            return taskManager.showModalErrorServer();
+          });
       };
     } else {
       this._id = "";
       this.email = "";
       this.username = "";
       this.password = "";
-      
+
       this.auth = async function () {
         return await fetch("/checkLoginToken")
           .then((res) => res.json())
-          .catch(console.log);
+          .catch(() => {
+            return taskManager.showModalErrorServer();
+          });
       };
     }
   }

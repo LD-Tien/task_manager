@@ -1,3 +1,4 @@
+import { MODAL_DATA_ERROR_SERVER } from "../store/modalData";
 import Task from "./Task";
 import taskManager from "./TaskManger";
 
@@ -51,7 +52,14 @@ class TasksList {
               }
               return result;
             })
-            .catch(console.log);
+            .catch(() => {
+              taskManager.confirmModalData = MODAL_DATA_ERROR_SERVER;
+              taskManager.confirmModalData.onClickConfirm = () => {
+                window.location.reload();
+              };
+              taskManager.setShowModalConfirm(true);
+              return { code: 500 };
+            });
         },
         writable: false,
         configurable: false,
@@ -70,7 +78,14 @@ class TasksList {
               }
               return result;
             })
-            .catch(console.log);
+            .catch(() => {
+              taskManager.confirmModalData = MODAL_DATA_ERROR_SERVER;
+              taskManager.confirmModalData.onClickConfirm = () => {
+                window.location.reload();
+              };
+              taskManager.setShowModalConfirm(true);
+              return { code: 500 };
+            });
         },
         writable: false,
         configurable: false,
@@ -87,7 +102,14 @@ class TasksList {
               }
               return result;
             })
-            .catch(console.log);
+            .catch(() => {
+              taskManager.confirmModalData = MODAL_DATA_ERROR_SERVER;
+              taskManager.confirmModalData.onClickConfirm = () => {
+                window.location.reload();
+              };
+              taskManager.setShowModalConfirm(true);
+              return { code: 500 };
+            });
         },
         writable: false,
         configurable: false,
