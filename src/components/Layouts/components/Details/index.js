@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperclip, faRotate } from "@fortawesome/free-solid-svg-icons";
+import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import {
   faBell,
   faCalendarDays,
@@ -35,7 +35,7 @@ function Details({ task, setTasks, setTaskActive }) {
   function handleDeleteTask() {
     taskManager.confirmModalData = MODAL_DATA_DELETE_TASK;
     taskManager.confirmModalData.title = `Task "${task.title}" will be permanently deleted`;
-    taskManager.onClickConfirm = () => {
+    taskManager.confirmModalData.onClickConfirm = () => {
       task.deleteTask().then((result) => {
         if (result.code === 200) {
           taskManager.setTasks(taskManager.getAllTask());
