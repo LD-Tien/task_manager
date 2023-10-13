@@ -142,7 +142,9 @@ export const DUE_MENU_POPPER = [
         title: "Today",
         subTitle: moment().format("ddd"),
         onClick: function ({ task, handleUpdate }) {
-          task.planned = moment().format();
+          task.planned = moment()
+            .set({ hour: 0, minute: 0, second: 0 })
+            .format();
           handleUpdate();
         },
       },
@@ -151,7 +153,10 @@ export const DUE_MENU_POPPER = [
         title: "Tomorrow",
         subTitle: moment().add(1, "days").format("ddd"),
         onClick: function ({ task, handleUpdate }) {
-          task.planned = moment().add(1, "day").format();
+          task.planned = moment()
+            .set({ hour: 0, minute: 0, second: 0 })
+            .add(1, "day")
+            .format();
           handleUpdate();
         },
       },
@@ -161,6 +166,7 @@ export const DUE_MENU_POPPER = [
         subTitle: "Mon",
         onClick: function ({ task, handleUpdate }) {
           task.planned = moment()
+            .set({ hour: 0, minute: 0, second: 0 })
             .add(8 - moment().isoWeekday(), "days")
             .format();
           handleUpdate();

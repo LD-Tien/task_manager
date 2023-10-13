@@ -187,6 +187,9 @@ function Details({ task, setTasks, setTaskActive }) {
               item
               isActive={!!task.planned}
               task={task}
+              danger={moment(moment().format().split("T")[0]).isAfter(
+                moment(moment(task.planned).format().split("T")[0])
+              )}
               handleUpdate={handleUpdateTask}
               onClickCancel={() => {
                 task.planned = "";
