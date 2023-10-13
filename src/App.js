@@ -35,6 +35,7 @@ function App() {
           title={taskManager.confirmModalData.title}
           confirm={taskManager.confirmModalData.confirmContent}
           confirmContent={taskManager.confirmModalData.confirmContent}
+          confirmType={taskManager.confirmModalData.confirmType}
           onClickConfirm={taskManager.confirmModalData.onClickConfirm}
           cancelContent={taskManager.confirmModalData.cancelContent}
           onClickCancel={taskManager.confirmModalData.onClickCancel}

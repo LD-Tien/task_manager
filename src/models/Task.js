@@ -1,4 +1,3 @@
-import { MODAL_DATA_ERROR_SERVER } from "../store/modalData";
 import taskManager from "./TaskManger";
 
 class Note {
