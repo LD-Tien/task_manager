@@ -19,6 +19,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import taskManager from "../models/TaskManger";
+import { MODAL_DATA_DELETE_LIST, MODAL_DATA_DELETE_TASK } from "./modalData";
 
 export const SORT_ITEM = [
   { headerTitle: "Sort by" },
@@ -275,10 +276,8 @@ export const CONTEXT_MENU_TASK = [
         title: "Delete task",
         danger: true,
         onClick: function ({ task }) {
+          taskManager.confirmModalData = MODAL_DATA_DELETE_TASK;
           taskManager.confirmModalData.title = `Task "${task.title}" will be permanently deleted`;
-          taskManager.confirmModalData.body =
-            "You won't be able to undo this action";
-          taskManager.confirmModalData.confirmContent = "Delete task";
           taskManager.confirmModalData.onClickConfirm = () => {
             task.deleteTask().then((result) => {
               if (result.code === 200) {
@@ -344,10 +343,8 @@ export const CONTEXT_MENU_LIST = [
         title: "Delete list",
         danger: true,
         onClick: async function ({ list }) {
+          taskManager.confirmModalData = MODAL_DATA_DELETE_LIST;
           taskManager.confirmModalData.title = `List "${list.title}" will be permanently deleted`;
-          taskManager.confirmModalData.body =
-            "You won't be able to undo this action";
-          taskManager.confirmModalData.confirmContent = "Delete list";
           taskManager.confirmModalData.onClickConfirm = () => {
             list.deleteList().then((result) => {
               if (result.code === 200) {

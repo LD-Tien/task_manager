@@ -80,7 +80,8 @@
 }
 
 .danger {
-  &.item, &.small {
+  &.item,
+  &.small {
     * {
       color: var(--font-color-warning);
     }
@@ -88,6 +89,10 @@
 
   &.medium {
     background-color: var(--font-color-warning);
+
+    &:hover {
+      opacity: 0.8;
+    }
     * {
       color: var(--font-color-primary);
     }

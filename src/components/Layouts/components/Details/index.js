@@ -24,6 +24,7 @@ import TextInput from "../../../TextInput";
 import { useState } from "react";
 import moment from "moment";
 import taskManager from "../../../../models/TaskManger";
+import { MODAL_DATA_DELETE_TASK } from "../../../../store/modalData";
 
 function Details({ task, setTasks, setTaskActive }) {
   const [newSubTask, setNewSubTask] = useState("");
@@ -32,12 +33,17 @@ function Details({ task, setTasks, setTaskActive }) {
 
   if (task._id === -1) return;
   function handleDeleteTask() {
-    task.deleteTask().then((result) => {
-      if (result.code === 200) {
-        taskManager.setTasks(taskManager.getAllTask());
-        taskManager.setTaskActive({ _id: -1 });
-      }
-    });
+    taskManager.confirmModalData = MODAL_DATA_DELETE_TASK;
+    taskManager.confirmModalData.title = `Task "${task.title}" will be permanently deleted`;
+    taskManager.onClickConfirm = () => {
+      task.deleteTask().then((result) => {
+        if (result.code === 200) {
+          taskManager.setTasks(taskManager.getAllTask());
+          taskManager.setTaskActive({ _id: -1 });
+        }
+      });
+    };
+    taskManager.setShowModalConfirm(true);
   }
 
   function handleAddSubTask(e) {
