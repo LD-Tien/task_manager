@@ -3,9 +3,7 @@ import {
   faCircleHalfStroke,
   faKey,
   faLock,
-  faLockOpen,
   faRightFromBracket,
-  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
@@ -18,6 +16,7 @@ import TextInput from "../../../TextInput";
 
 function Header() {
   const [isShowModalAccount, setIsShowModalAccount] = useState(false);
+
   let userData = useRef("");
   useLayoutEffect(() => {
     fetch("/getUser")
@@ -31,14 +30,6 @@ function Header() {
       <Link href="/home" className={styles["brand"]}>
         Task Manager
       </Link>
-      {/* <div className={styles["search"]}>
-        <FontAwesomeIcon icon={faSearch} className={styles["search-icon"]} />
-        <input
-          type="search"
-          className={styles["search-input"]}
-          placeholder="Search"
-        />
-      </div> */}
       <div className={styles["button-list"]}>
         <Menu
           trigger="mouseenter"

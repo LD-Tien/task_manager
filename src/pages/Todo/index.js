@@ -1,31 +1,20 @@
 import styles from "./Todo.module.scss";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Details from "../../components/Layouts/components/Details";
 import Toolbar from "../../components/Toolbar";
 import TaskItem from "../../components/TaskItem";
 import { default as MenuPopper } from "../../components/Popper/Menu";
 import {
   CONTEXT_MENU_TASK,
-  DUE_MENU_POPPER,
-  REMIND_MENU_POPPER,
-  REPEAT_MENU_POPPER,
   SIDEBAR_DEFAULT_ITEM,
 } from "../../store/constraints";
 import Sidebar from "../../components/Layouts/components/Sidebar";
 import Header from "../../components/Layouts/components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList, faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { faList } from "@fortawesome/free-solid-svg-icons";
 import TextInput from "../../components/TextInput";
 import Accordion from "../../components/Accordion";
 import Button from "../../components/Button";
-import { faBell, faCalendar } from "@fortawesome/free-regular-svg-icons";
 import moment from "moment";
 import taskManager from "../../models/TaskManger";
 import Task from "../../models/Task";
@@ -35,8 +24,6 @@ function Todo() {
   const [tasks, setTasks] = useState([]);
   const [taskActive, setTaskActive] = useState({ _id: -1 });
   const [titleNewTask, setTitleNewTask] = useState("");
-  const [planned, setPlanned] = useState(""); // for new task
-  const [remind, setRemind] = useState(""); // for new task
   let [userLists, setUserLists] = useState([]);
   let defaultLists = useRef(SIDEBAR_DEFAULT_ITEM);
 
@@ -136,10 +123,11 @@ function Todo() {
   useEffect(() => {
     let timer;
     function notificationRemind() {
-      tasks.forEach((task) => {
+      taskManager.getAllTask().forEach((task) => {
         if (
           !task.isSendNotification &&
-          moment(moment(task.remind).format()).isSameOrBefore(moment().format())
+          task.remind &&
+          new Date(task.remind) - new Date() <= 0
         ) {
           new Notification("Remind", {
             body: task.title,
@@ -173,7 +161,7 @@ function Todo() {
     return () => {
       clearInterval(timer);
     };
-  }, [tasks]);
+  }, []);
 
   useLayoutEffect(() => {
     getData();
@@ -203,26 +191,27 @@ function Todo() {
                 )
               }
             />
-            <div className={styles["add-task"]}>
-              <form method="POST" autoComplete="off" onSubmit={handleAddTask}>
-                <TextInput
-                  name="title"
-                  value={titleNewTask}
-                  onChange={setTitleNewTask}
-                />
-              </form>
-              <Button
-                small
-                rounded
-                primary
-                disable={!titleNewTask.trim()}
-                onClick={(e) => {
-                  handleAddTask(e);
-                }}
-              >
-                Add
-              </Button>
-              {/* <MenuPopper
+            {!taskManager.searchKeywords && (
+              <div className={styles["add-task"]}>
+                <form method="POST" autoComplete="off" onSubmit={handleAddTask}>
+                  <TextInput
+                    name="title"
+                    value={titleNewTask}
+                    onChange={setTitleNewTask}
+                  />
+                </form>
+                <Button
+                  small
+                  rounded
+                  primary
+                  disable={!titleNewTask.trim()}
+                  onClick={(e) => {
+                    handleAddTask(e);
+                  }}
+                >
+                  Add
+                </Button>
+                {/* <MenuPopper
                   trigger="click"
                   placement="bottom"
                   items={REPEAT_MENU_POPPER}
@@ -234,62 +223,23 @@ function Todo() {
                     />
                   </div>
                 </MenuPopper> */}
-            </div>
+              </div>
+            )}
           </div>
 
-          <div className={styles["tasks-list"]}>
-            {tasks.length !== 0 &&
-              tasks.map((task) => {
-                if (task.isCompleted) {
-                  return null;
-                }
-
-                if (listActive._id === "MyDay") {
-                  if (!task.myDay) {
-                    return null;
-                  }
-                } else if (listActive._id === "Important") {
-                  if (!task.isImportant) return null;
-                } else if (listActive._id === "Planned") {
-                  if (!task.planned) return null;
-                } else if (listActive._id === "Tasks") {
-                  if (!!task.listId) return null;
-                } else if (listActive._id !== task.listId) {
-                  return null;
-                }
-                return (
-                  <MenuPopper
-                    key={task._id}
-                    task={task}
-                    followMouse="initial"
-                    trigger="contextmenu"
-                    placement="right-start"
-                    items={CONTEXT_MENU_TASK}
-                  >
-                    <div>
-                      <TaskItem
-                        key={task}
-                        data={task}
-                        isActive={task._id === taskActive._id}
-                        setTaskActive={setTaskActive}
-                        setTasks={setTasks}
-                      />
-                    </div>
-                  </MenuPopper>
-                );
-              })}
-          </div>
-          <div className={styles["tasks-list-completed"]}>
-            <Accordion title="Completed" total>
-              {tasks.length !== 0 &&
-                tasks
-                  .map((task) => {
-                    if (!task.isCompleted) {
+          {!taskManager.searchKeywords ? (
+            <>
+              <div className={styles["tasks-list"]}>
+                {tasks.length !== 0 &&
+                  tasks.map((task) => {
+                    if (task.isCompleted) {
                       return null;
                     }
 
                     if (listActive._id === "MyDay") {
-                      if (!task.myDay) return null;
+                      if (!task.myDay) {
+                        return null;
+                      }
                     } else if (listActive._id === "Important") {
                       if (!task.isImportant) return null;
                     } else if (listActive._id === "Planned") {
@@ -299,7 +249,6 @@ function Todo() {
                     } else if (listActive._id !== task.listId) {
                       return null;
                     }
-
                     return (
                       <MenuPopper
                         key={task._id}
@@ -311,7 +260,7 @@ function Todo() {
                       >
                         <div>
                           <TaskItem
-                            key={task._id}
+                            key={task}
                             data={task}
                             isActive={task._id === taskActive._id}
                             setTaskActive={setTaskActive}
@@ -320,11 +269,82 @@ function Todo() {
                         </div>
                       </MenuPopper>
                     );
-                  })
-                  .filter((item) => !!item)}
-              {/* remove item null in array by filter */}
-            </Accordion>
-          </div>
+                  })}
+              </div>
+              <div className={styles["tasks-list-completed"]}>
+                <Accordion title="Completed" total>
+                  {tasks.length !== 0 &&
+                    tasks
+                      .map((task) => {
+                        if (!task.isCompleted) {
+                          return null;
+                        }
+
+                        if (listActive._id === "MyDay") {
+                          if (!task.myDay) return null;
+                        } else if (listActive._id === "Important") {
+                          if (!task.isImportant) return null;
+                        } else if (listActive._id === "Planned") {
+                          if (!task.planned) return null;
+                        } else if (listActive._id === "Tasks") {
+                          if (!!task.listId) return null;
+                        } else if (listActive._id !== task.listId) {
+                          return null;
+                        }
+
+                        return (
+                          <MenuPopper
+                            key={task._id}
+                            task={task}
+                            followMouse="initial"
+                            trigger="contextmenu"
+                            placement="right-start"
+                            items={CONTEXT_MENU_TASK}
+                          >
+                            <div>
+                              <TaskItem
+                                key={task._id}
+                                data={task}
+                                isActive={task._id === taskActive._id}
+                                setTaskActive={setTaskActive}
+                                setTasks={setTasks}
+                              />
+                            </div>
+                          </MenuPopper>
+                        );
+                      })
+                      .filter((item) => !!item)}
+                  {/* remove item null in array by filter */}
+                </Accordion>
+              </div>
+            </>
+          ) : (
+            <div className={styles["tasks-list"]}>
+              {taskManager.tasksSearched.length !== 0 &&
+                taskManager.tasksSearched.map((task) => {
+                  return (
+                    <MenuPopper
+                      key={task._id}
+                      task={task}
+                      followMouse="initial"
+                      trigger="contextmenu"
+                      placement="right-start"
+                      items={CONTEXT_MENU_TASK}
+                    >
+                      <div>
+                        <TaskItem
+                          key={task._id}
+                          data={task}
+                          isActive={task._id === taskActive._id}
+                          setTaskActive={setTaskActive}
+                          setTasks={setTasks}
+                        />
+                      </div>
+                    </MenuPopper>
+                  );
+                })}
+            </div>
+          )}
         </div>
         <div className={styles["detail"]}>
           <Details

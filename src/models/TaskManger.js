@@ -8,6 +8,8 @@ class TaskManger {
     let allList = [];
     let tasksNoList = [];
     this.sortMode = "Creation Date";
+    this.searchKeywords = "";
+    this.tasksSearched = [];
 
     this.getDataFromAPI = async () => {
       const result = await new User().auth();
@@ -48,12 +50,12 @@ class TaskManger {
               if (a.planned && b.planned) {
                 return new Date(a.planned) - new Date(b.planned);
               } else {
-                if(!a.planned && !b.planned) {
-                  return 0
-                } else if(!a.planned) {
-                  return 1
-                } else { 
-                  return -1
+                if (!a.planned && !b.planned) {
+                  return 0;
+                } else if (!a.planned) {
+                  return 1;
+                } else {
+                  return -1;
                 }
               }
             });
@@ -69,6 +71,15 @@ class TaskManger {
         default:
           break;
       }
+    };
+
+    this.searchTasks = (keywords) => {
+      if (keywords) {
+        this.searchKeywords = keywords;
+      }
+      this.tasksSearched = [...allTask].filter((task) => {
+        return task.title.includes(this.searchKeywords);
+      });
     };
 
     this.setAllList = (lists) => {

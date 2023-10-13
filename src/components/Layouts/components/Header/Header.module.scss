@@ -7,30 +7,11 @@
   padding: 0 24px;
 
   .brand {
+    white-space: nowrap;
     text-decoration: none;
     font-weight: 700;
     font-size: 2.4rem;
     color: var(--font-color-primary);
-  }
-
-  .search {
-    display: flex;
-    align-items: center;
-    height: 36px;
-    padding: 0 16px;
-    background-color: var(--bg-primary-accent);
-    color: var(--font-color-primary);
-    border-radius: 8px;
-
-    .search-input {
-      background-color: transparent;
-      color: inherit;
-      border: none;
-      outline: none;
-      height: inherit;
-      width: 400px;
-      margin-left: 16px;
-    }
   }
 
   .button-list {

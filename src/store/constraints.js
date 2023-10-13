@@ -14,9 +14,11 @@ import {
   faArrowDownAZ,
   faICursor,
   faListCheck,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import taskManager from "../models/TaskManger";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 export const SORT_ITEM = [
   { headerTitle: "Sort by" },
@@ -303,6 +305,12 @@ export const SIDEBAR_DEFAULT_ITEM = [
     title: "Tasks",
   },
 ];
+
+export const SEARCH_LIST = {
+  _id: "Search",
+  leftIcon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
+  title: "Search for",
+};
 
 export const CONTEXT_MENU_LIST = [
   {

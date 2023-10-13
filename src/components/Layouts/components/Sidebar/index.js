@@ -6,11 +6,18 @@ import TextInput from "../../../TextInput";
 import { default as MenuPopper } from "../../../Popper/Menu";
 import taskManager from "../../../../models/TaskManger";
 import TasksList from "../../../../models/TasksList";
-import { CONTEXT_MENU_LIST } from "../../../../store/constraints";
+import {
+  CONTEXT_MENU_LIST,
+  SIDEBAR_DEFAULT_ITEM,
+  SEARCH_LIST,
+} from "../../../../store/constraints";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 function Sidebar({ listActive, defaultList = [], userLists = [] }) {
   const [newList, setNewList] = useState("");
   const [editableListId, setEditableListId] = useState("");
+  const [search, setSearch] = useState("");
   taskManager.setEditableListId = setEditableListId;
 
   function handleClick(listActive) {
@@ -67,6 +74,31 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
 
   return (
     <div className={styles["wrapper"]}>
+      <div className={styles["search"]}>
+        <TextInput
+          type="search"
+          value={search}
+          icon={
+            <FontAwesomeIcon
+              icon={faSearch}
+              className={styles["search-icon"]}
+            />
+          }
+          placeholder="Search tasks"
+          onChange={(value) => {
+            setSearch(value);
+            if (value) {
+              taskManager.searchKeywords = value;
+              taskManager.searchTasks();
+              taskManager.setListActive({ ...SEARCH_LIST });
+            } else {
+              taskManager.searchKeywords = value;
+              taskManager.tasksSearched = [];
+              taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
+            }
+          }}
+        />
+      </div>
       <div className={styles["default-list"]}>
         {defaultList.map((item) => {
           return (

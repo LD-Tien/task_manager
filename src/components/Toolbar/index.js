@@ -12,16 +12,20 @@ function Toolbar({ title, icon }) {
     <div className={styles["wrapper"]}>
       <div className={styles["title"]}>
         {icon}
-        <p>{title}</p>
+        <p>
+          {taskManager.searchKeywords
+            ? `${title} "${taskManager.searchKeywords}"`
+            : title}
+        </p>
         {/* <Button leftIcon={<FontAwesomeIcon icon={faEllipsis} />} small></Button> */}
       </div>
-      <MenuPopper trigger="click" items={SORT_ITEM}>
+      {!taskManager.searchKeywords && <MenuPopper trigger="click" items={SORT_ITEM}>
         <div>
           <Button leftIcon={<FontAwesomeIcon icon={faFilter} />} small>
             Sort tasks by {taskManager.sortMode.toLowerCase()}
           </Button>
         </div>
-      </MenuPopper>
+      </MenuPopper>}
     </div>
   );
 }
