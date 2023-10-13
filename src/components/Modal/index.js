@@ -1,8 +1,19 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./Modal.module.scss";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import Button from "../Button";
 
-function Modal({ title = "title", children, isShow, setIsShow }) {
+function Modal({
+  type,
+  title,
+  children,
+  isShow,
+  setIsShow,
+  onClickConfirm,
+  confirmContent = "Delete",
+  onClickCancel,
+  cancelContent = "Cancel",
+}) {
   return (
     <>
       {isShow ? (
@@ -22,7 +33,33 @@ function Modal({ title = "title", children, isShow, setIsShow }) {
               </span>
             </div>
             <div className={styles["body"]}>{children}</div>
-            <div className={styles["footer"]}></div>
+            {type === "confirm" && (
+              <div className={styles["footer"]}>
+                <Button
+                  medium
+                  onClick={() => {
+                    if (onClickCancel) {
+                      onClickCancel();
+                    }
+                    setIsShow(!isShow);
+                  }}
+                >
+                  {cancelContent}
+                </Button>
+                <Button
+                  medium
+                  danger
+                  onClick={() => {
+                    if (onClickConfirm) {
+                      onClickConfirm();
+                    }
+                    setIsShow(!isShow);
+                  }}
+                >
+                  {confirmContent}
+                </Button>
+              </div>
+            )}
           </div>
         </>
       ) : (

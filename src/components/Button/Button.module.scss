@@ -79,13 +79,38 @@
   }
 }
 
-.item {
-  &.danger {
+.danger {
+  &.item, &.small {
     * {
       color: var(--font-color-warning);
     }
   }
+
+  &.medium {
+    background-color: var(--font-color-warning);
+    * {
+      color: var(--font-color-primary);
+    }
+  }
 }
+
+// .item {
+//   &.danger {
+//     * {
+//       color: var(--font-color-warning);
+//     }
+//   }
+// }
+
+// .medium,
+// .small {
+//   &.danger {
+//     background-color: var(--font-color-warning);
+//     * {
+//       color: var(--font-color-primary);
+//     }
+//   }
+// }
 
 .active {
   > * {

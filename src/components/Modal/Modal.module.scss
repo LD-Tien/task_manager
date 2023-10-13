@@ -12,6 +12,7 @@
   left: 0;
   right: 0;
   z-index: 1001;
+  gap: 24px;
   background-color: var(--bg-primary-accent);
   border-radius: 8px;
   box-shadow: 0px 0px 10px 10px rgba($color: #000, $alpha: 0.05);
@@ -22,8 +23,8 @@
     justify-content: space-between;
     font-size: 2rem;
     color: var(--font-color-primary);
-    margin-bottom: 24px;
     font-weight: 700;
+    gap: 12px;
 
     .close {
       cursor: pointer;
@@ -69,6 +70,12 @@
         border-radius: 8px;
       }
     }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: right;
+    gap: 12px;
   }
 }
 

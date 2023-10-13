@@ -2,10 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendar,
   faCalendarPlus,
-  faCheckCircle,
   faClock,
   faClone,
-  faCopy,
   faStar,
   faSun,
   faTrashCan,
@@ -21,7 +19,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import taskManager from "../models/TaskManger";
-import { icon } from "@fortawesome/fontawesome-svg-core";
 
 export const SORT_ITEM = [
   { headerTitle: "Sort by" },
@@ -278,12 +275,19 @@ export const CONTEXT_MENU_TASK = [
         title: "Delete task",
         danger: true,
         onClick: function ({ task }) {
-          task.deleteTask().then((result) => {
-            if (result.code === 200) {
-              taskManager.setTasks(taskManager.getAllTask());
-              taskManager.setTaskActive({ _id: -1 });
-            }
-          });
+          taskManager.confirmModalData.title = `Task "${task.title}" will be permanently deleted`;
+          taskManager.confirmModalData.body =
+            "You won't be able to undo this action";
+          taskManager.confirmModalData.confirmContent = "Delete task";
+          taskManager.confirmModalData.onClickConfirm = () => {
+            task.deleteTask().then((result) => {
+              if (result.code === 200) {
+                taskManager.setTasks(taskManager.getAllTask());
+                taskManager.setTaskActive({ _id: -1 });
+              }
+            });
+          };
+          taskManager.setShowModalConfirm(true);
         },
       },
     ],
@@ -340,12 +344,19 @@ export const CONTEXT_MENU_LIST = [
         title: "Delete list",
         danger: true,
         onClick: async function ({ list }) {
-          list.deleteList().then((result) => {
-            if (result.code === 200) {
-              taskManager.setUserLists(taskManager.getAllList());
-              taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
-            }
-          });
+          taskManager.confirmModalData.title = `List "${list.title}" will be permanently deleted`;
+          taskManager.confirmModalData.body =
+            "You won't be able to undo this action";
+          taskManager.confirmModalData.confirmContent = "Delete list";
+          taskManager.confirmModalData.onClickConfirm = () => {
+            list.deleteList().then((result) => {
+              if (result.code === 200) {
+                taskManager.setUserLists(taskManager.getAllList());
+                taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
+              }
+            });
+          };
+          taskManager.setShowModalConfirm(true);
         },
       },
     ],
@@ -370,10 +381,10 @@ export const ACCOUNT_MENU = [
           const dataTheme = root.getAttribute("data-theme");
           if (dataTheme === "dark") {
             root.setAttribute("data-theme", "light");
-            localStorage.setItem("data-theme", "light")
+            localStorage.setItem("data-theme", "light");
           } else {
             root.setAttribute("data-theme", "dark");
-            localStorage.setItem("data-theme", "dark")
+            localStorage.setItem("data-theme", "dark");
           }
         },
       },

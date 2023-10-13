@@ -10,6 +10,13 @@ class TaskManger {
     this.sortMode = "Creation Date";
     this.searchKeywords = "";
     this.tasksSearched = [];
+    this.confirmModalData = {
+      title: undefined,
+      body: undefined,
+      confirmContent: undefined,
+      onClickConfirm: undefined,
+      onClickCancel: undefined,
+    };
 
     this.getDataFromAPI = async () => {
       const result = await new User().auth();
