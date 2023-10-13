@@ -5,6 +5,7 @@ import Button from "../Button";
 
 import { default as MenuPopper } from "../Popper/Menu";
 import { SORT_ITEM } from "../../store/constraints";
+import taskManager from "../../models/TaskManger";
 
 function Toolbar({ title, icon }) {
   return (
@@ -17,7 +18,7 @@ function Toolbar({ title, icon }) {
       <MenuPopper trigger="click" items={SORT_ITEM}>
         <div>
           <Button leftIcon={<FontAwesomeIcon icon={faFilter} />} small>
-            Sort
+            Sort tasks by {taskManager.sortMode.toLowerCase()}
           </Button>
         </div>
       </MenuPopper>

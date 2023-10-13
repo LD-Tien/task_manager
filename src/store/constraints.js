@@ -10,10 +10,13 @@ import {
   faSun,
   faTrashCan,
 } from "@fortawesome/free-regular-svg-icons";
-import { faArrowDownAZ, faICursor, faListCheck } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowDownAZ,
+  faICursor,
+  faListCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import taskManager from "../models/TaskManger";
-
 
 export const SORT_ITEM = [
   { headerTitle: "Sort by" },
@@ -22,17 +25,28 @@ export const SORT_ITEM = [
       {
         leftIcon: <FontAwesomeIcon icon={faCalendar} />,
         title: "Due date",
-        disable: true,
+        onClick: () => {
+          taskManager.sortMode = "Due Date";
+          taskManager.setTasks(taskManager.getAllTask());
+        },
+        // disable: true,
       },
       {
         leftIcon: <FontAwesomeIcon icon={faArrowDownAZ} />,
         title: "Alphabetically",
-        disable: true
+        onClick: () => {
+          taskManager.sortMode = "Alphabet";
+          taskManager.setTasks(taskManager.getAllTask());
+        },
       },
       {
         leftIcon: <FontAwesomeIcon icon={faCalendarPlus} />,
         title: "Creation date",
-        disable: true
+        onClick: () => {
+          taskManager.sortMode = "Creation Date";
+          taskManager.setTasks(taskManager.getAllTask());
+        },
+        // disable: true
       },
     ],
   },

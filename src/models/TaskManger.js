@@ -1,4 +1,3 @@
-// import moment from "moment";
 import Task from "../models/Task";
 import TasksList from "./TasksList";
 import User from "./User";
@@ -8,7 +7,7 @@ class TaskManger {
     let allTask = [];
     let allList = [];
     let tasksNoList = [];
-    // this.sortMode = "Alphabet";
+    this.sortMode = "Creation Date";
 
     this.getDataFromAPI = async () => {
       const result = await new User().auth();
@@ -31,40 +30,46 @@ class TaskManger {
         });
     };
 
-    // this.sortTask = (mode) => {
-    //   switch (mode) {
-    //     case "Alphabet":
-    //       if (allTask.length > 1) {
-    //         allTask.sort((a, b) => {
-    //           if (a.title < b.title) {
-    //             return -1;
-    //           }
-    //           return 1;
-    //         });
-    //         this.sortMode = "Alphabet";
-    //       }
-    //       break;
-    //     case "DueDate":
-    //       if (allTask.length > 1) {
-    //         allTask.sort((a, b) => {
-    //           if (a.planned && b.planned) {
-    //             if (moment(a.planned).isSameOrAfter(b.planned)) {
-    //               return -1;
-    //             }
-    //           } else {
-
-    //           }
-    //           return 1;
-    //         });
-    //         this.sortMode = "DueDate";
-    //       }
-    //       break;
-    //     case "CreationDate":
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // };
+    this.sortTask = (mode) => {
+      switch (mode) {
+        case "Alphabet":
+          if (allTask.length > 1) {
+            allTask.sort((a, b) => {
+              if (a.title < b.title) {
+                return -1;
+              }
+              return 1;
+            });
+          }
+          break;
+        case "Due Date":
+          if (allTask.length > 1) {
+            allTask.sort((a, b) => {
+              if (a.planned && b.planned) {
+                return new Date(a.planned) - new Date(b.planned);
+              } else {
+                if(!a.planned && !b.planned) {
+                  return 0
+                } else if(!a.planned) {
+                  return 1
+                } else { 
+                  return -1
+                }
+              }
+            });
+          }
+          break;
+        case "Creation Date":
+          if (allTask.length > 1) {
+            allTask.sort((a, b) => {
+              return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+          }
+          break;
+        default:
+          break;
+      }
+    };
 
     this.setAllList = (lists) => {
       if (lists.length !== 0) {
@@ -99,6 +104,7 @@ class TaskManger {
           return null;
         })
         .filter((task) => task);
+      allTask.push(tasksNoList);
     };
 
     this.getAllTask = () => {
@@ -107,7 +113,7 @@ class TaskManger {
       }, []);
 
       allTask = allTask.concat(tasksNoList);
-      // this.sortTask(this.sortMode);
+      this.sortTask(this.sortMode);
       return allTask;
     };
 
