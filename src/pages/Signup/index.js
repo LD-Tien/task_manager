@@ -42,14 +42,12 @@ function Signup() {
     });
 
     const result = await user.signup();
-    if (!result.errorMessage) {
-      // signup successfully
+    if (result.code === 200) {
       document.cookie = "TMToken = " + result.token;
       window.location.replace("/home");
       setErrorTextSignup("");
-    } else {
-      // login failed
-      setErrorTextSignup(result.errorMessage);
+    } else { // code 400
+      setErrorTextSignup(result.message);
     }
   }
 

@@ -30,14 +30,13 @@ function Login() {
       password: passwordLogin,
       username: emailLogin.split("@")[0],
     });
-    const data = await user.login();
-    if (!data.errorMessage) {
-      // login successfully
+    const result = await user.login();
+    if (result.code === 200) {
       setErrorTextLogin("");
-      document.cookie = "TMToken = " + data.token;
+      document.cookie = "TMToken = " + result.token;
       window.location.replace("/home");
     } else {
-      setErrorTextLogin(data.errorMessage);
+      setErrorTextLogin(result.message);
     }
   }
 
