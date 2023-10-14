@@ -22,7 +22,7 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
 
   function handleClick(listActive) {
     taskManager.setListActive(listActive);
-    taskManager.setTaskActive({ _id: -1 });
+    taskManager.setTaskActive({ taskId: -1 });
   }
 
   function handleChange(input) {
@@ -30,15 +30,20 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
     setNewList(input);
   }
 
-  async function handleAddNewList(e) {
+  function handleAddNewList(e) {
     e.preventDefault();
     if (newList.trim() === "") return;
     setNewList("");
     const taskList = new TasksList();
+    taskList.setList({ listId: taskManager.createId(), title: newList });
+    taskManager.addList(taskList);
+    taskManager.setUserLists(taskManager.getAllList());
+    taskManager.setListActive(taskList);
     taskList.addList(newList).then((result) => {
       if (result.code === 200) {
-        taskManager.setListActive(taskList);
-        taskManager.setUserLists(taskManager.getAllList());
+        taskList.setList(result.data);
+      } else if (result.code === 400) {
+        taskManager.showModalServerError(result.message);
       }
     });
   }
@@ -47,7 +52,7 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
     return userLists.map((list) => {
       return (
         <MenuPopper
-          key={list._id}
+          key={list.listId}
           list={list}
           trigger="contextmenu"
           placement="bottom"
@@ -55,10 +60,10 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
         >
           <div>
             <SidebarItem
-              key={list._id}
+              key={list.listId}
               data={list}
-              isActive={list._id === listActive._id}
-              editable={editableListId === list._id}
+              isActive={list.listId === listActive.listId}
+              editable={editableListId === list.listId}
               onBlur={() => {
                 setEditableListId(false);
               }}
@@ -103,9 +108,9 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
         {defaultList.map((item) => {
           return (
             <SidebarItem
-              key={item._id}
+              key={item.listId}
               data={item}
-              isActive={item._id === listActive._id}
+              isActive={item.listId === listActive.listId}
               onClick={handleClick}
             />
           );

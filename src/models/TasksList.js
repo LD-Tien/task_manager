@@ -1,4 +1,3 @@
-import { MODAL_DATA_ERROR_SERVER } from "../store/modalData";
 import Task from "./Task";
 import taskManager from "./TaskManger";
 
@@ -7,7 +6,8 @@ class TasksList {
     this.setList = (list) => {
       this.tasks = [];
       if (list) {
-        this._id = list._id || "";
+        this._id = list.listId || "";
+        this.listId = list.listId || "";
         this.title = list.title || "";
         this.owner = list.owner || "";
         this.icon = list.icon || "";
@@ -22,7 +22,7 @@ class TasksList {
           if (tasks.length !== 0) {
             this.tasks = tasks
               .map((task) => {
-                if (task.listId === this._id) {
+                if (task.listId === this.listId) {
                   return new Task(task);
                 }
                 return null;
@@ -36,55 +36,32 @@ class TasksList {
         configurable: false,
       },
       addList: {
-        value: async (title) => {
+        value: async () => {
           return await fetch("/addNewList", {
             method: "POST",
             headers: {
               "Content-type": "application/json",
             },
-            body: JSON.stringify({ title: title }),
+            body: JSON.stringify({ listId: this.listId, title: this.title }),
           })
             .then((res) => res.json())
-            .then((result) => {
-              if (result.code === 200) {
-                this.setList(result.data);
-                taskManager.addList(this);
-              }
-              return result;
-            })
             .catch(() => {
-              taskManager.confirmModalData = MODAL_DATA_ERROR_SERVER;
-              taskManager.confirmModalData.onClickConfirm = () => {
-                window.location.reload();
-              };
-              taskManager.setShowModalConfirm(true);
-              return { code: 500 };
+              return taskManager.showModalServerError();
             });
         },
         writable: false,
         configurable: false,
       },
       updateList: {
-        value: async (titleUpdate) => {
-          return await fetch(`/updateList/${this._id}`, {
+        value: async () => {
+          return await fetch(`/updateList/${this.listId}`, {
             method: "PUT",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ title: titleUpdate }),
+            body: JSON.stringify({ title: this.title }),
           })
             .then((res) => res.json())
-            .then((result) => {
-              if (result.code === 200) {
-                this.title = titleUpdate;
-              }
-              return result;
-            })
             .catch(() => {
-              taskManager.confirmModalData = MODAL_DATA_ERROR_SERVER;
-              taskManager.confirmModalData.onClickConfirm = () => {
-                window.location.reload();
-              };
-              taskManager.setShowModalConfirm(true);
-              return { code: 500 };
+              return taskManager.showModalServerError();
             });
         },
         writable: false,
@@ -92,23 +69,12 @@ class TasksList {
       },
       deleteList: {
         value: async () => {
-          return await fetch(`/deleteList/${this._id}`, {
+          return await fetch(`/deleteList/${this.listId}`, {
             method: "DELETE",
           })
             .then((res) => res.json())
-            .then((result) => {
-              if (result.code === 200) {
-                taskManager.deleteList(this);
-              }
-              return result;
-            })
             .catch(() => {
-              taskManager.confirmModalData = MODAL_DATA_ERROR_SERVER;
-              taskManager.confirmModalData.onClickConfirm = () => {
-                window.location.reload();
-              };
-              taskManager.setShowModalConfirm(true);
-              return { code: 500 };
+              return taskManager.showModalServerError();
             });
         },
         writable: false,

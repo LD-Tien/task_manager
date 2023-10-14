@@ -11,7 +11,7 @@ function Modal({
   setIsShow,
   onClickConfirm,
   confirmContent = "Delete",
-  confirmType = "normal",
+  confirmType,
   onClickCancel,
   cancelContent = "Cancel",
 }) {
@@ -20,42 +20,52 @@ function Modal({
       {isShow ? (
         <>
           <div
-            onClick={() => setIsShow(!isShow)}
+            onClick={() => {
+              if (confirmType !== "error") {
+                setIsShow(!isShow);
+              }
+            }}
             className={styles["outside"]}
           ></div>
           <div className={styles["wrapper"]}>
             <div className={styles["header"]}>
               <p className={styles["title"]}>{title}</p>
-              <span
-                onClick={() => setIsShow(!isShow)}
-                className={styles["close"]}
-              >
-                <FontAwesomeIcon icon={faXmark} />
-              </span>
+              {confirmType !== "error" && (
+                <span
+                  onClick={() => setIsShow(!isShow)}
+                  className={styles["close"]}
+                >
+                  <FontAwesomeIcon icon={faXmark} />
+                </span>
+              )}
             </div>
             <div className={styles["body"]}>{children}</div>
             {type === "confirm" && (
               <div className={styles["footer"]}>
-                <Button
-                  medium
-                  onClick={() => {
-                    if (onClickCancel) {
-                      onClickCancel();
-                    }
-                    setIsShow(!isShow);
-                  }}
-                >
-                  {cancelContent}
-                </Button>
+                {confirmType !== "error" && (
+                  <Button
+                    medium
+                    onClick={() => {
+                      if (onClickCancel) {
+                        onClickCancel();
+                      }
+                      setIsShow(!isShow);
+                    }}
+                  >
+                    {cancelContent}
+                  </Button>
+                )}
                 <Button
                   medium
                   danger={confirmType === "danger"}
-                  primary={confirmType === "normal"}
+                  primary={confirmType === "error"}
                   onClick={() => {
                     if (onClickConfirm) {
                       onClickConfirm();
                     }
-                    setIsShow(!isShow);
+                    if (confirmType !== "error") {
+                      setIsShow(!isShow);
+                    }
                   }}
                 >
                   {confirmContent}

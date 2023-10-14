@@ -14,11 +14,10 @@ export const MODAL_DATA_DELETE_LIST = {
   onClickConfirm: () => {},
 };
 
-export const MODAL_DATA_ERROR_SERVER = {
-    title: "Server not responding",
-    body: "Please try again later.",
-    confirmContent: "Refresh",
-    cancelContent: "Dismiss",
-    onClickConfirm: () => {},
-  };
-  
+export const MODAL_DATA_SERVER_ERROR = {
+  title: "Server not responding",
+  body: "Please try again later.",
+  confirmType: "error",
+  confirmContent: "Refresh",
+  onClickConfirm: () => {},
+};

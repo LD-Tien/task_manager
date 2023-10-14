@@ -18,7 +18,7 @@ class User {
         })
           .then((res) => res.json())
           .catch(() => {
-            return taskManager.showModalErrorServer();
+            return taskManager.showModalServerError();
           });
       };
 
@@ -32,7 +32,7 @@ class User {
         })
           .then((res) => res.json())
           .catch(() => {
-            return taskManager.showModalErrorServer();
+            return taskManager.showModalServerError();
           });
       };
     } else {
@@ -45,7 +45,7 @@ class User {
         return await fetch("/checkLoginToken")
           .then((res) => res.json())
           .catch(() => {
-            return taskManager.showModalErrorServer();
+            return taskManager.showModalServerError();
           });
       };
     }

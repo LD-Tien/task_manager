@@ -1,9 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCircleHalfStroke,
   faKey,
   faLock,
-  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";

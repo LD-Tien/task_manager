@@ -7,13 +7,17 @@ class Note {
   }
 }
 
+export { Note };
+
 class SubTask {
   constructor(subTaskData) {
+    this.subTaskId = subTaskData.subTaskId;
     this.title = subTaskData.title;
     this.isCompleted = subTaskData.isCompleted;
-    this._id = subTaskData._id;
   }
 }
+
+export { SubTask };
 
 class File {
   constructor(fileData) {
@@ -24,35 +28,40 @@ class File {
   }
 }
 
+export { File };
+
 class Task {
   constructor(data) {
-    if (data) {
-      this.note = new Note(data.note);
-      this._id = data._id;
-      this.title = data.title;
-      this.subTasks = [];
-      if (data.subTasks.length !== 0) {
-        this.subTasks = data.subTasks.map(
-          (subTaskData) => new SubTask(subTaskData)
-        );
+    this.setTask = (task) => {
+      if (task) {
+        this.note = new Note(task.note);
+        this._id = task._id;
+        this.taskId = task.taskId;
+        this.title = task.title;
+        this.subTasks = [];
+        if (task.subTasks.length !== 0) {
+          this.subTasks = task.subTasks.map(
+            (subTasktask) => new SubTask(subTasktask)
+          );
+        }
+        this.files = [];
+        if (task.files.length !== 0) {
+          this.files = task.files.map((filetask) => new File(filetask));
+        }
+        this.planned = task.planned;
+        this.remind = task.remind;
+        this.isSendNotification = task.isSendNotification;
+        this.repeat = task.repeat;
+        this.myDay = task.myDay;
+        this.isImportant = task.isImportant;
+        this.isCompleted = task.isCompleted;
+        this.listId = task.listId;
+        this.owner = task.owner;
+        this.partners = task.partners;
+        this.createdAt = task.createdAt;
+        this.updatedAt = task.updatedAt;
       }
-      this.files = [];
-      if (data.files.length !== 0) {
-        this.files = data.files.map((fileData) => new File(fileData));
-      }
-      this.planned = data.planned;
-      this.remind = data.remind;
-      this.isSendNotification = data.isSendNotification;
-      this.repeat = data.repeat;
-      this.myDay = data.myDay;
-      this.isImportant = data.isImportant;
-      this.isCompleted = data.isCompleted;
-      this.listId = data.listId;
-      this.owner = data.owner;
-      this.partners = data.partners;
-      this.createdAt = data.createdAt;
-      this.updatedAt = data.updatedAt;
-    }
+    };
 
     Object.defineProperties(this, {
       addTask: {
@@ -69,16 +78,8 @@ class Task {
             body: JSON.stringify(task),
           })
             .then((res) => res.json())
-            .then((result) => {
-              if (result.code === 200) {
-                taskManager.addTask(new Task(result.data));
-              } else {
-                alert(result.message);
-              }
-              return result;
-            })
             .catch(() => {
-              return taskManager.showModalErrorServer();
+              return taskManager.showModalServerError();
             });
         },
         writable: false,
@@ -90,7 +91,7 @@ class Task {
             task = this;
           }
 
-          return await fetch(`/updateTask/${task._id}`, {
+          return await fetch(`/updateTask/${task.taskId}`, {
             method: "PUT",
             headers: {
               "content-type": "application/json",
@@ -98,13 +99,8 @@ class Task {
             body: JSON.stringify(task),
           })
             .then((res) => res.json())
-            .then((result) => {
-              if (result.code === 200) {
-              }
-              return result;
-            })
             .catch(() => {
-              return taskManager.showModalErrorServer();
+              return taskManager.showModalServerError();
             });
         },
         writable: false,
@@ -115,7 +111,7 @@ class Task {
           if (!task) {
             task = this;
           }
-          return await fetch(`/deleteTask/${task._id}`, {
+          return await fetch(`/deleteTask/${task.taskId}`, {
             method: "DELETE",
             headers: {
               "content-type": "application/json",
@@ -123,45 +119,16 @@ class Task {
             body: JSON.stringify(task),
           })
             .then((res) => res.json())
-            .then((result) => {
-              if (result.code === 200) {
-                taskManager.deleteTask(task);
-              }
-              return result;
-            })
             .catch(() => {
-              return taskManager.showModalErrorServer();
+              return taskManager.showModalServerError();
             });
         },
         writable: false,
         configurable: false,
       },
       addSubTask: {
-        value: async (subTaskTitle) => {
-          return await fetch(`/addSubTask/${this._id}`, {
-            method: "PUT",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify({ title: subTaskTitle, isCompleted: false }),
-          })
-            .then((res) => res.json())
-            .then((result) => {
-              if (result.code === 200) {
-                this.subTasks.push(new SubTask(result.data));
-              }
-              return result;
-            })
-            .catch(() => {
-              return taskManager.showModalErrorServer();
-            });
-        },
-        writable: false,
-        configurable: false,
-      },
-      updateSubTask: {
         value: async (subTask) => {
-          return await fetch(`/updateSubTask/${this._id}/${subTask._id}`, {
+          return await fetch(`/addSubTask/${this.taskId}`, {
             method: "PUT",
             headers: {
               "content-type": "application/json",
@@ -169,11 +136,28 @@ class Task {
             body: JSON.stringify(subTask),
           })
             .then((res) => res.json())
-            .then((result) => {
-              return result;
-            })
             .catch(() => {
-              return taskManager.showModalErrorServer();
+              return taskManager.showModalServerError();
+            });
+        },
+        writable: false,
+        configurable: false,
+      },
+      updateSubTask: {
+        value: async (subTask) => {
+          return await fetch(
+            `/updateSubTask/${this.taskId}/${subTask.subTaskId}`,
+            {
+              method: "PUT",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify(subTask),
+            }
+          )
+            .then((res) => res.json())
+            .catch(() => {
+              return taskManager.showModalServerError();
             });
         },
         writable: false,
@@ -182,26 +166,25 @@ class Task {
 
       deleteSubTask: {
         value: async (subTask) => {
-          return await fetch(`/deleteSubtask/${this._id}/${subTask._id}`, {
-            method: "PUT",
-          })
+          return await fetch(
+            `/deleteSubtask/${this.taskId}/${subTask.subTaskId}`,
+            {
+              method: "PUT",
+            }
+          )
             .then((res) => res.json())
-            .then((result) => {
-              if (result.code === 200) {
-                this.subTasks = this.subTasks.filter(
-                  (item) => item._id !== subTask._id
-                );
-              }
-              return result;
-            })
             .catch(() => {
-              return taskManager.showModalErrorServer();
+              return taskManager.showModalServerError();
             });
         },
         writable: false,
         configurable: false,
       },
     });
+
+    if (data) {
+      this.setTask(data);
+    }
   }
 }
 

@@ -285,10 +285,15 @@ export const CONTEXT_MENU_TASK = [
           taskManager.confirmModalData = MODAL_DATA_DELETE_TASK;
           taskManager.confirmModalData.title = `Task "${task.title}" will be permanently deleted`;
           taskManager.confirmModalData.onClickConfirm = () => {
+            taskManager.deleteTask(task);
+            taskManager.setTasks(taskManager.getAllTask());
+            taskManager.setTaskActive({ taskId: -1 });
+
             task.deleteTask().then((result) => {
-              if (result.code === 200) {
+              if (result.code === 400) {
+                taskManager.addTask(task);
                 taskManager.setTasks(taskManager.getAllTask());
-                taskManager.setTaskActive({ _id: -1 });
+                taskManager.showModalServerError(result.message);
               }
             });
           };
@@ -300,26 +305,26 @@ export const CONTEXT_MENU_TASK = [
 ];
 
 export const SIDEBAR_DEFAULT_ITEM = [
-  { _id: "MyDay", leftIcon: <FontAwesomeIcon icon={faSun} />, title: "My Day" },
+  { listId: "MyDay", leftIcon: <FontAwesomeIcon icon={faSun} />, title: "My Day" },
   {
-    _id: "Important",
+    listId: "Important",
     leftIcon: <FontAwesomeIcon icon={faStar} />,
     title: "Important",
   },
   {
-    _id: "Planned",
+    listId: "Planned",
     leftIcon: <FontAwesomeIcon icon={faCalendar} />,
     title: "Planned",
   },
   {
-    _id: "Tasks",
+    listId: "Tasks",
     leftIcon: <FontAwesomeIcon icon={faListCheck} />,
     title: "Tasks",
   },
 ];
 
 export const SEARCH_LIST = {
-  _id: "Search",
+  listId: "Search",
   leftIcon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
   title: "Search for",
 };
@@ -331,7 +336,7 @@ export const CONTEXT_MENU_LIST = [
         leftIcon: <FontAwesomeIcon icon={faICursor} />,
         title: "Rename list",
         onClick: function ({ list }) {
-          taskManager.setEditableListId(list._id);
+          taskManager.setEditableListId(list.listId);
         },
       },
       {
@@ -352,10 +357,14 @@ export const CONTEXT_MENU_LIST = [
           taskManager.confirmModalData = MODAL_DATA_DELETE_LIST;
           taskManager.confirmModalData.title = `List "${list.title}" will be permanently deleted`;
           taskManager.confirmModalData.onClickConfirm = () => {
+            taskManager.deleteList(list);
+            taskManager.setUserLists(taskManager.getAllList());
+            taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
             list.deleteList().then((result) => {
               if (result.code === 200) {
-                taskManager.setUserLists(taskManager.getAllList());
-                taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
+                list.setList(result.data);
+              } else if (result.code === 400) {
+                taskManager.showModalServerError(result.message);
               }
             });
           };

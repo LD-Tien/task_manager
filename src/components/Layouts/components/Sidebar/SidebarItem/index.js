@@ -25,9 +25,12 @@ function SidebarItem({
       setListName(data.title);
       return;
     }
+    data.title = listNameUpdate;
+    taskManager.setUserLists(taskManager.getAllList()); // refresh
+
     data.updateList(listNameUpdate).then((result) => {
-      if (result.code === 200) {
-        taskManager.setUserLists(taskManager.getAllList()); // refresh
+      if (result.code === 400) {
+        taskManager.showModalServerError(result.message);
       }
     });
   }

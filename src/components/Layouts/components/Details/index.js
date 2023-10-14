@@ -25,21 +25,28 @@ import { useState } from "react";
 import moment from "moment";
 import taskManager from "../../../../models/TaskManger";
 import { MODAL_DATA_DELETE_TASK } from "../../../../store/modalData";
+import { File, SubTask } from "../../../../models/Task";
 
 function Details({ task, setTasks, setTaskActive }) {
   const [newSubTask, setNewSubTask] = useState("");
   const [fileName, setFileName] = useState("");
-  const [note, setNote] = useState(task._id === -1 ? "" : task.note.content);
+  const [note, setNote] = useState(task.taskId === -1 ? "" : task.note.content);
 
-  if (task._id === -1) return;
+  if (task.taskId === -1) return; // no selected tasks
+
   function handleDeleteTask() {
     taskManager.confirmModalData = MODAL_DATA_DELETE_TASK;
     taskManager.confirmModalData.title = `Task "${task.title}" will be permanently deleted`;
     taskManager.confirmModalData.onClickConfirm = () => {
+      taskManager.deleteTask(task);
+      taskManager.setTasks(taskManager.getAllTask());
+      taskManager.setTaskActive({ taskId: -1 });
+
       task.deleteTask().then((result) => {
-        if (result.code === 200) {
+        if (result.code === 400) {
+          taskManager.addTask(task);
           taskManager.setTasks(taskManager.getAllTask());
-          taskManager.setTaskActive({ _id: -1 });
+          taskManager.showModalServerError(result.message);
         }
       });
     };
@@ -50,68 +57,102 @@ function Details({ task, setTasks, setTaskActive }) {
     setNewSubTask("");
     e.preventDefault();
 
-    task.addSubTask(newSubTask).then((result) => {
-      if (result.code === 200) {
-        taskManager.setTasks(taskManager.getAllTask());
+    const subTask = new SubTask({
+      subTaskId: taskManager.createId(),
+      title: newSubTask,
+      isCompleted: false,
+    });
+
+    task.subTasks.push(subTask);
+    taskManager.setTasks(taskManager.getAllTask());
+
+    task.addSubTask(subTask).then((result) => {
+      if (result.code === 400) {
+        console.log(result.error);
+        taskManager.showModalServerError(result.message);
       }
     });
   }
 
   function handleUpdateTask() {
+    taskManager.setTasks(taskManager.getAllTask());
     task.updateTask().then((result) => {
-      if (result.code === 200) {
-        taskManager.setTasks(taskManager.getAllTask());
+      if (result.code === 400) {
+        taskManager.showModalServerError(result.message);
       }
     });
   }
 
   function handleUploadFile(fileInputElement) {
+    const formData = new FormData();
     const file = fileInputElement.files[0];
+    formData.append("fileName", file);
     const fileSize = file.size / 1024 / 1024; // in MiB
     if (fileSize > 10) {
       alert("File size exceeds 10 MiB");
       setFileName("");
       return;
     }
-    const formData = new FormData();
-    formData.append("fileName", file);
-    fetch("/uploadFile", {
+
+    let fileData = new File({
+      firebaseName: "",
+      name: file.name,
+      type: "",
+      downloadURL: "",
+    });
+
+    task.files.push(fileData);
+    taskManager.setTasks(taskManager.getAllTask());
+
+    fetch(`/uploadFile/${task.taskId}`, {
       method: "POST",
       body: formData,
     })
       .then((res) => res.json())
-      .then((data) => {
-        task.files.push(data);
-        handleUpdateTask();
-        setFileName("");
-        setTasks((prev) => [...prev]);
+      .then((result) => {
+        if (result.code === 200) {
+          task.files[task.files.length - 1] = new File(result.data);
+          setFileName("");
+          taskManager.setTasks(taskManager.getAllTask());
+        } else if (result.code === 400) {
+          taskManager.showModalServerError(result.message);
+        }
+      })
+      .catch(() => {
+        taskManager.showModalServerError();
       });
   }
 
   function handleDeleteFile(deleteFile, task) {
+    taskManager.setTasks(taskManager.getAllTask());
     fetch(`/deleteFile/${deleteFile}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify(task),
-    }).then((res) => {
-      if (res.status === 200) {
-        setTasks((prev) => [...prev]);
-      }
-    });
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.code === 400) {
+          taskManager.showModalServerError(result.message);
+        }
+      })
+      .catch(() => {
+        taskManager.showModalServerError();
+      });
   }
 
   return (
     <div className={styles["wrapper"]}>
       <div>
-        <TaskItem key={task._id} setTasks={setTasks} editable data={task} />
+        <TaskItem key={task.taskId} setTasks={setTasks} editable data={task} />
       </div>
       <GroupItem>
         {task.subTasks.map((subTask) => {
           return (
             <TaskItem
-              key={subTask._id}
+              key={subTask.subTaskId}
               editable
               isSubTask
               setTaskActive={setTaskActive}
@@ -185,11 +226,14 @@ function Details({ task, setTasks, setTaskActive }) {
             <Button
               leftIcon={<FontAwesomeIcon icon={faCalendarDays} />}
               item
-              isActive={!!task.planned}
+              isActive={task.planned}
               task={task}
-              danger={moment(moment().format().split("T")[0]).isAfter(
-                moment(moment(task.planned).format().split("T")[0])
-              )}
+              danger={
+                task.planned &&
+                moment(moment().format().split("T")[0]).isAfter(
+                  moment(moment(task.planned).format().split("T")[0])
+                )
+              }
               handleUpdate={handleUpdateTask}
               onClickCancel={() => {
                 task.planned = "";
@@ -223,6 +267,7 @@ function Details({ task, setTasks, setTaskActive }) {
               <Button
                 key={index}
                 href={file.downloadURL}
+                disable={!file.downloadURL}
                 leftIcon={<FontAwesomeIcon icon={faFile} />}
                 item
                 isFile
@@ -234,7 +279,7 @@ function Details({ task, setTasks, setTaskActive }) {
                   );
                 }}
               >
-                {file.name}
+                {file.downloadURL ? file.name : `Uploading...`}
               </Button>
             );
           })}
@@ -285,7 +330,7 @@ function Details({ task, setTasks, setTaskActive }) {
         <Button
           leftIcon={<FontAwesomeIcon icon={faSquareCaretRight} />}
           small
-          onClick={() => setTaskActive({ _id: -1 })}
+          onClick={() => setTaskActive({ taskId: -1 })}
         />
         <p className={styles["create-date"]}>
           Created on {moment(task.createdAt).calendar()}

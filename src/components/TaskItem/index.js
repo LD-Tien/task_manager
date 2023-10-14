@@ -28,25 +28,33 @@ function TaskItem({
   function handleUpdateTask(e) {
     if (e) e.preventDefault();
 
+    taskManager.setTasks(taskManager.getAllTask());
+
     if (isSubTask) {
       parentTask.updateSubTask(data).then((result) => {
-        if (result.code === 200) {
-          taskManager.setTasks(taskManager.getAllTask());
+        if (result.code === 400) {
+          taskManager.showModalServerError(result.message);
         }
       });
     } else {
+      taskManager.setTasks(taskManager.getAllTask());
       data.updateTask().then((result) => {
-        if (result.code === 200) {
-          taskManager.setTasks(taskManager.getAllTask());
+        if (result.code === 400) {
+          taskManager.showModalServerError(result.message);
         }
       });
     }
   }
 
   function handleDeleteSubTask() {
+    parentTask.subTasks = parentTask.subTasks.filter(
+      (item) => item.subTaskId !== data.subTaskId
+    );
+    taskManager.setTasks(taskManager.getAllTask());
+
     parentTask.deleteSubTask(data).then((result) => {
-      if (result.code === 200) {
-        taskManager.setTasks(taskManager.getAllTask());
+      if (result.code === 400) {
+        taskManager.showModalServerError(result.message);
       }
     });
   }
