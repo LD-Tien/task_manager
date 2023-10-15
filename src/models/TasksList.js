@@ -41,6 +41,7 @@ class TasksList {
             method: "POST",
             headers: {
               "Content-type": "application/json",
+              authorization: await taskManager.getIdToken(),
             },
             body: JSON.stringify({ listId: this.listId, title: this.title }),
           })
@@ -56,7 +57,10 @@ class TasksList {
         value: async () => {
           return await fetch(`/updateList/${this.listId}`, {
             method: "PUT",
-            headers: { "content-type": "application/json" },
+            headers: {
+              "content-type": "application/json",
+              authorization: await taskManager.getIdToken(),
+            },
             body: JSON.stringify({ title: this.title }),
           })
             .then((res) => res.json())
@@ -71,6 +75,9 @@ class TasksList {
         value: async () => {
           return await fetch(`/deleteList/${this.listId}`, {
             method: "DELETE",
+            headers: {
+              authorization: await taskManager.getIdToken(),
+            },
           })
             .then((res) => res.json())
             .catch(() => {

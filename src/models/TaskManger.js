@@ -1,8 +1,7 @@
 import Task from "../models/Task";
 import { MODAL_DATA_SERVER_ERROR } from "../store/modalData";
 import TasksList from "./TasksList";
-import User from "./User";
-
+import { auth } from "../firebase";
 class TaskManger {
   constructor() {
     let allTask = [];
@@ -21,6 +20,16 @@ class TaskManger {
       onClickCancel: undefined,
     };
 
+    this.getIdToken = async () => {
+      const currentUser = auth.currentUser;
+      try {
+        const token = await currentUser.getIdToken();
+        return token;
+      } catch (error) {
+        taskManager.showModalServerError("Error", error.message);
+      }
+    };
+
     this.showModalServerError = (errorTitle, errorBody) => {
       this.confirmModalData = MODAL_DATA_SERVER_ERROR;
       if (errorTitle) {
@@ -37,23 +46,28 @@ class TaskManger {
     };
 
     this.getDataFromAPI = async () => {
-      const result = await new User().auth();
-      if (!result) {
-        window.location.replace("/login");
-      }
-
-      await fetch("/getLists")
+      const token = await this.getIdToken();
+      await fetch("/getLists", {
+        headers: {
+          authorization: token,
+        },
+      })
         .then((res) => res.json())
         .then((result) => {
           if (result.code === 200) {
             this.setAllList(result.data);
           }
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error);
           return this.showModalServerError();
         });
 
-      await fetch("/getTasks")
+      await fetch("/getTasks", {
+        headers: {
+          authorization: token,
+        },
+      })
         .then((res) => res.json())
         .then((result) => {
           if (result.code === 200) {

@@ -20,6 +20,8 @@ import {
 import moment from "moment";
 import taskManager from "../models/TaskManger";
 import { MODAL_DATA_DELETE_LIST, MODAL_DATA_DELETE_TASK } from "./modalData";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 export const SORT_ITEM = [
   { headerTitle: "Sort by" },
@@ -305,7 +307,11 @@ export const CONTEXT_MENU_TASK = [
 ];
 
 export const SIDEBAR_DEFAULT_ITEM = [
-  { listId: "MyDay", leftIcon: <FontAwesomeIcon icon={faSun} />, title: "My Day" },
+  {
+    listId: "MyDay",
+    leftIcon: <FontAwesomeIcon icon={faSun} />,
+    title: "My Day",
+  },
   {
     listId: "Important",
     leftIcon: <FontAwesomeIcon icon={faStar} />,
@@ -409,8 +415,9 @@ export const ACCOUNT_MENU = [
         title: "Log out",
         danger: true,
         onClick: function () {
-          document.cookie = "TMToken=;";
-          window.location.replace("/login");
+          signOut(auth).then(() => {
+            window.location.href = "/login"
+          });
         },
       },
     ],

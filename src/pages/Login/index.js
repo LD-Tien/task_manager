@@ -7,37 +7,35 @@ import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import styles from "./Login.module.scss";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
-import User from "../../models/User";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Login() {
   const [emailLogin, setEmailLogin] = useState("");
   const [passwordLogin, setPasswordLogin] = useState("");
   const [errorTextLogin, setErrorTextLogin] = useState("");
-  const [isLogged, setIsLogged] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   async function handleClickLogin(e) {
     e.preventDefault();
-    if(!validateEmail(emailLogin)) {
-      setErrorTextLogin("Please enter the correct email format")
+    if (!validateEmail(emailLogin)) {
+      setErrorTextLogin("Please enter the correct email format");
       return;
     }
-    if(passwordLogin.length < 4) {
-      setErrorTextLogin("Password must have at least 4 characters")
+    if (passwordLogin.length < 6) {
+      setErrorTextLogin("Password should be at least 6 characters");
       return;
     }
-    const user = new User({
-      email: emailLogin,
-      password: passwordLogin,
-      username: emailLogin.split("@")[0],
-    });
-    const result = await user.login();
-    if (result.code === 200) {
-      setErrorTextLogin("");
-      document.cookie = "TMToken = " + result.token;
-      window.location.replace("/home");
-    } else {
-      setErrorTextLogin(result.message);
-    }
+    setLoading(true);
+    login(emailLogin, passwordLogin)
+      .then(() => {
+        setErrorTextLogin("");
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+        setErrorTextLogin("Email or password is incorrect");
+      });
   }
 
   function validateEmail(email) {
@@ -48,21 +46,21 @@ function Login() {
       );
   }
 
-  async function checkLogin() {
-    const result = await new User().auth();
-    if (result) {
-      window.location.replace("/home");
-      setIsLogged(true);
-    } else {
-      setIsLogged(false);
-    }
-  }
+  // async function checkLogin() {
+  //   const result = await new User().auth();
+  //   if (result) {
+  //     window.location.replace("/home");
+  //     setIsLogged(true);
+  //   } else {
+  //     setIsLogged(false);
+  //   }
+  // }
 
   useLayoutEffect(() => {
-    checkLogin();
+    // checkLogin();
   }, []);
 
-  return !isLogged ? (
+  return (
     <div className={styles["wrapper"]}>
       <form method="POST">
         <p className={styles["title"]}>LOG IN</p>
@@ -82,18 +80,22 @@ function Login() {
           onChange={setPasswordLogin}
           icon={<FontAwesomeIcon icon={faLock} />}
         />
-        <Button medium primary centerText onClick={handleClickLogin}>
+        <Button
+          disable={loading}
+          medium
+          primary
+          centerText
+          onClick={handleClickLogin}
+        >
           Log In
         </Button>
         <p className={styles["error-text"]}>{errorTextLogin}</p>
         <hr />
         <Link className={styles["link"]} to={"/signup"} replace>
-          Create account
+          Need an account? Sign up
         </Link>
       </form>
     </div>
-  ) : (
-    <></>
   );
 }
 

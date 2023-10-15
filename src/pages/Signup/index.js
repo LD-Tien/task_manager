@@ -1,8 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import TextInput from "../../components/TextInput";
-import styles from "./Signup.module.scss";
-import Button from "../../components/Button";
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import {
   faCircleCheck,
   faCircleXmark,
@@ -10,45 +7,45 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import User from "../../models/User";
+
+import { useAuth } from "../../contexts/AuthContext";
+import TextInput from "../../components/TextInput";
+import styles from "./Signup.module.scss";
+import Button from "../../components/Button";
 
 function Signup() {
   const [emailSignup, setEmailSignup] = useState("");
   const [passwordSignup, setPasswordSignup] = useState("");
   const [retypePasswordSignup, setRetypePasswordSignup] = useState("");
   const [errorTextSignup, setErrorTextSignup] = useState("");
-  const [isLogged, setIsLogged] = useState(true);
+  const { signup, login } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   async function handleClickSignup(e) {
-    e.preventDefault();
     e.preventDefault();
     if (!validateEmail(emailSignup)) {
       setErrorTextSignup("Please enter the correct email format");
       return;
     }
-    if (passwordSignup.length < 4) {
-      setErrorTextSignup("Password must have at least 4 characters");
+    if (passwordSignup.length < 6) {
+      setErrorTextSignup("Password should be at least 6 characters");
       return;
     }
     if (!(retypePasswordSignup === passwordSignup)) {
-      setErrorTextSignup("Re-enter password does not match password");
+      setErrorTextSignup("Confirm password does not match password");
       return;
     }
 
-    const user = new User({
-      email: emailSignup,
-      password: passwordSignup,
-      username: emailSignup.split("@")[0],
-    });
-
-    const result = await user.signup();
-    if (result.code === 200) {
-      document.cookie = "TMToken = " + result.token;
-      window.location.replace("/home");
-      setErrorTextSignup("");
-    } else { // code 400
-      setErrorTextSignup(result.message);
-    }
+    setLoading(true);
+    signup(emailSignup, passwordSignup)
+      .then(() => {
+        login(emailSignup, passwordSignup);
+        setLoading(false);
+      })
+      .catch(() => {
+        setErrorTextSignup("Email already in use, please try another");
+        setLoading(false);
+      });
   }
 
   function validateEmail(email) {
@@ -59,20 +56,7 @@ function Signup() {
       );
   }
 
-  async function checkLogin() {
-    const result = await new User().auth();
-    if (result) {
-      window.location.replace("/home");
-      setIsLogged(true);
-    } else {
-      setIsLogged(false);
-    }
-  }
-
-  useLayoutEffect(() => {
-    checkLogin();
-  }, []);
-  return !isLogged ? (
+  return (
     <div className={styles["wrapper"]}>
       <form>
         <p className={styles["title"]}>SIGN UP</p>
@@ -92,7 +76,7 @@ function Signup() {
         />
         <TextInput
           type="password"
-          placeholder="Retype password"
+          placeholder="Confirm password"
           onChange={setRetypePasswordSignup}
           icon={
             passwordSignup === retypePasswordSignup ? (
@@ -105,18 +89,22 @@ function Signup() {
             )
           }
         />
-        <Button medium primary centerText onClick={handleClickSignup}>
+        <Button
+          medium
+          disable={loading}
+          primary
+          centerText
+          onClick={handleClickSignup}
+        >
           Sign Up
         </Button>
         <p className={styles["error-text"]}>{errorTextSignup}</p>
         <hr />
         <Link className={styles["link"]} to={"/login"} replace>
-          Already have an account
+          Already have an account, Log in
         </Link>
       </form>
     </div>
-  ) : (
-    <></>
   );
 }
 

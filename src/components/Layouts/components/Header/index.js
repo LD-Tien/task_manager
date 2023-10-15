@@ -1,29 +1,24 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faKey,
-  faLock,
-} from "@fortawesome/free-solid-svg-icons";
+import { faKey, faLock } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
 import Button from "../../../Button";
 import Menu from "../../../Popper/Menu";
 import { faFloppyDisk, faUser } from "@fortawesome/free-regular-svg-icons";
 import Modal from "../../../Modal";
-import { useLayoutEffect, useRef, useState } from "react";
+import {useState } from "react";
 import TextInput from "../../../TextInput";
 import { ACCOUNT_MENU } from "../../../../store/constraints";
+import { useAuth } from "../../../../contexts/AuthContext";
+import accountImage from "./account64.png";
 
 function Header() {
+  const { currentUser } = useAuth();
   const [isShowModalAccount, setIsShowModalAccount] = useState(false);
 
-  let userData = useRef("");
-  useLayoutEffect(() => {
-    fetch("/getUser")
-      .then((res) => res.json())
-      .then((data) => {
-        userData.current = data;
-      });
-  }, []);
+  if (!currentUser) {
+    window.location.href = "/login";
+  }
   return (
     <div className={styles["wrapper"]}>
       <Link href="/home" className={styles["brand"]}>
@@ -38,15 +33,20 @@ function Header() {
         >
           <div className={styles["account"]}>
             <div>
-              <p className={styles["username"]}>{userData.current.username}</p>
-              <p className={styles["email"]}>{userData.current.email}</p>
+              <p className={styles["username"]}>
+                {currentUser.providerData[0].displayName ??
+                  currentUser.email.split("@")[0]}
+              </p>
+              <p className={styles["email"]}>{currentUser.email}</p>
             </div>
             <Button small>
               <div
                 className={styles["avatar"]}
                 style={{
-                  backgroundImage:
-                    "url(https://cdn-icons-png.flaticon.com/512/149/149071.png)",
+                  backgroundImage: `url(${
+                    currentUser.providerData.photoURL ?? accountImage
+                  })`,
+                  marginBottom: "-2px",
                 }}
               />
             </Button>
@@ -64,7 +64,10 @@ function Header() {
             <TextInput
               icon={<FontAwesomeIcon icon={faUser} />}
               placeholder="Username"
-              value={userData.current.username}
+              value={
+                currentUser.providerData[0].displayName ??
+                currentUser.email.split("@")[0]
+              }
             />
             <Button
               leftIcon={<FontAwesomeIcon icon={faFloppyDisk} />}

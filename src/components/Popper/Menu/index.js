@@ -1,9 +1,8 @@
-import Tippy, { tippy } from "@tippyjs/react/headless";
+import Tippy from "@tippyjs/react/headless";
 import { followCursor } from "tippy.js/headless";
 import styles from "./Menu.module.scss";
 import Popper from "..";
 import Button from "../../Button";
-import TextInput from "../../TextInput";
 import moment from "moment";
 
 function Menu({

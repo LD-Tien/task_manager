@@ -74,6 +74,7 @@ class Task {
             method: "POST",
             headers: {
               "content-type": "application/json",
+              authorization: await taskManager.getIdToken(),
             },
             body: JSON.stringify(task),
           })
@@ -95,6 +96,7 @@ class Task {
             method: "PUT",
             headers: {
               "content-type": "application/json",
+              authorization: await taskManager.getIdToken(),
             },
             body: JSON.stringify(task),
           })
@@ -115,6 +117,7 @@ class Task {
             method: "DELETE",
             headers: {
               "content-type": "application/json",
+              authorization: await taskManager.getIdToken(),
             },
             body: JSON.stringify(task),
           })
@@ -132,6 +135,7 @@ class Task {
             method: "PUT",
             headers: {
               "content-type": "application/json",
+              authorization: await taskManager.getIdToken(),
             },
             body: JSON.stringify(subTask),
           })
@@ -151,6 +155,7 @@ class Task {
               method: "PUT",
               headers: {
                 "content-type": "application/json",
+                authorization: await taskManager.getIdToken(),
               },
               body: JSON.stringify(subTask),
             }
@@ -170,6 +175,9 @@ class Task {
             `/deleteSubtask/${this.taskId}/${subTask.subTaskId}`,
             {
               method: "PUT",
+              headers: {
+                authorization: await taskManager.getIdToken(),
+              },
             }
           )
             .then((res) => res.json())

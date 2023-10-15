@@ -83,7 +83,7 @@ function Details({ task, setTasks, setTaskActive }) {
     });
   }
 
-  function handleUploadFile(fileInputElement) {
+  async function handleUploadFile(fileInputElement) {
     const formData = new FormData();
     const file = fileInputElement.files[0];
     formData.append("fileName", file);
@@ -106,6 +106,9 @@ function Details({ task, setTasks, setTaskActive }) {
 
     fetch(`/uploadFile/${task.taskId}`, {
       method: "POST",
+      headers: {
+        authorization: await taskManager.getIdToken(),
+      },
       body: formData,
     })
       .then((res) => res.json())
@@ -123,12 +126,13 @@ function Details({ task, setTasks, setTaskActive }) {
       });
   }
 
-  function handleDeleteFile(deleteFile, task) {
+  async function handleDeleteFile(deleteFile, task) {
     taskManager.setTasks(taskManager.getAllTask());
     fetch(`/deleteFile/${deleteFile}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
+        authorization: await taskManager.getIdToken(),
       },
       body: JSON.stringify(task),
     })

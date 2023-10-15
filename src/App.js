@@ -5,8 +5,11 @@ import Signup from "./pages/Signup";
 import { useRef, useState } from "react";
 import taskManager from "./models/TaskManger";
 import Modal from "./components/Modal";
+import { useAuth } from "./contexts/AuthContext";
+import PrivateRouter from "./components/PrivateRouter";
 
 function App() {
+  const { currentUser } = useAuth();
   const root = useRef(document.querySelector("html"));
   const dataTheme = useRef(localStorage.getItem("data-theme"));
   const [showModalConfirm, setShowModalConfirm] = useState(false);
@@ -24,10 +27,32 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/home" element={<Todo />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/*" element={<Login />} />
+          <Route
+            path="/home"
+            element={
+              <PrivateRouter isPass={currentUser} redirect="/login">
+                <Todo />
+              </PrivateRouter>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PrivateRouter isPass={!currentUser} redirect="/home">
+                <Signup />
+              </PrivateRouter>
+            }
+          />
+          <Route
+            path="/*"
+            element={
+              <PrivateRouter isPass={!currentUser} redirect="/home">
+                <Login />
+              </PrivateRouter>
+            }
+          />
         </Routes>
+
         <Modal
           type="confirm"
           isShow={showModalConfirm}
