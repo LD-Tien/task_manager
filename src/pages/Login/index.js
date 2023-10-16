@@ -8,7 +8,6 @@ import styles from "./Login.module.scss";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import { useAuth } from "../../contexts/AuthContext";
-import taskManager from "../../models/TaskManger";
 
 function Login() {
   const [emailLogin, setEmailLogin] = useState("");
@@ -43,14 +42,13 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     loginWithGoogle()
-      .then((credential) => {
-        alert(credential);
+      .then(() => {
+        setErrorTextLogin("");
         setLoading(false);
       })
       .catch(() => {
-        taskManager.showModalServerError(
-          "Error!",
-          "Email already in use. Please choose another sign in method"
+        setErrorTextLogin(
+          "Email already in use. Try another email"
         );
       });
   }

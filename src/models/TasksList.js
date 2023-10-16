@@ -1,5 +1,7 @@
+import { deleteObject, ref } from "firebase/storage";
 import Task from "./Task";
 import taskManager from "./TaskManger";
+import { filesRef } from "../firebase";
 
 class TasksList {
   constructor(data) {
@@ -80,6 +82,26 @@ class TasksList {
             },
           })
             .then((res) => res.json())
+            .then((result) => {
+              if (result.code === 200 && this.tasks.length) {
+                this.tasks.forEach((task) => {
+                  try {
+                    if (task.files.length) {
+                      task.files.forEach((file) => {
+                        const desertRef = ref(
+                          filesRef,
+                          `uid:${task.owner}/${file.firebaseName}`
+                        );
+                        deleteObject(desertRef);
+                      });
+                    }
+                  } catch (error) {
+                    taskManager.showModalServerError();
+                  }
+                });
+              }
+              return result;
+            })
             .catch(() => {
               return taskManager.showModalServerError();
             });

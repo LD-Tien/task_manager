@@ -26,6 +26,13 @@ import moment from "moment";
 import taskManager from "../../../../models/TaskManger";
 import { MODAL_DATA_DELETE_TASK } from "../../../../store/modalData";
 import { File, SubTask } from "../../../../models/Task";
+import { filesRef } from "../../../../firebase";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 
 function Details({ task, setTasks, setTaskActive }) {
   const [newSubTask, setNewSubTask] = useState("");
@@ -84,9 +91,7 @@ function Details({ task, setTasks, setTaskActive }) {
   }
 
   async function handleUploadFile(fileInputElement) {
-    const formData = new FormData();
     const file = fileInputElement.files[0];
-    formData.append("fileName", file);
     const fileSize = file.size / 1024 / 1024; // in MiB
     if (fileSize > 10) {
       alert("File size exceeds 10 MiB");
@@ -95,56 +100,31 @@ function Details({ task, setTasks, setTaskActive }) {
     }
 
     let fileData = new File({
-      firebaseName: "",
+      firebaseName: `${file.name} - ${taskManager.createId()}`,
       name: file.name,
-      type: "",
+      type: file.type,
       downloadURL: "",
     });
-
     task.files.push(fileData);
-    taskManager.setTasks(taskManager.getAllTask());
 
-    fetch(`/uploadFile/${task.taskId}`, {
-      method: "POST",
-      headers: {
-        authorization: await taskManager.getIdToken(),
-      },
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.code === 200) {
-          task.files[task.files.length - 1] = new File(result.data);
-          setFileName("");
-          taskManager.setTasks(taskManager.getAllTask());
-        } else if (result.code === 400) {
-          taskManager.showModalServerError(result.message);
-        }
+    const fileRef = ref(filesRef, `uid:${task.owner}/${fileData.firebaseName}`);
+    await uploadBytes(fileRef, file)
+      .then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((downloadURL) => {
+          fileData.downloadURL = downloadURL;
+          handleUpdateTask();
+        });
       })
       .catch(() => {
         taskManager.showModalServerError();
       });
+    setFileName("");
   }
 
-  async function handleDeleteFile(deleteFile, task) {
-    taskManager.setTasks(taskManager.getAllTask());
-    fetch(`/deleteFile/${deleteFile}`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-        authorization: await taskManager.getIdToken(),
-      },
-      body: JSON.stringify(task),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.code === 400) {
-          taskManager.showModalServerError(result.message);
-        }
-      })
-      .catch(() => {
-        taskManager.showModalServerError();
-      });
+  async function handleDeleteFile(fileName, task) {
+    handleUpdateTask();
+    const desertRef = ref(filesRef, `uid:${task.owner}/${fileName}`);
+    deleteObject(desertRef).catch(() => taskManager.showModalServerError());
   }
 
   return (
@@ -278,7 +258,7 @@ function Details({ task, setTasks, setTaskActive }) {
                 onClickCancel={(e) => {
                   e.preventDefault();
                   handleDeleteFile(
-                    task.files.splice(index, 1)[0].firebaseName,
+                    task.files.splice(index, 1)[0].firebaseName, // remove file in task (DOM)
                     task
                   );
                 }}

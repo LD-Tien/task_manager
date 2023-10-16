@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getStorage, ref } from "firebase/storage";
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -10,5 +11,8 @@ const app = initializeApp({
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_APP_ID,
 });
+
+export const storage = getStorage(app);
+export const filesRef = ref(storage, "files");
 export const auth = getAuth(app);
 export default app;
