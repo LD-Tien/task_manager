@@ -44,7 +44,7 @@ function Header() {
                 className={styles["avatar"]}
                 style={{
                   backgroundImage: `url(${
-                    currentUser.providerData.photoURL ?? accountImage
+                    currentUser.photoURL ?? accountImage
                   })`,
                   marginBottom: "-2px",
                 }}
@@ -54,7 +54,7 @@ function Header() {
         </Menu>
       </div>
       <Modal
-        title="Account (Not working)"
+        title="Account (Feature not working)"
         isShow={isShowModalAccount}
         setIsShow={setIsShowModalAccount}
       >

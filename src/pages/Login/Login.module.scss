@@ -37,6 +37,22 @@
     border-radius: 8px;
     overflow: hidden;
 
+    hr {
+      border: 0;
+      height: 1px;
+      background-color: var(--bg-separator);
+    }
+
+    .or {
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      gap: 8px;
+      hr {
+        flex: 1;
+      }
+    }
+
     > * {
       border-radius: 3px;
       > * {

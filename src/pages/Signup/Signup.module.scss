@@ -36,6 +36,12 @@
       padding: 24px;
       border-radius: 8px;
       overflow: hidden;
+
+      hr {
+        border: 0;
+        height: 1px;
+        background-color: var(--bg-separator);
+      }
   
       > * {
         border-radius: 3px;
