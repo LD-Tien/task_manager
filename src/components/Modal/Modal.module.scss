@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
   min-width: 300px;
-  width: 350px;
+  max-width: 100%;
   flex-direction: column;
   position: absolute;
   padding: 24px;
@@ -26,6 +26,8 @@
     color: var(--font-color-primary);
     font-weight: 700;
     gap: 12px;
+    overflow: hidden;
+    text-overflow: clip;
 
     .close {
       cursor: pointer;

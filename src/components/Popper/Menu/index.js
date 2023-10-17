@@ -53,7 +53,8 @@ function Menu({
                     (e) => {
                       if (props.handleUpdate && props.task) {
                         if (props.updateRemind) {
-                          props.task.isSendNotification = false;
+                          props.task.isSendNotification =
+                            new Date(e.target.value) - new Date() <= 0;
                           props.task.remind = moment(e.target.value).format();
                         }
                         if (props.updatePlanned) {

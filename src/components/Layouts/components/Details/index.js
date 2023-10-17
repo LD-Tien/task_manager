@@ -186,6 +186,7 @@ function Details({ task, setTasks, setTaskActive }) {
               leftIcon={<FontAwesomeIcon icon={faBell} />}
               item
               isActive={!!task.remind}
+              danger={task.isSendNotification}
               onClickCancel={() => {
                 task.remind = "";
                 handleUpdateTask();
@@ -193,7 +194,7 @@ function Details({ task, setTasks, setTaskActive }) {
             >
               {task.remind
                 ? `Remind me at ${moment(task.remind).format("LT")}, ${
-                    moment(task.remind).calendar().split(" ")[0]
+                    moment(task.remind).calendar().split(" at")[0]
                   }`
                 : `Remind me`}
             </Button>

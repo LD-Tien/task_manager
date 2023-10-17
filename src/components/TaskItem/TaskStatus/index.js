@@ -75,9 +75,9 @@ function TaskStatus(task) {
           </span>
         </span>
       )}
-      {(task.remind || task.note.content || task.files.length !== 0) && (
+      {((task.remind && !task.isSendNotification) || task.note.content || task.files.length !== 0) && (
         <span className={styles["task-status"]}>
-          {task.remind && <FontAwesomeIcon icon={faBell} />}
+          {(task.remind && !task.isSendNotification) && <FontAwesomeIcon icon={faBell} />}
           {task.note.content && <FontAwesomeIcon icon={faNoteSticky} />}
           {task.files.length !== 0 && <FontAwesomeIcon icon={faPaperclip} />}
         </span>

@@ -192,7 +192,6 @@ function Todo() {
             className={`${styles["sidebar"]} ${
               styles[`${hiddenSidebar ? "hidden-sidebar" : ""}`]
             }`}
-
             onClick={(e) => {
               e.stopPropagation();
             }}
