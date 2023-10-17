@@ -42,7 +42,7 @@ function Modal({
             <div className={styles["body"]}>{children}</div>
             {type === "confirm" && (
               <div className={styles["footer"]}>
-                {confirmType !== "error" && (
+                {cancelContent && (
                   <Button
                     medium
                     onClick={() => {
@@ -58,7 +58,7 @@ function Modal({
                 <Button
                   medium
                   danger={confirmType === "danger"}
-                  primary={confirmType === "error"}
+                  primary={confirmType !== "danger"}
                   onClick={() => {
                     if (onClickConfirm) {
                       onClickConfirm();

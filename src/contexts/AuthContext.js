@@ -8,6 +8,9 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
   sendPasswordResetEmail,
+  updateProfile,
+  updatePassword,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 import { createContext, useContext, useLayoutEffect, useState } from "react";
 import { auth } from "../firebase";
@@ -43,6 +46,20 @@ export function AuthProvider({ children }) {
     });
   }
 
+  function updateUserProfile(profile) {
+    return updateProfile(currentUser, {
+      ...profile,
+    });
+  }
+
+  function updateUserPassword(newPassword) {
+    return updatePassword(currentUser, newPassword);
+  }
+
+  function reAuthenticate(credential) {
+    return reauthenticateWithCredential(currentUser,credential);
+  }
+
   function logout() {
     return signOut(auth);
   }
@@ -61,6 +78,9 @@ export function AuthProvider({ children }) {
     logout,
     loginWithGoogle,
     forgotPassword,
+    updateUserProfile,
+    updateUserPassword,
+    reAuthenticate,
   };
   return (
     <AuthContext.Provider value={value}>
