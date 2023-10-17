@@ -1,10 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKey, faLock } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faKey,
+  faLock,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
 import Button from "../../../Button";
 import Menu from "../../../Popper/Menu";
-import { faFloppyDisk, faUser } from "@fortawesome/free-regular-svg-icons";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
 import Modal from "../../../Modal";
 import { useState } from "react";
 import TextInput from "../../../TextInput";
@@ -14,6 +19,10 @@ import accountImage from "./account64.png";
 import taskManager from "../../../../models/TaskManger";
 import { MODAL_DATA_OK } from "../../../../store/modalData";
 import { EmailAuthProvider } from "firebase/auth";
+import {
+  SEARCH_LIST,
+  SIDEBAR_DEFAULT_ITEM,
+} from "../../../../store/constraints";
 
 function Header() {
   const { currentUser, updateUserProfile, updateUserPassword, reAuthenticate } =
@@ -31,6 +40,7 @@ function Header() {
   const providerPassword = currentUser.providerData.some(
     (provider) => provider.providerId === "password"
   );
+  const [search, setSearch] = useState("");
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
@@ -65,11 +75,53 @@ function Header() {
         taskManager.setShowModalConfirm(true);
       });
   };
+
   return (
-    <div className={styles["wrapper"]}>
-      <Link href="/home" className={styles["brand"]}>
-        Task Manager
-      </Link>
+    <div
+      className={styles["wrapper"]}
+      onClick={() => {
+        taskManager.setHiddenSidebar(true);
+      }}
+    >
+      <div className={styles["left-column"]}>
+        <FontAwesomeIcon
+          icon={faBars}
+          className={styles["bars-btn"]}
+          onClick={(e) => {
+            e.stopPropagation();
+            taskManager.setHiddenSidebar((prev) => !prev);
+          }}
+        />
+        <Link href="/home" className={styles["brand"]}>
+          Task Manager
+        </Link>
+      </div>
+      <div className={styles["search"]}>
+        <TextInput
+          type="search"
+          value={search}
+          icon={
+            <FontAwesomeIcon
+              icon={faSearch}
+              className={styles["search-icon"]}
+            />
+          }
+          placeholder="Search tasks"
+          onChange={(value) => {
+            setSearch(value);
+            taskManager.setTaskActive({ taskId: -1 });
+            if (value) {
+              taskManager.searchKeywords = value;
+              taskManager.searchTasks();
+              taskManager.setListActive({ ...SEARCH_LIST });
+            } else {
+              taskManager.searchKeywords = value;
+              taskManager.tasksSearched = [];
+              taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
+            }
+          }}
+        />
+      </div>
       <div className={styles["button-list"]}>
         <Menu
           trigger="mouseenter"
@@ -105,21 +157,21 @@ function Header() {
       >
         <form>
           <label>Username</label>
-          <div>
-            <TextInput
-              icon={<FontAwesomeIcon icon={faUser} />}
-              placeholder="Username"
-              value={username}
-              onChange={setUsername}
-            />
-            <Button
-              leftIcon={<FontAwesomeIcon icon={faFloppyDisk} />}
-              small
-              primary
-              disable={currentUserName === username}
-              onClick={handleUpdateProfile}
-            ></Button>
-          </div>
+          <TextInput
+            icon={<FontAwesomeIcon icon={faUser} />}
+            placeholder="Username"
+            value={username}
+            onChange={setUsername}
+          />
+          <Button
+            medium
+            primary
+            centerText
+            disable={currentUserName === username}
+            onClick={handleUpdateProfile}
+          >
+            Save
+          </Button>
           {providerPassword && (
             <>
               <label>Change password</label>

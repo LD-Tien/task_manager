@@ -1,23 +1,29 @@
 .wrapper {
-    display: flex;
-    align-items: center;
-    color: var(--font-color-brand);
-    user-select: none;
+  display: flex;
+  align-items: center;
+  color: var(--font-color-brand);
+  user-select: none;
 
-    > * {
-        border-radius: 8px;
-        overflow: hidden;
-    }
+  > * {
+    border-radius: 8px;
+    overflow: hidden;
+  }
 }
 
 .title > * {
-    margin-right: 8px;
+  margin-right: 8px;
 }
 
 .title {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    font-size: 2rem;
-    font-weight: 500;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+@media (max-width: 740px) {
+  .wrapper {
+    flex-direction: column;
+  }
 }

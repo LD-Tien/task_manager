@@ -1,6 +1,7 @@
 .wrapper {
   display: flex;
-  min-width: 350px;
+  min-width: 300px;
+  width: 350px;
   flex-direction: column;
   position: absolute;
   padding: 24px;
@@ -11,7 +12,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1001;
+  z-index: 2000;
   gap: 24px;
   background-color: var(--bg-primary-accent);
   border-radius: 8px;
@@ -48,27 +49,16 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-
+      
       label {
         margin-top: 12px;
-      }
-
-      > div {
-        display: flex;
-        border-radius: 8px;
-        overflow: hidden;
-        gap: 8px;
-
-        > *,
-        > * > :first-child {
-          border-radius: 8px;
-        }
       }
 
       > *,
       > * > :first-child {
         border-radius: 8px;
       }
+
     }
   }
 

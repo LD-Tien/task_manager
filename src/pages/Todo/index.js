@@ -24,6 +24,7 @@ function Todo() {
   const [tasks, setTasks] = useState([]);
   const [taskActive, setTaskActive] = useState({ taskId: -1 });
   const [titleNewTask, setTitleNewTask] = useState("");
+  const [hiddenSidebar, setHiddenSidebar] = useState(true);
   let [userLists, setUserLists] = useState([]);
   let defaultLists = useRef(SIDEBAR_DEFAULT_ITEM);
 
@@ -31,6 +32,7 @@ function Todo() {
   taskManager.setTasks = setTasks;
   taskManager.setTaskActive = setTaskActive;
   taskManager.setUserLists = setUserLists;
+  taskManager.setHiddenSidebar = setHiddenSidebar;
 
   async function getData() {
     await taskManager.getDataFromAPI();
@@ -178,14 +180,33 @@ function Todo() {
     <div className={styles["wrapper"]}>
       <Header />
       <div className={styles["content"]}>
-        <Sidebar
-          listActive={listActive}
-          setListActive={setListActive}
-          setTaskActive={setTaskActive}
-          defaultList={defaultLists.current}
-          userLists={userLists}
-          setUserLists={setUserLists}
-        />
+        <div
+          className={styles["wrapper-sidebar"]}
+          onClick={() => {
+            if (!hiddenSidebar) {
+              setHiddenSidebar(true);
+            }
+          }}
+        >
+          <div
+            className={`${styles["sidebar"]} ${
+              styles[`${hiddenSidebar ? "hidden-sidebar" : ""}`]
+            }`}
+
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <Sidebar
+              listActive={listActive}
+              setListActive={setListActive}
+              setTaskActive={setTaskActive}
+              defaultList={defaultLists.current}
+              userLists={userLists}
+              setUserLists={setUserLists}
+            />
+          </div>
+        </div>
         <div className={styles["main-content"]}>
           <div className={styles["header"]}>
             <Toolbar

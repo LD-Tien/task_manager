@@ -24,6 +24,7 @@ function TextInput(
           name={name}
           value={value}
           placeholder={placeholder}
+          spellCheck="false"
         />
       </div>
       {errorMessage && <p className={styles["error-text"]}>{errorMessage}</p>}

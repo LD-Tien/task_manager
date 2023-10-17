@@ -4,31 +4,11 @@
   min-width: 300px;
   height: calc(100vh - 64px);
   background-color: var(--bg-primary-accent);
-  margin-top: 16px;
   overflow-y: auto;
 
   > * {
     margin-bottom: 8px;
     padding-bottom: 8px;
-  }
-
-  .search {
-    position: sticky;
-    padding: 0 12px 16px;
-    background-color: var(--bg-primary-accent);
-    top: 0px;
-    color: var(--font-color-primary);
-    border-bottom: 0.1rem solid var(--bg-separator);
-
-    > :first-child {
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    input {
-      margin-left: 8px;
-      margin-right: -18px;
-    }
   }
 }
 

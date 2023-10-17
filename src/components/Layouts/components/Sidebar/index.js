@@ -79,31 +79,6 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
 
   return (
     <div className={styles["wrapper"]}>
-      <div className={styles["search"]}>
-        <TextInput
-          type="search"
-          value={search}
-          icon={
-            <FontAwesomeIcon
-              icon={faSearch}
-              className={styles["search-icon"]}
-            />
-          }
-          placeholder="Search tasks"
-          onChange={(value) => {
-            setSearch(value);
-            if (value) {
-              taskManager.searchKeywords = value;
-              taskManager.searchTasks();
-              taskManager.setListActive({ ...SEARCH_LIST });
-            } else {
-              taskManager.searchKeywords = value;
-              taskManager.tasksSearched = [];
-              taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
-            }
-          }}
-        />
-      </div>
       <div className={styles["default-list"]}>
         {defaultList.map((item) => {
           return (
