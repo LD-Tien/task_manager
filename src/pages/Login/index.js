@@ -96,6 +96,9 @@ function Login() {
         >
           {errorTextLogin}
         </p>
+        <Link className={styles["link"]} to={"/forgotPassword"} replace>
+          Forgot password?
+        </Link>
         <div className={styles["or"]}>
           <hr />
           OR

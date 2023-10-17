@@ -7,6 +7,7 @@ import taskManager from "./models/TaskManger";
 import Modal from "./components/Modal";
 import { useAuth } from "./contexts/AuthContext";
 import PrivateRouter from "./components/PrivateRouter";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   const { currentUser } = useAuth();
@@ -44,13 +45,21 @@ function App() {
             }
           />
           <Route
+            path="/forgotPassword"
+            element={
+              <PrivateRouter isPass={!currentUser} redirect="/home">
+                <ForgotPassword />
+              </PrivateRouter>
+            }
+          />
+          <Route
             path="/*"
             element={
               <PrivateRouter isPass={!currentUser} redirect="/home">
                 <Login />
               </PrivateRouter>
             }
-          />
+          />{" "}
         </Routes>
 
         <Modal

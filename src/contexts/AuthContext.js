@@ -7,6 +7,7 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithRedirect,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { createContext, useContext, useLayoutEffect, useState } from "react";
 import { auth } from "../firebase";
@@ -31,12 +32,15 @@ export function AuthProvider({ children }) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 
+  function forgotPassword(email) {
+    return sendPasswordResetEmail(auth, email);
+  }
+
   function loginWithGoogle() {
-    return signInWithRedirect(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        return credential;
-      })
+    return signInWithRedirect(auth, provider).then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      return credential;
+    });
   }
 
   function logout() {
@@ -56,6 +60,7 @@ export function AuthProvider({ children }) {
     login,
     logout,
     loginWithGoogle,
+    forgotPassword,
   };
   return (
     <AuthContext.Provider value={value}>
