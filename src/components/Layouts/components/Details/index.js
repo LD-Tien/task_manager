@@ -34,13 +34,17 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
+import { useParams } from "react-router-dom";
 
 function Details({ task, setTasks, setTaskActive }) {
   const [newSubTask, setNewSubTask] = useState("");
   const [fileName, setFileName] = useState("");
   const [note, setNote] = useState(task.taskId === -1 ? "" : task.note.content);
+  const { taskActiveId } = useParams();
 
-  if (task.taskId === -1) return; // no selected tasks
+  if (!taskActiveId) {
+    setTaskActive({ taskId: -1 });
+  }
 
   function handleDeleteTask() {
     taskManager.confirmModalData = MODAL_DATA_DELETE_TASK;
@@ -128,6 +132,8 @@ function Details({ task, setTasks, setTaskActive }) {
     const desertRef = ref(filesRef, `uid:${task.owner}/${fileName}`);
     deleteObject(desertRef).catch(() => taskManager.showModalServerError());
   }
+
+  // useEffect(() => {});
 
   return (
     <div className={styles["wrapper"]}>

@@ -15,7 +15,7 @@ function App() {
   const [showModalConfirm, setShowModalConfirm] = useState(false);
   const dataTheme = localStorage.getItem("data-theme");
   taskManager.setShowModalConfirm = setShowModalConfirm;
-  
+
   if (!dataTheme) {
     // set default theme
     root.current.setAttribute("data-theme", "dark");
@@ -29,7 +29,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route
-            path="/home"
+            path="/home/*"
             element={
               <PrivateRouter isPass={currentUser} redirect="/login">
                 <Todo />
@@ -39,7 +39,7 @@ function App() {
           <Route
             path="/signup"
             element={
-              <PrivateRouter isPass={!currentUser} redirect="/home">
+              <PrivateRouter isPass={!currentUser} redirect="/home/MyDay">
                 <Signup />
               </PrivateRouter>
             }
@@ -47,7 +47,7 @@ function App() {
           <Route
             path="/forgotPassword"
             element={
-              <PrivateRouter isPass={!currentUser} redirect="/home">
+              <PrivateRouter isPass={!currentUser} redirect="/home/MyDay">
                 <ForgotPassword />
               </PrivateRouter>
             }
@@ -55,11 +55,11 @@ function App() {
           <Route
             path="/*"
             element={
-              <PrivateRouter isPass={!currentUser} redirect="/home">
+              <PrivateRouter isPass={!currentUser} redirect="/home/MyDay">
                 <Login />
               </PrivateRouter>
             }
-          />{" "}
+          />
         </Routes>
 
         <Modal

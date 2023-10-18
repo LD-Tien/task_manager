@@ -360,13 +360,14 @@ export const CONTEXT_MENU_LIST = [
         leftIcon: <FontAwesomeIcon icon={faTrashCan} />,
         title: "Delete list",
         danger: true,
-        onClick: async function ({ list }) {
+        onClick: async function ({ list, navigate }) {
           taskManager.confirmModalData = MODAL_DATA_DELETE_LIST;
           taskManager.confirmModalData.title = `List "${list.title}" will be permanently deleted`;
           taskManager.confirmModalData.onClickConfirm = () => {
             taskManager.deleteList(list);
             taskManager.setUserLists(taskManager.getAllList());
             taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
+            navigate(-1);
             list.deleteList().then((result) => {
               if (result.code === 200) {
                 list.setList(result.data);

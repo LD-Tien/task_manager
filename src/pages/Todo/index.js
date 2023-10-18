@@ -20,6 +20,7 @@ import Accordion from "../../components/Accordion";
 import Button from "../../components/Button";
 import taskManager from "../../models/TaskManger";
 import Task from "../../models/Task";
+import { Route, Routes } from "react-router-dom";
 
 function Todo() {
   const [listActive, setListActive] = useState(SIDEBAR_DEFAULT_ITEM[0]);
@@ -204,14 +205,34 @@ function Todo() {
               exit={{ width: 0 }}
               transition={{ duration: 0.1 }}
             >
-              <Sidebar
-                listActive={listActive}
-                setListActive={setListActive}
-                setTaskActive={setTaskActive}
-                defaultList={defaultLists.current}
-                userLists={userLists}
-                setUserLists={setUserLists}
-              />
+              <Routes>
+                <Route
+                  path="/:listActiveId/*"
+                  element={
+                    <Sidebar
+                      listActive={listActive}
+                      setListActive={setListActive}
+                      setTaskActive={setTaskActive}
+                      defaultList={defaultLists.current}
+                      userLists={userLists}
+                      setUserLists={setUserLists}
+                    />
+                  }
+                />
+                <Route
+                  path="/"
+                  element={
+                    <Sidebar
+                      listActive={listActive}
+                      setListActive={setListActive}
+                      setTaskActive={setTaskActive}
+                      defaultList={defaultLists.current}
+                      userLists={userLists}
+                      setUserLists={setUserLists}
+                    />
+                  }
+                />
+              </Routes>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -307,6 +328,7 @@ function Todo() {
                               <TaskItem
                                 key={task.taskId}
                                 data={task}
+                                listActiveId={listActive.listId}
                                 isActive={task.taskId === taskActive.taskId}
                                 setTaskActive={setTaskActive}
                                 setTasks={setTasks}
@@ -364,6 +386,7 @@ function Todo() {
                                 <TaskItem
                                   key={task.taskId}
                                   data={task}
+                                  listActiveId={listActive.listId}
                                   isActive={task.taskId === taskActive.taskId}
                                   setTaskActive={setTaskActive}
                                   setTasks={setTasks}
@@ -403,6 +426,7 @@ function Todo() {
                             <TaskItem
                               key={task.taskId}
                               data={task}
+                              listActiveId={listActive.listId}
                               isActive={task.taskId === taskActive.taskId}
                               setTaskActive={setTaskActive}
                               setTasks={setTasks}
@@ -417,24 +441,31 @@ function Todo() {
             </div>
           )}
         </div>
-        <AnimatePresence>
-          {taskActive.taskId !== -1 && (
-            <motion.div
-              className={styles["detail"]}
-              initial={{ width: 0, left: "auto" }}
-              animate={{ width: "auto", left: 0 }}
-              exit={{ width: 0, left: "auto" }}
-              transition={{ duration: 0.1 }}
-            >
-              <Details
-                key={taskActive.taskId}
-                task={taskActive}
-                setTasks={setTasks}
-                setTaskActive={setTaskActive}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <Routes>
+          <Route
+            path="/:listActiveId/:taskActiveId"
+            element={
+              <AnimatePresence>
+                {taskActive.taskId !== -1 && (
+                  <motion.div
+                    className={styles["detail"]}
+                    initial={{ width: 0, left: "auto" }}
+                    animate={{ width: "auto", left: 0 }}
+                    exit={{ width: 0, left: "auto" }}
+                    transition={{ duration: 0.1 }}
+                  >
+                    <Details
+                      key={taskActive.taskId}
+                      task={taskActive}
+                      setTasks={setTasks}
+                      setTaskActive={setTaskActive}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            }
+          />
+        </Routes>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import SidebarItem from "./SidebarItem";
@@ -7,12 +7,20 @@ import TextInput from "../../../TextInput";
 import { default as MenuPopper } from "../../../Popper/Menu";
 import taskManager from "../../../../models/TaskManger";
 import TasksList from "../../../../models/TasksList";
-import { CONTEXT_MENU_LIST } from "../../../../store/constraints";
+import {
+  CONTEXT_MENU_LIST,
+  SEARCH_LIST,
+  SIDEBAR_DEFAULT_ITEM,
+} from "../../../../store/constraints";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Sidebar({ listActive, defaultList = [], userLists = [] }) {
   const [newList, setNewList] = useState("");
   const [editableListId, setEditableListId] = useState("");
+  const navigate = useNavigate();
   taskManager.setEditableListId = setEditableListId;
+
+  const { listActiveId } = useParams();
 
   function handleClick(listActive) {
     taskManager.setListActive(listActive);
@@ -20,6 +28,7 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
       taskManager.setHiddenSidebar(true);
     }
     taskManager.setTaskActive({ taskId: -1 });
+    navigate(`/home/${listActive.listId}`);
   }
 
   function handleChange(input) {
@@ -36,6 +45,8 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
     taskManager.addList(taskList);
     taskManager.setUserLists(taskManager.getAllList());
     taskManager.setListActive(taskList);
+    navigate(`/home/${taskList.listId}`);
+
     taskList.addList(newList).then((result) => {
       if (result.code === 200) {
         taskList.setList(result.data);
@@ -60,6 +71,7 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
               <MenuPopper
                 key={list.listId}
                 list={list}
+                navigate={navigate}
                 trigger="contextmenu"
                 placement="bottom"
                 items={CONTEXT_MENU_LIST}
@@ -85,6 +97,39 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
   }
 
   document.title = listActive.title + " - Task Manager";
+
+  useEffect(() => {
+    if (!listActiveId) {
+      navigate(`/home/MyDay`, { replace: true });
+    }
+  });
+
+  useLayoutEffect(() => {
+    if (listActiveId) {
+      if (listActiveId !== listActive.listId) {
+        taskManager.setListActive(() => {
+          if (listActiveId === "Search") {
+            return SEARCH_LIST;
+          }
+          const defaultList = SIDEBAR_DEFAULT_ITEM.find((list) => {
+            return list.listId === listActiveId;
+          });
+          if (defaultList) {
+            return defaultList;
+          }
+
+          const userList = userLists.find((list) => {
+            return list.listId === listActiveId;
+          });
+          if (userList) {
+            return userList;
+          }
+
+          return SIDEBAR_DEFAULT_ITEM[0];
+        });
+      }
+    }
+  }, [listActiveId, listActive.listId, userLists, navigate]);
 
   return (
     <div className={styles["wrapper"]}>

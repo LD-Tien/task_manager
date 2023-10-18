@@ -5,7 +5,7 @@ import {
   faLock,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
 import Button from "../../../Button";
 import Menu from "../../../Popper/Menu";
@@ -21,7 +21,6 @@ import { MODAL_DATA_OK } from "../../../../store/modalData";
 import { EmailAuthProvider } from "firebase/auth";
 import {
   SEARCH_LIST,
-  SIDEBAR_DEFAULT_ITEM,
 } from "../../../../store/constraints";
 
 function Header() {
@@ -41,6 +40,7 @@ function Header() {
     (provider) => provider.providerId === "password"
   );
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
@@ -109,17 +109,33 @@ function Header() {
             />
           }
           placeholder="Search tasks"
+          onFocus={(value) => {
+            if (
+              value.length !== 0 &&
+              !window.location.pathname.includes("/Search")
+            ) {
+              navigate(window.location.href);
+              navigate("/home/Search", { replace: true });
+            }
+          }}
           onChange={(value) => {
-            setSearch(value);
+            if (value.length === 1 && search.length === 0) {
+              navigate(window.location.href);
+              navigate("/home/Search", { replace: true });
+            }
             taskManager.setTaskActive({ taskId: -1 });
+            setSearch(value);
             if (value) {
               taskManager.searchKeywords = value;
               taskManager.searchTasks();
               taskManager.setListActive({ ...SEARCH_LIST });
+              navigate("/home/Search", { replace: true });
             } else {
               taskManager.searchKeywords = value;
               taskManager.tasksSearched = [];
-              taskManager.setListActive(SIDEBAR_DEFAULT_ITEM[0]);
+              if (window.location.pathname.includes("/home/Search")) {
+                navigate(-1);
+              }
             }
           }}
         />

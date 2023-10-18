@@ -85,7 +85,7 @@ function ForgotPassword() {
         </div>
 
         <hr />
-        <Link className={styles["link"]} to={"/Login"} replace>
+        <Link className={styles["link"]} to={"/login"} replace>
           Return to login
         </Link>
       </form>

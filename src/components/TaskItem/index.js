@@ -9,16 +9,19 @@ import {
 import TaskStatus from "./TaskStatus";
 import { useState } from "react";
 import taskManager from "../../models/TaskManger";
+import { useNavigate } from "react-router-dom";
 
 function TaskItem({
   data,
   isActive,
+  listActiveId,
   editable,
   setTaskActive,
   isSubTask,
   parentTask,
 }) {
   const [taskName, setTaskName] = useState(data.title);
+  const navigate = useNavigate();
 
   function handleChange(e) {
     setTaskName(e.target.value);
@@ -68,11 +71,27 @@ function TaskItem({
       }`}
       onClick={() => {
         if (!editable) {
+          if (
+            window.location.pathname.split("/").at(-1) === listActiveId &&
+            !window.location.pathname.includes("/Search")
+          ) {
+            navigate(window.location.pathname); // if don't have params taskActiveId and it's not params Search duplicate current path
+          }
+          navigate(`/home/${listActiveId}/${data.subTaskId ?? data.taskId}`, {
+            replace: true,
+          });
           setTaskActive(data);
         }
       }}
       onContextMenu={(e) => {
         if (!data.isSubTask && !editable) {
+          if (
+            window.location.pathname.split("/").at(-1) === listActiveId &&
+            !window.location.pathname.includes("/Search")
+          ) {
+            navigate(window.location.pathname); // if don't have params taskActiveId and it's not params Search duplicate current path
+          }
+          navigate(`/home/${listActiveId}/${data.taskId}`, { replace: true });
           e.preventDefault();
         }
       }}

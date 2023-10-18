@@ -96,7 +96,7 @@ function Login() {
         >
           {errorTextLogin}
         </p>
-        <Link className={styles["link"]} to={"/forgotPassword"} replace>
+        <Link className={styles["link"]} to={"/forgotPassword"}>
           Forgot password?
         </Link>
         <div className={styles["or"]}>
@@ -139,7 +139,7 @@ function Login() {
           Sign in with Google
         </Button>
         <hr />
-        <Link className={styles["link"]} to={"/signup"} replace>
+        <Link className={styles["link"]} to={"/signup"}>
           Create an account? Sign up
         </Link>
       </form>
