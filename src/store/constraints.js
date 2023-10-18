@@ -289,6 +289,7 @@ export const CONTEXT_MENU_TASK = [
           taskManager.confirmModalData.onClickConfirm = () => {
             taskManager.deleteTask(task);
             taskManager.setTasks(taskManager.getAllTask());
+            taskManager.searchTasks();
             taskManager.setTaskActive({ taskId: -1 });
 
             task.deleteTask().then((result) => {
@@ -416,7 +417,7 @@ export const ACCOUNT_MENU = [
         danger: true,
         onClick: function () {
           signOut(auth).then(() => {
-            window.location.href = "/login"
+            window.location.href = "/login";
           });
         },
       },

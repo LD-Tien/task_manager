@@ -80,7 +80,9 @@ function Header() {
     <div
       className={styles["wrapper"]}
       onClick={() => {
-        taskManager.setHiddenSidebar(true);
+        if (window.innerWidth <= 1113) {
+          taskManager.setHiddenSidebar(true);
+        }
       }}
     >
       <div className={styles["left-column"]}>

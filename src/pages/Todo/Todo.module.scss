@@ -102,10 +102,22 @@
     .sidebar {
       background-color: var(--bg-primary-accent);
       width: fit-content;
+      overflow: hidden;
     }
 
     .hidden-sidebar {
       display: none;
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .wrapper-sidebar {
+    .sidebar {
+      width: 100%;
+      > :first-child {
+        width: 100%;
+      }
     }
   }
 }

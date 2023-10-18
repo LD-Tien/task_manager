@@ -1,5 +1,10 @@
-import styles from "./Todo.module.scss";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import { motion, AnimatePresence } from "framer-motion";
+
+import styles from "./Todo.module.scss";
 import Details from "../../components/Layouts/components/Details";
 import Toolbar from "../../components/Toolbar";
 import TaskItem from "../../components/TaskItem";
@@ -10,12 +15,9 @@ import {
 } from "../../store/constraints";
 import Sidebar from "../../components/Layouts/components/Sidebar";
 import Header from "../../components/Layouts/components/Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList } from "@fortawesome/free-solid-svg-icons";
 import TextInput from "../../components/TextInput";
 import Accordion from "../../components/Accordion";
 import Button from "../../components/Button";
-import moment from "moment";
 import taskManager from "../../models/TaskManger";
 import Task from "../../models/Task";
 
@@ -188,27 +190,36 @@ function Todo() {
             }
           }}
         >
-          <div
-            className={`${styles["sidebar"]} ${
-              styles[`${hiddenSidebar ? "hidden-sidebar" : ""}`]
-            }`}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <Sidebar
-              listActive={listActive}
-              setListActive={setListActive}
-              setTaskActive={setTaskActive}
-              defaultList={defaultLists.current}
-              userLists={userLists}
-              setUserLists={setUserLists}
-            />
-          </div>
+          <AnimatePresence>
+            <motion.div
+              key={hiddenSidebar}
+              className={`${styles["sidebar"]} ${
+                styles[`${hiddenSidebar ? "hidden-sidebar" : ""}`]
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              initial={{ width: 0 }}
+              animate={{ width: 300 }}
+              exit={{ width: 0 }}
+              transition={{ duration: 0.1 }}
+            >
+              <Sidebar
+                listActive={listActive}
+                setListActive={setListActive}
+                setTaskActive={setTaskActive}
+                defaultList={defaultLists.current}
+                userLists={userLists}
+                setUserLists={setUserLists}
+              />
+            </motion.div>
+          </AnimatePresence>
         </div>
+
         <div className={styles["main-content"]}>
-          <div className={styles["header"]}>
+          <motion.div className={styles["header"]}>
             <Toolbar
+              listId={listActive.listId}
               title={listActive.title}
               icon={
                 !!listActive.leftIcon ? (
@@ -218,7 +229,7 @@ function Todo() {
                 )
               }
             />
-            {!taskManager.searchKeywords && (
+            {listActive.listId !== "Search" && (
               <div className={styles["add-task"]}>
                 <form method="POST" autoComplete="off" onSubmit={handleAddTask}>
                   <TextInput
@@ -252,74 +263,38 @@ function Todo() {
                 </MenuPopper> */}
               </div>
             )}
-          </div>
+          </motion.div>
 
-          {!taskManager.searchKeywords ? (
+          {listActive.listId !== "Search" ? (
             <>
               <div className={styles["tasks-list"]}>
-                {tasks.length !== 0 &&
-                  tasks.map((task) => {
-                    if (task.isCompleted) {
-                      return null;
-                    }
-
-                    if (listActive.listId === "MyDay") {
-                      if (!task.myDay) {
+                {tasks.length !== 0 && (
+                  <AnimatePresence key={listActive.listId}>
+                    {tasks.map((task, index) => {
+                      if (task.isCompleted) {
                         return null;
                       }
-                    } else if (listActive.listId === "Important") {
-                      if (!task.isImportant) return null;
-                    } else if (listActive.listId === "Planned") {
-                      if (!task.planned) return null;
-                    } else if (listActive.listId === "Tasks") {
-                      if (!!task.listId) return null;
-                    } else if (listActive.listId !== task.listId) {
-                      return null;
-                    }
-                    return (
-                      <MenuPopper
-                        key={task.taskId}
-                        task={task}
-                        followMouse="initial"
-                        trigger="contextmenu"
-                        placement="right-start"
-                        items={CONTEXT_MENU_TASK}
-                      >
-                        <div>
-                          <TaskItem
-                            key={task.taskId}
-                            data={task}
-                            isActive={task.taskId === taskActive.taskId}
-                            setTaskActive={setTaskActive}
-                            setTasks={setTasks}
-                          />
-                        </div>
-                      </MenuPopper>
-                    );
-                  })}
-              </div>
-              <div className={styles["tasks-list-completed"]}>
-                <Accordion title="Completed" total>
-                  {tasks.length !== 0 &&
-                    tasks
-                      .map((task) => {
-                        if (!task.isCompleted) {
+                      if (listActive.listId === "MyDay") {
+                        if (!task.myDay) {
                           return null;
                         }
-
-                        if (listActive.listId === "MyDay") {
-                          if (!task.myDay) return null;
-                        } else if (listActive.listId === "Important") {
-                          if (!task.isImportant) return null;
-                        } else if (listActive.listId === "Planned") {
-                          if (!task.planned) return null;
-                        } else if (listActive.listId === "Tasks") {
-                          if (!!task.listId) return null;
-                        } else if (listActive.listId !== task.listId) {
-                          return null;
-                        }
-
-                        return (
+                      } else if (listActive.listId === "Important") {
+                        if (!task.isImportant) return null;
+                      } else if (listActive.listId === "Planned") {
+                        if (!task.planned) return null;
+                      } else if (listActive.listId === "Tasks") {
+                        if (!!task.listId) return null;
+                      } else if (listActive.listId !== task.listId) {
+                        return null;
+                      }
+                      return (
+                        <motion.div
+                          key={task.taskId}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0, margin: 0 }}
+                          transition={{ delay: index * 0.03 }}
+                        >
                           <MenuPopper
                             key={task.taskId}
                             task={task}
@@ -338,6 +313,64 @@ function Todo() {
                               />
                             </div>
                           </MenuPopper>
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
+                )}
+              </div>
+              <div className={styles["tasks-list-completed"]}>
+                <Accordion key={listActive.listId} title="Completed" total>
+                  {tasks.length !== 0 &&
+                    tasks
+                      .map((task, index) => {
+                        if (!task.isCompleted) {
+                          return null;
+                        }
+
+                        if (listActive.listId === "MyDay") {
+                          if (!task.myDay) return null;
+                        } else if (listActive.listId === "Important") {
+                          if (!task.isImportant) return null;
+                        } else if (listActive.listId === "Planned") {
+                          if (!task.planned) return null;
+                        } else if (listActive.listId === "Tasks") {
+                          if (!!task.listId) return null;
+                        } else if (listActive.listId !== task.listId) {
+                          return null;
+                        }
+
+                        return (
+                          <motion.div
+                            key={task.taskId}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0, margin: 0 }}
+                            transition={{
+                              type: "tween",
+                              duration: 0.1,
+                              delay: index * 0.03,
+                            }}
+                          >
+                            <MenuPopper
+                              key={task.taskId}
+                              task={task}
+                              followMouse="initial"
+                              trigger="contextmenu"
+                              placement="right-start"
+                              items={CONTEXT_MENU_TASK}
+                            >
+                              <div>
+                                <TaskItem
+                                  key={task.taskId}
+                                  data={task}
+                                  isActive={task.taskId === taskActive.taskId}
+                                  setTaskActive={setTaskActive}
+                                  setTasks={setTasks}
+                                />
+                              </div>
+                            </MenuPopper>
+                          </motion.div>
                         );
                       })
                       .filter((item) => !!item)}
@@ -347,40 +380,61 @@ function Todo() {
             </>
           ) : (
             <div className={styles["tasks-list"]}>
-              {taskManager.tasksSearched.length !== 0 &&
-                taskManager.tasksSearched.map((task) => {
-                  return (
-                    <MenuPopper
-                      key={task.taskId}
-                      task={task}
-                      followMouse="initial"
-                      trigger="contextmenu"
-                      placement="right-start"
-                      items={CONTEXT_MENU_TASK}
-                    >
-                      <div>
-                        <TaskItem
+              {taskManager.tasksSearched.length !== 0 && (
+                <AnimatePresence>
+                  {taskManager.tasksSearched.map((task, index) => {
+                    return (
+                      <motion.div
+                        key={task.taskId}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0, margin: 0 }}
+                        transition={{ delay: index * 0.03 }}
+                      >
+                        <MenuPopper
                           key={task.taskId}
-                          data={task}
-                          isActive={task.taskId === taskActive.taskId}
-                          setTaskActive={setTaskActive}
-                          setTasks={setTasks}
-                        />
-                      </div>
-                    </MenuPopper>
-                  );
-                })}
+                          task={task}
+                          followMouse="initial"
+                          trigger="contextmenu"
+                          placement="right-start"
+                          items={CONTEXT_MENU_TASK}
+                        >
+                          <div>
+                            <TaskItem
+                              key={task.taskId}
+                              data={task}
+                              isActive={task.taskId === taskActive.taskId}
+                              setTaskActive={setTaskActive}
+                              setTasks={setTasks}
+                            />
+                          </div>
+                        </MenuPopper>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              )}
             </div>
           )}
         </div>
-        <div className={styles["detail"]}>
-          <Details
-            key={taskActive.taskId}
-            task={taskActive}
-            setTasks={setTasks}
-            setTaskActive={setTaskActive}
-          />
-        </div>
+        <AnimatePresence>
+          {taskActive.taskId !== -1 && (
+            <motion.div
+              className={styles["detail"]}
+              initial={{ width: 0, left: "auto" }}
+              animate={{ width: "auto", left: 0 }}
+              exit={{ width: 0, left: "auto" }}
+              transition={{ duration: 0.1 }}
+            >
+              <Details
+                key={taskActive.taskId}
+                task={taskActive}
+                setTasks={setTasks}
+                setTaskActive={setTaskActive}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

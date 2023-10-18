@@ -8,6 +8,7 @@ import {
   faSun,
   faTrashCan,
 } from "@fortawesome/free-regular-svg-icons";
+import { motion, AnimatePresence } from "framer-motion";
 
 import Button from "../../../Button";
 import TaskItem from "../../../TaskItem";
@@ -47,6 +48,7 @@ function Details({ task, setTasks, setTaskActive }) {
     taskManager.confirmModalData.onClickConfirm = () => {
       taskManager.deleteTask(task);
       taskManager.setTasks(taskManager.getAllTask());
+      taskManager.searchTasks();
       taskManager.setTaskActive({ taskId: -1 });
 
       task.deleteTask().then((result) => {
@@ -133,19 +135,29 @@ function Details({ task, setTasks, setTaskActive }) {
         <TaskItem key={task.taskId} setTasks={setTasks} editable data={task} />
       </div>
       <GroupItem>
-        {task.subTasks.map((subTask) => {
-          return (
-            <TaskItem
-              key={subTask.subTaskId}
-              editable
-              isSubTask
-              setTaskActive={setTaskActive}
-              data={subTask}
-              parentTask={task}
-              setTasks={setTasks}
-            />
-          );
-        })}
+        <AnimatePresence>
+          {task.subTasks.map((subTask, index) => {
+            return (
+              <motion.div
+                key={subTask.subTaskId}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ delay: index * 0.03 }}
+              >
+                <TaskItem
+                  key={subTask.subTaskId}
+                  editable
+                  isSubTask
+                  setTaskActive={setTaskActive}
+                  data={subTask}
+                  parentTask={task}
+                  setTasks={setTasks}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
         <form method="POST" autoComplete="off" onSubmit={handleAddSubTask}>
           <TextInput
             name="subTask"
@@ -246,28 +258,39 @@ function Details({ task, setTasks, setTaskActive }) {
         </MenuPopper> */}
       </GroupItem>
       <GroupItem>
-        {task.files.length !== 0 &&
-          task.files.map((file, index) => {
-            return (
-              <Button
-                key={index}
-                href={file.downloadURL}
-                disable={!file.downloadURL}
-                leftIcon={<FontAwesomeIcon icon={faFile} />}
-                item
-                isFile
-                onClickCancel={(e) => {
-                  e.preventDefault();
-                  handleDeleteFile(
-                    task.files.splice(index, 1)[0].firebaseName, // remove file in task (DOM)
-                    task
-                  );
-                }}
-              >
-                {file.downloadURL ? file.name : `Uploading...`}
-              </Button>
-            );
-          })}
+        {task.files.length !== 0 && (
+          <AnimatePresence>
+            {task.files.map((file, index) => {
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ delay: index * 0.03 }}
+                >
+                  <Button
+                    key={index}
+                    href={file.downloadURL}
+                    disable={!file.downloadURL}
+                    leftIcon={<FontAwesomeIcon icon={faFile} />}
+                    item
+                    isFile
+                    onClickCancel={(e) => {
+                      e.preventDefault();
+                      handleDeleteFile(
+                        task.files.splice(index, 1)[0].firebaseName, // remove file in task (DOM)
+                        task
+                      );
+                    }}
+                  >
+                    {file.downloadURL ? file.name : `Uploading...`}
+                  </Button>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        )}
 
         <div>
           <input

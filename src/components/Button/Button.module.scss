@@ -20,7 +20,7 @@
     span {
       display: flex;
     }
-    
+
     span,
     svg {
       margin: 0px 2px;
@@ -43,7 +43,9 @@
   }
   &:hover {
     .cancel {
-      display: block;
+      display: flex;
+      justify-content: center;
+      min-width: 20px;
     }
   }
 }
@@ -60,7 +62,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
+    padding: 8px 16px;
     color: var(--font-color-secondary);
 
     .text {
@@ -128,7 +130,7 @@
 }
 
 .small {
-  span{
+  span {
     display: inline-block;
   }
   min-height: 40px;
@@ -180,6 +182,17 @@
     opacity: 0.8;
     * {
       color: var(--color-brand-secondary);
+    }
+  }
+}
+
+@media (max-width: 1113px) {
+  .active,
+  .file {
+    .cancel {
+      display: flex;
+      min-width: 20px;
+      justify-content: center;
     }
   }
 }

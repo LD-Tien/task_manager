@@ -7,13 +7,13 @@ import { default as MenuPopper } from "../Popper/Menu";
 import { SORT_ITEM } from "../../store/constraints";
 import taskManager from "../../models/TaskManger";
 
-function Toolbar({ title, icon }) {
+function Toolbar({ title, icon, listId }) {
   return (
     <div className={styles["wrapper"]}>
       <div className={styles["title"]}>
         {icon}
         <p>
-          {taskManager.searchKeywords
+          {listId === "Search"
             ? taskManager.tasksSearched.length === 0
               ? `No results found for keyword "${taskManager.searchKeywords}"`
               : `${title} "${taskManager.searchKeywords}"`
@@ -21,7 +21,7 @@ function Toolbar({ title, icon }) {
         </p>
         {/* <Button leftIcon={<FontAwesomeIcon icon={faEllipsis} />} small></Button> */}
       </div>
-      {!taskManager.searchKeywords && (
+      {listId !== "Search" && (
         <MenuPopper trigger="click" items={SORT_ITEM}>
           <div>
             <Button leftIcon={<FontAwesomeIcon icon={faFilter} />} small>

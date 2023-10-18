@@ -26,5 +26,6 @@ export const MODAL_DATA_SERVER_ERROR = {
   body: "Please try again later.",
   confirmType: "error",
   confirmContent: "Refresh",
+  cancelContent: "",
   onClickConfirm: () => {},
 };
