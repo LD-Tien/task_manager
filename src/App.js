@@ -12,16 +12,16 @@ import ForgotPassword from "./pages/ForgotPassword";
 function App() {
   const { currentUser } = useAuth();
   const root = useRef(document.querySelector("html"));
-  const dataTheme = useRef(localStorage.getItem("data-theme"));
   const [showModalConfirm, setShowModalConfirm] = useState(false);
+  const dataTheme = localStorage.getItem("data-theme");
   taskManager.setShowModalConfirm = setShowModalConfirm;
-
-  if (!dataTheme.current) {
+  
+  if (!dataTheme) {
     // set default theme
     root.current.setAttribute("data-theme", "dark");
     localStorage.setItem("data-theme", "dark");
   } else {
-    root.current.setAttribute("data-theme", dataTheme.current);
+    root.current.setAttribute("data-theme", dataTheme);
   }
 
   return (
