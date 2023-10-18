@@ -446,22 +446,38 @@ function Todo() {
             path="/:listActiveId/:taskActiveId"
             element={
               <AnimatePresence>
-                {taskActive.taskId !== -1 && (
-                  <motion.div
-                    className={styles["detail"]}
-                    initial={{ width: 0, left: "auto" }}
-                    animate={{ width: "auto", left: 0 }}
-                    exit={{ width: 0, left: "auto" }}
-                    transition={{ duration: 0.1 }}
-                  >
-                    <Details
-                      key={taskActive.taskId}
-                      task={taskActive}
-                      setTasks={setTasks}
-                      setTaskActive={setTaskActive}
-                    />
-                  </motion.div>
-                )}
+                {taskActive.taskId !== -1 &&
+                  (window.innerWidth >= 424 ? (
+                    <motion.div
+                      className={styles["detail"]}
+                      initial={{ width: 0, left: "auto" }}
+                      animate={{ width: "auto", left: 0 }}
+                      exit={{ width: 0, left: "auto" }}
+                      transition={{ duration: 0.1 }}
+                    >
+                      <Details
+                        key={taskActive.taskId}
+                        task={taskActive}
+                        setTasks={setTasks}
+                        setTaskActive={setTaskActive}
+                      />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      className={styles["detail"]}
+                      initial={{ opacity: 0, x: 300 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 300 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Details
+                        key={taskActive.taskId}
+                        task={taskActive}
+                        setTasks={setTasks}
+                        setTaskActive={setTaskActive}
+                      />
+                    </motion.div>
+                  ))}
               </AnimatePresence>
             }
           />

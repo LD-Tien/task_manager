@@ -1,8 +1,8 @@
 import styles from "./GroupItem.module.scss";
 import { motion } from "framer-motion";
 
-function GroupItem({ children}) {
-  return (
+function GroupItem({ children }) {
+  return window.innerWidth > 424 ? (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -11,6 +11,8 @@ function GroupItem({ children}) {
     >
       {children}
     </motion.div>
+  ) : (
+    <div className={styles["wrapper"]}>{children}</div>
   );
 }
 
