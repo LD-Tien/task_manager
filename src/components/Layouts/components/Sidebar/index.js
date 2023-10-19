@@ -64,7 +64,7 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
 
   function renderUserLists() {
     return (
-      <AnimatePresence initial={window.innerWidth > 424}>
+      <AnimatePresence initial={window.innerWidth > 740}>
         {userLists.map((list, index) => {
           return (
             <motion.div
