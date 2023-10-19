@@ -101,6 +101,7 @@ function Todo() {
         content: "",
         updatedAt: "",
       },
+      createdAt: new Date().toISOString(),
     });
   };
 
@@ -116,7 +117,6 @@ function Todo() {
     task.addTask().then((result) => {
       if (result.code === 200) {
         task.setTask(result.data);
-        setTasks(taskManager.getAllTask());
       } else if (result.code === 400) {
         taskManager.showModalServerError(result.message);
       }
@@ -139,6 +139,7 @@ function Todo() {
         if (
           !task.isSendNotification &&
           task.remind &&
+          !isNaN(new Date(task.remind)) &&
           new Date(task.remind) - new Date() <= 0
         ) {
           new Notification("Remind", {
@@ -200,9 +201,9 @@ function Todo() {
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              initial={{opacity: 0, width: 0 }}
-              animate={{opacity: 1, width: 300 }}
-              exit={{opacity:0, width: 0 }}
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: 300 }}
+              exit={{ opacity: 0, width: 0 }}
               transition={{ duration: 0.2 }}
             >
               <Routes>
@@ -451,8 +452,8 @@ function Todo() {
                     <motion.div
                       className={styles["detail"]}
                       initial={{ width: 0 }}
-                      animate={{ width: "auto"}}
-                      exit={{ width: 0, }}
+                      animate={{ width: "auto" }}
+                      exit={{ width: 0 }}
                       transition={{ duration: 0.2 }}
                     >
                       <Details
