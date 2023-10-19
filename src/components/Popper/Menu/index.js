@@ -46,12 +46,37 @@ function Menu({
 
                 if (button && input) {
                   button.addEventListener("click", () => {
+                    // if have remind set value = remind else set value = today
+                    if (props.updateRemind) {
+                      input.value =
+                        props.task.remind &&
+                        !isNaN(moment(props.task.remind)) &&
+                        moment(props.task.remind).format(
+                          "YYYY[-]MM[-]DD[T]HH:mm"
+                        );
+                    } else {
+                      input.value =
+                        props.task.planned &&
+                        !isNaN(moment(props.task.planned)) &&
+                        moment(props.task.planned).format().split("T")[0];
+                    }
                     input.showPicker();
                   });
+
                   input.addEventListener(
                     "change",
                     (e) => {
                       if (props.handleUpdate && props.task) {
+                        if (isNaN(moment(e.target.value))) {
+                          if (props.updatePlanned) {
+                            props.task.planned = "";
+                          } else {
+                            props.task.remind = "";
+                            props.task.isSendNotification = true;
+                          }
+                          props.handleUpdate();
+                          return;
+                        }
                         if (props.updateRemind) {
                           props.task.isSendNotification =
                             new Date(e.target.value) - new Date() <= 0;

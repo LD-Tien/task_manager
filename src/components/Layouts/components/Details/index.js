@@ -202,14 +202,14 @@ function Details({ task, setTasks, setTaskActive }) {
             <Button
               leftIcon={<FontAwesomeIcon icon={faBell} />}
               item
-              isActive={!!task.remind}
-              danger={task.isSendNotification}
+              isActive={task.remind}
+              danger={task.remind && task.isSendNotification}
               onClickCancel={() => {
                 task.remind = "";
                 handleUpdateTask();
               }}
             >
-              {task.remind
+              {task.remind && !isNaN(new Date(task.remind))
                 ? `Remind me at ${moment(task.remind).format("LT")}, ${
                     moment(task.remind).calendar().split(" at")[0]
                   }`

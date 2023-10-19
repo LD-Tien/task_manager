@@ -3,7 +3,6 @@ import {
   faCalendar,
   faCalendarPlus,
   faClock,
-  faClone,
   faStar,
   faSun,
   faTrashCan,
@@ -346,11 +345,11 @@ export const CONTEXT_MENU_LIST = [
           taskManager.setEditableListId(list.listId);
         },
       },
-      {
-        leftIcon: <FontAwesomeIcon icon={faClone} />,
-        title: "Duplicate list",
-        disable: true,
-      },
+      // {
+      //   leftIcon: <FontAwesomeIcon icon={faClone} />,
+      //   title: "Duplicate list",
+      //   disable: true,
+      // },
     ],
   },
 
