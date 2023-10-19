@@ -200,10 +200,10 @@ function Todo() {
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              initial={{ width: 0 }}
-              animate={{ width: 300 }}
-              exit={{ width: 0 }}
-              transition={{ duration: 0.1 }}
+              initial={{opacity: 0, width: 0 }}
+              animate={{opacity: 1, width: 300 }}
+              exit={{opacity:0, width: 0 }}
+              transition={{ duration: 0.2 }}
             >
               <Routes>
                 <Route
@@ -321,7 +321,7 @@ function Todo() {
                             task={task}
                             followMouse="initial"
                             trigger="contextmenu"
-                            placement="right-start"
+                            placement="top"
                             items={CONTEXT_MENU_TASK}
                           >
                             <div>
@@ -379,7 +379,7 @@ function Todo() {
                               task={task}
                               followMouse="initial"
                               trigger="contextmenu"
-                              placement="right-start"
+                              placement="top"
                               items={CONTEXT_MENU_TASK}
                             >
                               <div>
@@ -419,7 +419,7 @@ function Todo() {
                           task={task}
                           followMouse="initial"
                           trigger="contextmenu"
-                          placement="right-start"
+                          placement="top"
                           items={CONTEXT_MENU_TASK}
                         >
                           <div>
@@ -447,13 +447,13 @@ function Todo() {
             element={
               <AnimatePresence>
                 {taskActive.taskId !== -1 &&
-                  (window.innerWidth >= 424 ? (
+                  (window.innerWidth > 740 ? (
                     <motion.div
                       className={styles["detail"]}
-                      initial={{ width: 0, left: "auto" }}
-                      animate={{ width: "auto", left: 0 }}
-                      exit={{ width: 0, left: "auto" }}
-                      transition={{ duration: 0.1 }}
+                      initial={{ width: 0 }}
+                      animate={{ width: "auto"}}
+                      exit={{ width: 0, }}
+                      transition={{ duration: 0.2 }}
                     >
                       <Details
                         key={taskActive.taskId}

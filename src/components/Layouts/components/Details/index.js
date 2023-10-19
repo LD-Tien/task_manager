@@ -81,7 +81,6 @@ function Details({ task, setTasks, setTaskActive }) {
 
     task.addSubTask(subTask).then((result) => {
       if (result.code === 400) {
-        console.log(result.error);
         taskManager.showModalServerError(result.message);
       }
     });
@@ -141,7 +140,7 @@ function Details({ task, setTasks, setTaskActive }) {
         <TaskItem key={task.taskId} setTasks={setTasks} editable data={task} />
       </div>
       <GroupItem>
-        <AnimatePresence>
+        <AnimatePresence initial={window.innerWidth > 740}>
           {task.subTasks.map((subTask, index) => {
             return (
               <motion.div
@@ -265,7 +264,7 @@ function Details({ task, setTasks, setTaskActive }) {
       </GroupItem>
       <GroupItem>
         {task.files.length !== 0 && (
-          <AnimatePresence>
+          <AnimatePresence initial={window.innerWidth > 740}>
             {task.files.map((file, index) => {
               return (
                 <motion.div

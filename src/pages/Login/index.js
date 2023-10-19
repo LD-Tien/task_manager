@@ -50,6 +50,7 @@ function Login() {
         setErrorTextLogin(
           "Email already in use. Try another email"
         );
+        setLoading(false);
       });
   }
 

@@ -31,6 +31,12 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
     navigate(`/home/${listActive.listId}`);
   }
 
+  function handleRightClick(listActive) {
+    taskManager.setListActive(listActive);
+    taskManager.setTaskActive({ taskId: -1 });
+    navigate(`/home/${listActive.listId}`);
+  }
+
   function handleChange(input) {
     if (input.length > 30) return;
     setNewList(input);
@@ -58,7 +64,7 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
 
   function renderUserLists() {
     return (
-      <AnimatePresence>
+      <AnimatePresence initial={window.innerWidth > 424}>
         {userLists.map((list, index) => {
           return (
             <motion.div
@@ -86,6 +92,7 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
                       setEditableListId(false);
                     }}
                     onClick={handleClick}
+                    onContextMenu={handleRightClick}
                   />
                 </div>
               </MenuPopper>
@@ -134,24 +141,25 @@ function Sidebar({ listActive, defaultList = [], userLists = [] }) {
   return (
     <div className={styles["wrapper"]}>
       <div className={styles["default-list"]}>
-        {defaultList.map((item, index) => {
-          return (
-            <motion.div
-              key={item.listId}
-              initial={{ opacity: 0, x: -30, height: 0 }}
-              animate={{ opacity: 1, x: 0, height: "auto" }}
-              exit={{ opacity: 0, x: -30, height: 0 }}
-              transition={{ delay: index * 0.03 }}
-            >
-              <SidebarItem
+        <AnimatePresence initial={window.innerWidth > 740}>
+          {defaultList.map((item, index) => {
+            return (
+              <motion.div
                 key={item.listId}
-                data={item}
-                isActive={item.listId === listActive.listId}
-                onClick={handleClick}
-              />
-            </motion.div>
-          );
-        })}
+                initial={{ opacity: 0, x: -30, height: 0 }}
+                animate={{ opacity: 1, x: 0, height: "auto" }}
+                transition={{ delay: index * 0.03 }}
+              >
+                <SidebarItem
+                  key={item.listId}
+                  data={item}
+                  isActive={item.listId === listActive.listId}
+                  onClick={handleClick}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
 
       <div className={styles["user-list"]}>

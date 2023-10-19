@@ -9,6 +9,7 @@ function SidebarItem({
   onClick,
   editable = false,
   onBlur = () => {},
+  onContextMenu = () => {},
   data,
 }) {
   const [listName, setListName] = useState(data.title);
@@ -47,7 +48,7 @@ function SidebarItem({
         onClick(data);
       }}
       onContextMenu={(e) => {
-        onClick(data);
+        onContextMenu(data);
         e.preventDefault();
       }}
       className={`${styles["wrapper"]} ${isActive && styles["active"]}`}

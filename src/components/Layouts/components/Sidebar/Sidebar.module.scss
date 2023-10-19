@@ -5,6 +5,7 @@
   height: calc(100vh - 64px);
   background-color: var(--bg-primary-accent);
   overflow-y: auto;
+  overflow-x: hidden;
 
   > * {
     margin-bottom: 8px;

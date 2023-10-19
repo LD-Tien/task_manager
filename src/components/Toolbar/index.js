@@ -10,7 +10,14 @@ import taskManager from "../../models/TaskManger";
 function Toolbar({ title, icon, listId }) {
   return (
     <div className={styles["wrapper"]}>
-      <div className={styles["title"]}>
+      <div
+        className={styles["title"]}
+        onClick={() => {
+          if (window.innerWidth <= 1113) {
+            taskManager.setHiddenSidebar(false);
+          }
+        }}
+      >
         {icon}
         <p>
           {listId === "Search"
